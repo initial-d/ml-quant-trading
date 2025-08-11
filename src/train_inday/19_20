@@ -1,0 +1,240 @@
+######## 19 ######## 0
+mean       0.079715
+19 0 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 0 test
+2021 SP:2.699	YGain:0.612947	Ywithdraw:0.072
+sum  SP:2.675	YGain:0.612947	Ywithdraw:0.072
+######## 19 ######## 1
+mean       0.093767
+19 1 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 1 test
+2021 SP:3.273	YGain:0.77533	Ywithdraw:0.086
+sum  SP:3.235	YGain:0.77533	Ywithdraw:0.086
+######## 19 ######## 2
+mean       0.094606
+19 2 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 2 test
+2021 SP:7.297	YGain:1.76624	Ywithdraw:0.054
+sum  SP:7.050	YGain:1.76624	Ywithdraw:0.054
+######## 19 ######## 3
+mean       0.103056
+19 3 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 3 test
+2021 SP:9.211	YGain:2.31446	Ywithdraw:0.056
+sum  SP:8.814	YGain:2.31446	Ywithdraw:0.056
+######## 19 ######## 4
+mean       0.104248
+19 4 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 4 test
+2021 SP:8.763	YGain:2.19021	Ywithdraw:0.070
+sum  SP:8.404	YGain:2.19021	Ywithdraw:0.070
+######## 19 ######## 5
+mean       0.100472
+19 5 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 5 test
+2021 SP:9.042	YGain:2.33247	Ywithdraw:0.070
+sum  SP:8.668	YGain:2.33247	Ywithdraw:0.070
+######## 19 ######## 6
+mean       0.102257
+19 6 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 6 test
+2021 SP:9.047	YGain:2.33485	Ywithdraw:0.068
+sum  SP:8.673	YGain:2.33485	Ywithdraw:0.068
+######## 19 ######## 7
+mean       0.104303
+19 7 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 7 test
+2021 SP:10.838	YGain:2.79495	Ywithdraw:0.075
+sum  SP:10.295	YGain:2.79495	Ywithdraw:0.075
+######## 19 ######## 8
+mean       0.108039
+19 8 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 8 test
+2021 SP:8.956	YGain:2.34527	Ywithdraw:0.084
+sum  SP:8.594	YGain:2.34527	Ywithdraw:0.084
+######## 19 ######## 9
+mean       0.112485
+19 9 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 9 test
+2021 SP:8.945	YGain:2.39523	Ywithdraw:0.078
+sum  SP:8.590	YGain:2.39523	Ywithdraw:0.078
+######## 19 ######## 10
+mean       0.116420
+19 10 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 10 test
+2021 SP:8.423	YGain:2.29626	Ywithdraw:0.085
+sum  SP:8.115	YGain:2.29626	Ywithdraw:0.085
+######## 19 ######## 11
+mean       0.118053
+19 11 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 11 test
+2021 SP:8.790	YGain:2.4271	Ywithdraw:0.077
+sum  SP:8.456	YGain:2.4271	Ywithdraw:0.077
+######## 19 ######## 12
+mean       0.114821
+19 12 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 12 test
+2021 SP:8.027	YGain:2.23159	Ywithdraw:0.076
+sum  SP:7.752	YGain:2.23159	Ywithdraw:0.076
+######## 19 ######## 13
+mean       0.129333
+19 13 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 13 test
+2021 SP:7.568	YGain:2.15204	Ywithdraw:0.079
+sum  SP:7.330	YGain:2.15204	Ywithdraw:0.079
+######## 19 ######## 14
+mean       0.117412
+19 14 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+19 14 test
+2021 SP:6.206	YGain:1.81981	Ywithdraw:0.081
+sum  SP:6.055	YGain:1.81981	Ywithdraw:0.081
+######## 20 ######## 0
+mean       0.076763
+20 0 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 0 test
+2021 SP:4.154	YGain:0.977546	Ywithdraw:0.066
+sum  SP:4.085	YGain:0.977546	Ywithdraw:0.066
+######## 20 ######## 1
+mean       0.083696
+20 1 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 1 test
+2021 SP:5.039	YGain:1.23053	Ywithdraw:0.066
+sum  SP:4.932	YGain:1.23053	Ywithdraw:0.066
+######## 20 ######## 2
+mean       0.100065
+20 2 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 2 test
+2021 SP:7.072	YGain:1.76139	Ywithdraw:0.053
+sum  SP:6.845	YGain:1.76139	Ywithdraw:0.053
+######## 20 ######## 3
+mean       0.103942
+20 3 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 3 test
+2021 SP:8.186	YGain:2.09357	Ywithdraw:0.055
+sum  SP:7.881	YGain:2.09357	Ywithdraw:0.055
+######## 20 ######## 4
+mean       0.110168
+20 4 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 4 test
+2021 SP:8.495	YGain:2.18277	Ywithdraw:0.070
+sum  SP:8.166	YGain:2.18277	Ywithdraw:0.070
+######## 20 ######## 5
+mean       0.113392
+20 5 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 5 test
+2021 SP:8.829	YGain:2.28329	Ywithdraw:0.067
+sum  SP:8.474	YGain:2.28329	Ywithdraw:0.067
+######## 20 ######## 6
+mean       0.117009
+20 6 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 6 test
+2021 SP:8.525	YGain:2.24435	Ywithdraw:0.071
+sum  SP:8.200	YGain:2.24435	Ywithdraw:0.071
+######## 20 ######## 7
+mean       0.120090
+20 7 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 7 test
+2021 SP:9.353	YGain:2.45844	Ywithdraw:0.069
+sum  SP:8.958	YGain:2.45844	Ywithdraw:0.069
+######## 20 ######## 8
+mean       0.122164
+20 8 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 8 test
+2021 SP:8.543	YGain:2.28847	Ywithdraw:0.074
+sum  SP:8.221	YGain:2.28847	Ywithdraw:0.074
+######## 20 ######## 9
+mean       0.120180
+20 9 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 9 test
+2021 SP:9.129	YGain:2.48264	Ywithdraw:0.078
+sum  SP:8.763	YGain:2.48264	Ywithdraw:0.078
+######## 20 ######## 10
+mean       0.134331
+20 10 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 10 test
+2021 SP:8.413	YGain:2.33009	Ywithdraw:0.083
+sum  SP:8.109	YGain:2.33009	Ywithdraw:0.083
+######## 20 ######## 11
+mean       0.132152
+20 11 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 11 test
+2021 SP:8.423	YGain:2.38736	Ywithdraw:0.083
+sum  SP:8.124	YGain:2.38736	Ywithdraw:0.083
+######## 20 ######## 12
+mean       0.128210
+20 12 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 12 test
+2021 SP:7.378	YGain:2.11642	Ywithdraw:0.083
+sum  SP:7.154	YGain:2.11642	Ywithdraw:0.083
+######## 20 ######## 13
+mean       0.147637
+20 13 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 13 test
+2021 SP:7.627	YGain:2.20319	Ywithdraw:0.084
+sum  SP:7.388	YGain:2.20319	Ywithdraw:0.084
+######## 20 ######## 14
+mean       0.136281
+20 14 base
+2021 SP:6.580	YGain:1.96543	Ywithdraw:0.081
+sum  SP:6.411	YGain:1.96543	Ywithdraw:0.081
+20 14 test
+2021 SP:6.685	YGain:1.97042	Ywithdraw:0.083
+sum  SP:6.507	YGain:1.97042	Ywithdraw:0.083

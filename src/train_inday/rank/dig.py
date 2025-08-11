@@ -1,0 +1,96 @@
+# -*- coding:utf-8 -*-
+
+import sys
+import numpy as np
+import pandas as pd
+
+import time
+from datetime import date
+
+
+def generate_trade_df():
+
+    #today = date.fromtimestamp(time.time()).strftime('%Y%m%d')
+    #daily_fn = '/home/guochenglin/xproject-data/data/%s.data.ochl' % (today)
+    #trade_fn = '/home/guochenglin/xproject-data/data/%s.result.txt' % (today)
+    #trade_df_fn = '/home/guochenglin/xproject-data/data/%s.trade.pickle' % (today)
+
+    names = ['date', 'stock', 'open', 'close', 'high', 'low', 'avg', 'volume', 'fhzs', 'limit_up', 'limit_down']
+    dtype = {'stock': np.str_, 'date': np.str_, 'open': np.float32, 'close': np.float32, 'high': np.float32, 'low': np.float32, 'avg': np.float32, 'volume': np.float32, 'fhzs': np.str_, 'limit_up': np.float32, 'limit_down': np.float32}
+    #daily_df = pd.read_csv('../newest_data', header=None, sep='\t', names=names, index_col=False, dtype=dtype)
+    daily_df = pd.read_csv('newest_data', header=None, sep='\t', names=names, index_col=False, dtype=dtype)
+    daily_df['stock'] = daily_df['stock'].str[:6]
+    daily_df = daily_df.loc[daily_df.date >= '20220101']
+    res = []
+    for k, g_df in daily_df.groupby(['stock']):
+        g_df['lowest'] = g_df['low'].min()
+        res.append(g_df)
+    daily_df = pd.concat(res, axis=0)
+
+    daily_df.sort_values(by=['stock', 'date'], ascending=True, inplace=True)
+    daily_df['fhzs_1'] = daily_df['fhzs'].shift(-1)
+    #print(daily_df)
+
+
+    #trade_fn = 'tushare_day.v12'
+    #names = ['date', 'stock', 'pred',  'return']
+    #dtype = {'date': np.str_, 'stock': np.str_, 'pred': np.float32,  'return': np.float32}
+    #df = pd.read_csv(trade_fn, header=None, sep=' ', names=names, index_col=False, dtype=dtype)
+    #df['stock'] = df['stock'].str[:6]
+
+    #names = ['stock']
+    #dtype = {'stock': np.str_}
+    #gz2000_df = pd.read_csv('gz2000', header=None, sep='\t', names=names, index_col=False, dtype=dtype)
+
+
+    #print(df)
+    #names = ['datetime', 'code', 'total_mv']
+    #dtype = {'datetime': np.str_, 'code': np.str_, 'total_mv': np.float32}
+    #df_mv = pd.read_csv('cap.txt', header=None, sep='\t', names=names, index_col=False, dtype=dtype)
+    #df_mv.code = df_mv.code.str[:6]
+    #df_mv.datetime = df_mv.datetime.str.replace('-', '')
+    #df_mv = df_mv.loc[(df_mv.datetime > '20210101') & (df_mv.datetime < '20220901')]
+    #df_mv['sd'] = df_mv['datetime'] + df_mv['code']
+    #df_mv = df_mv.drop(columns=['datetime', 'code'])
+    
+
+
+
+    #df = df.join(daily_df.set_index('sd'), on='sd')
+    df = daily_df
+
+
+    #df = df.join(gz2000_df.set_index('stock'), on='stock', how='right')
+
+
+    #df = df.loc[ ( ((df.limit_up / df.close - 1) > 0.01)) & (df.avg < 300)] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.01) & (df.volume * df.avg * 100 > 30000000) & (df.volume * df.avg * 100 < 40000000)] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.01) & (df.volume * df.avg * 100 < 50000000) & (df.volume * df.avg * 100 > 10000000)] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.01) & (df.volume * df.avg * 100 < 10000000) ] 
+    df['ddd'] = df.close / df.lowest -1.0
+    df = df.loc[ (((df.close / df.lowest) -1) < 0.1)] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.01) & (df.volume < 50000)] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.02) & (df.volume  * 100 > 60000000) ] 
+    df = df.loc[ df.fhzs_1 != "1"] 
+    #df = df.loc[ ((df.limit_up / df.close - 1) > 0.01)] 
+    #df = df.loc[ (  ((df.volume * df.avg * 100) > 100000000) )] 
+    #df = df.loc[(df.close - df.low) / (df.high - df.close) > 1]
+
+
+    #df = df.join(df_mv.set_index('sd'), on='sd')
+    #df = df.loc[df.total_mv < 200]
+
+    #print(df)
+    #df.set_index(keys=['stock', 'date'], drop=False,inplace=True)
+    #df['return'] = -df['return']
+    df.sort_values(by=['date', 'ddd'], ascending=[True, True], inplace=True)
+    df = df.loc[df.date == '20221115']
+
+
+    #df['avg'] = np.where(np.isnan(df['avg']), df['close'], df['open'])
+
+    df.to_csv(sys.stdout, sep=' ', header=False, index=False)
+
+
+if __name__ == '__main__':
+    generate_trade_df()

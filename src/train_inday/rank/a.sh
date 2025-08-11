@@ -1,0 +1,10 @@
+awk '{print $5}' 1 > 2
+awk '(NR%9==0)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==1)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==2)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==3)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==4)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==5)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==6)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==7)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
+awk '(NR%9==8)' 2 | awk 'BEGIN{a=1}{a*=(($1/100)+1)}END{print a}'
