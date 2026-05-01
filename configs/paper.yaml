@@ -1,0 +1,53 @@
+# Full paper-reproduction config.
+#
+# Note
+# ----
+# To use this you must (a) supply a real OCHLV file at
+# `data.ochlv_path` and (b) replace the synthetic-data step with a
+# real-data load. The CLI subcommand `gen-data` looks at the
+# `data.ochlv_path` field; if present it loads the file via
+# `mlquant.data.loaders.load_ochlv_csv`, otherwise it falls back to
+# the synthetic generator below.
+
+seed: 42
+artifacts_dir: artifacts/paper
+limit_pct: 0.098
+costs_bps: 8.0
+cov_lookback: 120
+hidden: 256
+loss_gamma: 0.1
+
+# data:
+#   ochlv_path: /path/to/wind/ochlv.tsv
+#   universe:  null            # null = full A-share
+
+synthetic:
+  n_stocks:     3000
+  n_dates:      3500           # ~ 14 years of trading days
+  start_date:   "2010-01-04"
+  annual_drift: 0.07
+  annual_vol:   0.32
+  market_beta:  0.55
+  halt_prob:    0.01
+  limit_pct:    0.10
+  seed:         42
+  device:       cuda
+
+train:
+  epochs:       60
+  batch_size:   8192
+  lr:           5.0e-4
+  weight_decay: 1.0e-5
+  grad_clip:    1.0
+  device:       cuda
+  log_every:    200
+  save_dir:     artifacts/paper/checkpoints
+  val_split:    0.1
+
+portfolio:
+  risk_aversion: 10.0
+  weight_cap:    0.03
+  long_only:     true
+  cash_weight:   0.0
+  solver:        SCS            # change to MOSEK if licensed
+  shrinkage:     true

@@ -1,0 +1,41 @@
+# Small synthetic config — runs end-to-end in <1 minute on a laptop CPU.
+# This is the configuration that `make paper` and CI exercise.
+
+seed: 42
+artifacts_dir: artifacts/small
+limit_pct: 0.098
+costs_bps: 5.0
+cov_lookback: 60
+hidden: 64
+loss_gamma: 0.1
+
+synthetic:
+  n_stocks:     200
+  n_dates:      500
+  start_date:   "2022-01-04"
+  annual_drift: 0.05
+  annual_vol:   0.30
+  market_beta:  0.6
+  halt_prob:    0.005
+  limit_pct:    0.10
+  seed:         42
+  device:       cpu
+
+train:
+  epochs:       8
+  batch_size:   1024
+  lr:           1.0e-3
+  weight_decay: 1.0e-5
+  grad_clip:    1.0
+  device:       cpu
+  log_every:    50
+  save_dir:     artifacts/small/checkpoints
+  val_split:    0.1
+
+portfolio:
+  risk_aversion: 5.0
+  weight_cap:    0.05
+  long_only:     true
+  cash_weight:   0.0
+  solver:        SCS
+  shrinkage:     true

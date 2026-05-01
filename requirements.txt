@@ -1,0 +1,18 @@
+# Runtime dependencies. For a reproducible lock file run
+#   pip install pip-tools && pip-compile pyproject.toml -o requirements.lock
+#
+# Default install uses open-source solvers (SCS / ECOS) via cvxpy so anyone
+# can reproduce the paper without a commercial MOSEK licence.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+torch>=2.0
+cvxpy>=1.4
+scs>=3.2
+# `ecos` is an optional backup solver. On Python ≥3.13 it currently lacks
+# pre-built wheels and would require a C++ toolchain. SCS is sufficient.
+pyyaml>=6.0
+click>=8.1
+rich>=13.0
+tqdm>=4.65

@@ -1,0 +1,71 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.so
+*.dylib
+*.dll
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# ---- Notebooks ----
+.ipynb_checkpoints/
+Untitled*.ipynb
+
+# ---- Virtual envs ----
+.venv/
+venv/
+env/
+.python-version
+
+# ---- IDE ----
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# ---- Test / coverage ----
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Project artefacts ----
+artifacts/
+checkpoints/
+data/raw/
+data/interim/
+data/processed/
+*.pickle
+*.pkl
+*.parquet
+*.h5
+*.hdf5
+nohup.out
+*.log
+
+# ---- Backup / temp files ----
+*.bak
+*.bak.*
+*~
+*.tmp
+'
+
+# ---- Secrets / licences ----
+*.lic
+.env
+.env.*
+!.env.example
+secrets/
+
+# ---- Compiled C/C++ ----
+*.o
+*.a
+src/features/sigGen

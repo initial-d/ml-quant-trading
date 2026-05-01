@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlquant"
+version = "0.1.0"
+description = "Reference implementation of ‘ML-Enhanced Multi-Factor Quantitative Trading’ (arXiv:2507.07107)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Yimin Du" }]
+keywords = ["quant", "alpha", "factor", "portfolio", "pytorch", "markowitz"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
+    "torch>=2.0",
+    "cvxpy>=1.4",
+    "scs>=3.2",
+    "pyyaml>=6.0",
+    "click>=8.1",
+    "rich>=13.0",
+    "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+mosek = ["Mosek>=10.0"]
+ecos  = ["ecos>=2.0"]
+gpu = ["cupy-cuda12x>=12.0"]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.7",
+    "hypothesis>=6.90",
+]
+
+[project.scripts]
+mlquant = "mlquant.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/initial-d/ml-quant-trading"
+Paper    = "https://arxiv.org/abs/2507.07107"
+Issues   = "https://github.com/initial-d/ml-quant-trading/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts   = "-ra -q --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+extend-exclude = ["legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM", "PL"]
+ignore = ["E501", "PLR0913", "PLR2004"]
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+exclude = "legacy/"
