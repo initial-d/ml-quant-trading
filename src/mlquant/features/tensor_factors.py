@@ -31,10 +31,12 @@ import torch.nn.functional as F
 Tensor = torch.Tensor
 
 __all__ = [
-    "cs_rank", "cs_zscore",
+    "cs_rank", "cs_zscore", "cs_scale",
     "ts_rank", "ts_sum", "ts_mean", "ts_std",
     "ts_min", "ts_max", "ts_corr", "ts_cov",
+    "ts_argmax", "ts_argmin", "ts_product",
     "ewma", "delay", "delta",
+    "decay_linear", "signedpower",
 ]
 
 
@@ -237,3 +239,63 @@ def delta(x: Tensor, mask: Tensor, periods: int) -> Tuple[Tensor, Tensor]:
     """``x[t] - x[t-periods]``."""
     prev, prev_mask = delay(x, mask, periods)
     return (x - prev) * (mask & prev_mask).float(), mask & prev_mask
+
+
+# =============================================================================
+# WorldQuant-101 helpers
+# =============================================================================
+def cs_scale(x: Tensor, mask: Tensor, a: float = 1.0) -> Tuple[Tensor, Tensor]:
+    """``a * x / sum(|x|)`` cross-sectionally — the WQ ``scale`` primitive.
+
+    Masked cells are treated as 0 in both numerator and denominator so they
+    do not influence the L1 norm.
+    """
+    xm = x.masked_fill(~mask, 0.0)
+    denom = xm.abs().sum(dim=1, keepdim=True).clamp_min(1e-12)
+    out = (a * xm / denom).masked_fill(~mask, 0.0)
+    return out, mask
+
+
+def signedpower(x: Tensor, p: float) -> Tensor:
+    """``sign(x) * |x|**p`` — the WQ ``SignedPower`` primitive."""
+    return torch.sign(x) * x.abs().clamp_min(1e-12).pow(p)
+
+
+def ts_argmax(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    """1-based position of the max within a trailing ``window``."""
+    xw = _unfold_t(x.masked_fill(~mask, float("-inf")), window)
+    pos = xw.argmax(dim=1).float() + 1.0
+    out_mask = _unfold_mask(mask, window).any(dim=1)
+    return _pad_front(pos, window), _pad_front(out_mask, window, 0).bool()
+
+
+def ts_argmin(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    """1-based position of the min within a trailing ``window``."""
+    xw = _unfold_t(x.masked_fill(~mask, float("inf")), window)
+    pos = xw.argmin(dim=1).float() + 1.0
+    out_mask = _unfold_mask(mask, window).any(dim=1)
+    return _pad_front(pos, window), _pad_front(out_mask, window, 0).bool()
+
+
+def ts_product(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    """Rolling product over a trailing ``window``. Masked cells -> 1."""
+    xw = _unfold_t(x.masked_fill(~mask, 1.0), window)
+    out = xw.prod(dim=1)
+    out_mask = _unfold_mask(mask, window).all(dim=1)
+    return _pad_front(out, window), _pad_front(out_mask, window, 0).bool()
+
+
+def decay_linear(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    """Linear-decay weighted moving average — the WQ ``decay_linear`` primitive.
+
+    ``y_t = sum_{k=0..d-1} (d - k) * x_{t-k} / sum_{k=0..d-1}(d - k)``
+    Masked cells are treated as 0 (their weight effectively drops out).
+    """
+    if window < 1:
+        raise ValueError("window must be >= 1")
+    xw = _unfold_t(x.masked_fill(~mask, 0.0), window)
+    weights = torch.arange(window, 0, -1, device=x.device, dtype=x.dtype)
+    weights = weights / weights.sum()
+    out = (xw * weights.view(1, window, 1)).sum(dim=1)
+    out_mask = _unfold_mask(mask, window).all(dim=1)
+    return _pad_front(out, window), _pad_front(out_mask, window, 0).bool()

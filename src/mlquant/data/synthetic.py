@@ -17,6 +17,11 @@ Why bother making it realistic?
       * regression-test the factor engine with deterministic seeds,
       * give new contributors a 30-second smoke-test path,
       * publish CI runs that actually exercise the optimiser.
+
+The generator also fills in the *optional* A-share microstructure
+fields — ``amount`` (turnover), ``limit_up``, ``limit_down``,
+``last_close`` — so that code which prefers exchange-published values
+over derived proxies has something realistic to consume.
 """
 from __future__ import annotations
 
@@ -54,6 +59,8 @@ def make_synthetic_panel(cfg: Optional[SyntheticConfig] = None) -> Panel:
       4. Reject moves outside ±``limit_pct``: clamp and mask.
       5. Halts: Bernoulli ``halt_prob`` mask.
       6. Synthesise OCHL around close with a small intraday range.
+      7. Derive ``amount = vwap*volume``, ``last_close = close[t-1]`` and
+         the official ±``limit_pct`` bands.
 
     The resulting panel exercises the same masked code paths as a real
     Wind feed — every test in ``tests/`` runs against this generator.
@@ -92,7 +99,18 @@ def make_synthetic_panel(cfg: Optional[SyntheticConfig] = None) -> Panel:
     # 5. mask: tradable iff not halted ---------------------------------
     mask = ~halts
 
-    # 6. assemble Panel ------------------------------------------------
+    # 6. derive optional A-share fields --------------------------------
+    amount = (vwap * volume).astype(np.float32)
+    # last_close[t] = close[t-1]; day 0 falls back to the open price so
+    # the ±limit_pct bands stay well-defined.
+    last_close = np.empty_like(close, dtype=np.float32)
+    last_close[0]  = open_[0]
+    last_close[1:] = close[:-1]
+    # Round limit prices to two decimals to mimic exchange convention.
+    limit_up   = np.round(last_close * (1.0 + cfg.limit_pct), 2).astype(np.float32)
+    limit_down = np.round(last_close * (1.0 - cfg.limit_pct), 2).astype(np.float32)
+
+    # 7. assemble Panel ------------------------------------------------
     dates = pd.bdate_range(cfg.start_date, periods=T).to_numpy()
     stocks = np.asarray([f"SYN{idx:05d}" for idx in range(N)])
 
@@ -103,12 +121,16 @@ def make_synthetic_panel(cfg: Optional[SyntheticConfig] = None) -> Panel:
         dates=dates,
         stocks=stocks,
         fields={
-            "open":   _t(open_),
-            "high":   _t(high),
-            "low":    _t(low),
-            "close":  _t(close),
-            "volume": _t(volume),
-            "vwap":   _t(vwap),
+            "open":       _t(open_),
+            "high":       _t(high),
+            "low":        _t(low),
+            "close":      _t(close),
+            "volume":     _t(volume),
+            "vwap":       _t(vwap),
+            "amount":     _t(amount),
+            "limit_up":   _t(limit_up),
+            "limit_down": _t(limit_down),
+            "last_close": _t(last_close),
         },
         mask=torch.from_numpy(mask).to(cfg.device),
     )
