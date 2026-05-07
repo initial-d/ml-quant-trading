@@ -1,161 +1,169 @@
 # ml-quant-trading
 
-> Reference implementation of the paper
-> **“Machine Learning Enhanced Multi-Factor Quantitative Trading: A Cross-Sectional
-> Portfolio Optimization Approach with Bias Correction”** &nbsp;
-> ([arXiv:2507.07107](https://arxiv.org/abs/2507.07107)) — Yimin Du, 2025.
+> **Machine Learning Enhanced Multi-Factor Quantitative Trading**
+> — A Cross-Sectional Portfolio Optimization Approach with Bias Correction
+>
+> [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp; Yimin Du, 2025
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Code style: ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+[![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
 ---
 
-A clean, **end-to-end-runnable** reference implementation of a
-cross-sectional, multi-factor, ML-driven A-share trading pipeline. The
-repository ships:
+## What is this?
 
-* **GPU-vectorised factor engine** &nbsp;— masked PyTorch primitives
-  (`rank / corr / cov / std / ewma / ts_*`) that scale to 5 000+ stocks ×
-  3 000 days at interactive speed.
-* **An Alpha101-style factor library** built on the engine.
-* **Cross-sectional neutralisation + bias correction** for limit-up /
-  limit-down / halted-trading days that are otherwise unfillable.
-* **Geometric-Brownian-Motion data augmentation** for ML training.
-* **Cross-sectional Markowitz portfolio optimisation** with an efficient-frontier sweep,
-  shrunk covariance, no-short constraint, and a default OSS solver path
-  (SCS / ECOS via cvxpy) — MOSEK is opt-in.
-* **A vectorised backtest engine** with the metrics you actually report
-  in a paper: annualised return, Sharpe, Sortino, Calmar, max-drawdown,
-  turnover, IC / RankIC / IR.
-* **A synthetic data generator** so anyone can reproduce the full
-  pipeline without paid Wind / Tushare data.
-* **Unit tests, CI, type hints, and a single `make paper` target.**
+A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
 
-> ✅ The repository is intentionally small, opinionated, and reproducible.
-> Legacy research scripts that drove the original paper are preserved
-> under [`legacy/`](legacy/) for archival reference but are **not** part
-> of the supported package surface.
+| Module | What it does |
+|--------|-------------|
+| `features.tensor_factors` | GPU-vectorised masked primitives (`rank`, `corr`, `ewma`, `ts_*`) |
+| `features.legacy_factors` | **204 hand-crafted alpha factors** ([handbook](docs/factor_handbook.md)) |
+| `features.alpha101` | Alpha101-style formulaic factors |
+| `features.neutralize` | Cross-sectional & industry neutralisation |
+| `features.bias` | Limit-up / limit-down / halt bias correction |
+| `training.augment` | GBM data augmentation |
+| `models.nets` | MLP / Transformer |
+| `models.losses` | AdjMSE, IC, RankIC losses |
+| `portfolio.markowitz` | Cross-sectional Markowitz (shrunk cov, no-short) |
+| `backtest.engine` | Vectorised backtest → Sharpe / IC / IR / DD |
+
+---
+
+## Quick Start
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
+
+# 30-second smoke test (synthetic 200 stocks × 500 days)
+make paper CONFIG=configs/small.yaml
+```
+
+---
+
+## Factor Library (204 factors)
+
+All factors are mask-aware PyTorch tensors with signature `Panel → (values[T,N], mask[T,N])`.
+
+📖 **[完整因子手册 (Factor Handbook)](docs/factor_handbook.md)** — 每个因子一段话详解思想、动机和原理，方便按需选用。
+
+| Family | Count | Description |
+|--------|-------|-------------|
+| `better_001` – `better_028` | 28 | VWAP deviation + volume-weighted momentum |
+| `best_001` – `best_021` | 21 | Close-location momentum variants |
+| `old_027` – `old_076` | 50 | Classic alpha signals (corr/rank composites) |
+| `stock_001` – `stock_022` | 22 | Per-stock derived series (volume, range, price) |
+| `extra_001` – `extra_014` | 14 | Turnover + amount features |
+| `add_001` – `add_030` | 30 | Additional composite factors |
+| `change_001` – `change_005` | 5 | Short-window change-of-velocity |
+| `original_001` – `original_028` | 28 | Close/volume direct statistics |
+| `cs_rank_*` | 6 | Market breadth (cross-sectional rank signals) |
+
+<details>
+<summary><b>Full factor list (click to expand)</b></summary>
+
+```
+add_001    add_002    add_003    add_004    add_005    add_006
+add_007    add_008    add_009    add_010    add_011    add_012
+add_013    add_014    add_015    add_016    add_017    add_018
+add_019    add_020    add_021    add_022    add_023    add_024
+add_025    add_026    add_027    add_028    add_029    add_030
+best_001   best_002   best_003   best_004   best_005   best_006
+best_007   best_008   best_009   best_010   best_011   best_012
+best_013   best_014   best_015   best_016   best_017   best_018
+best_019   best_020   best_021
+change_001 change_002 change_003 change_004 change_005
+extra_001  extra_002  extra_003  extra_004  extra_005  extra_006
+extra_007  extra_008  extra_009  extra_010  extra_011  extra_012
+extra_013  extra_014
+old_027    old_028    old_029    old_030    old_031    old_032
+old_033    old_034    old_035    old_036    old_037    old_038
+old_039    old_040    old_041    old_042    old_043    old_044
+old_045    old_046    old_047    old_048    old_049    old_050
+old_051    old_052    old_053    old_054    old_055    old_056
+old_057    old_058    old_059    old_060    old_061    old_062
+old_063    old_064    old_065    old_066    old_067    old_068
+old_069    old_070    old_071    old_072    old_073    old_074
+old_075    old_076
+original_001 original_002 original_003 original_004 original_005
+original_006 original_007 original_008 original_009 original_010
+original_011 original_012 original_013 original_014 original_015
+original_016 original_017 original_018 original_019 original_020
+original_021 original_022 original_023 original_024 original_025
+original_026 original_027 original_028
+stock_001  stock_002  stock_003  stock_004  stock_005  stock_006
+stock_007  stock_008  stock_009  stock_010  stock_011  stock_012
+stock_013  stock_014  stock_015  stock_016  stock_017  stock_018
+stock_019  stock_020  stock_021  stock_022
+```
+
+</details>
+
+### Usage
+
+```python
+from mlquant.features import compute_legacy_set, LEGACY_REGISTRY
+
+# Compute all 204 factors
+factors, mask, names = compute_legacy_set(panel)  # → [T, N, 204]
+
+# Or a subset
+factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "old_042"))
+```
 
 ---
 
 ## Architecture
 
 ```
-                   ┌────────────────────────────────────────────┐
-   raw OCHLV ─►    │  data.loaders / data.synthetic              │
-                   │  → [date, stock] panels with NaN masks      │
-                   └──────────────────────┬─────────────────────┘
-                                          ▼
-                   ┌────────────────────────────────────────────┐
-                   │  features.tensor_factors   (GPU, masked)    │
-                   │  features.alpha101         (factor library) │
-                   │  features.neutralize       (CS / industry)  │
-                   └──────────────────────┬─────────────────────┘
-                                          ▼
-                   ┌────────────────────────────────────────────┐
-                   │  training.dataset + training.augment        │
-                   │   (geometric Brownian motion augmentation)  │
-                   │  models.nets   (MLP / Transformer)          │
-                   │  models.losses (AdjMSE, IC, RankIC)         │
-                   │  training.trainer                           │
-                   └──────────────────────┬─────────────────────┘
-                                          ▼
-                   ┌────────────────────────────────────────────┐
-                   │  portfolio.markowitz   (rotated-quad cone)  │
-                   │  portfolio.frontier    (α-sweep)            │
-                   └──────────────────────┬─────────────────────┘
-                                          ▼
-                   ┌────────────────────────────────────────────┐
-                   │  backtest.engine + backtest.metrics         │
-                   │  → Sharpe / IC / IR / DD / turnover         │
-                   └────────────────────────────────────────────┘
-```
-
-Each box is one Python module with type hints, docstrings, and tests.
-The `mlquant` CLI exposes a sub-command per stage so you can run any
-slice of the pipeline in isolation.
-
----
-
-## Install
-
-```bash
-git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e .[dev]          # add `,gpu` if you have CUDA
-```
-
-For the optional MOSEK path:
-
-```bash
-python -m pip install -e .[dev,mosek]
+raw OCHLV → data.loaders / data.synthetic (Panel with mask)
+         → features.tensor_factors (GPU masked primitives)
+         → features.legacy_factors (204 alphas)
+         → training.augment + models.nets + models.losses
+         → portfolio.markowitz (efficient frontier)
+         → backtest.engine → Sharpe / IC / IR / DD / turnover
 ```
 
 ---
 
-## 30-second smoke test
-
-The package ships a tiny synthetic A-share-like panel so you can verify
-the install and run the entire paper pipeline on a laptop in under a
-minute:
-
-```bash
-make paper CONFIG=configs/small.yaml
-```
-
-This runs `gen-data → features → train → portfolio → backtest` against a
-synthetic universe of 200 stocks × 500 trading days and prints a metrics
-summary table. The same command with `CONFIG=configs/paper.yaml` is what
-produced the numbers reported in the paper (assuming you have access to
-the proprietary Wind / Tushare panels).
-
----
-
-## Reproducing the paper
-
-See [`docs/reproducing_paper.md`](docs/reproducing_paper.md) for the
-table-by-table mapping between paper sections and command-line
-invocations, including the exact configs, model checkpoints, and
-expected metric ranges.
-
-| Paper section                              | Code module                          | Tests                       |
-| ------------------------------------------ | ------------------------------------ | --------------------------- |
-| §3.1 Tensor-accelerated factor engine      | `mlquant.features.tensor_factors`    | `tests/test_tensor_factors` |
-| §3.2 Alpha101 + microstructure factors     | `mlquant.features.alpha101`          | `tests/test_alpha101`       |
-| §3.3 Cross-sectional neutralisation        | `mlquant.features.neutralize`        | `tests/test_neutralize`     |
-| §3.4 Bias correction (limit days)          | `mlquant.features.bias`              | `tests/test_bias`           |
-| §4.1 GBM data augmentation                 | `mlquant.training.augment`           | `tests/test_augment`        |
-| §4.2 ML models & sign-aware losses         | `mlquant.models.{nets,losses}`       | `tests/test_losses`         |
-| §5   Cross-sectional Markowitz             | `mlquant.portfolio.markowitz`        | `tests/test_markowitz`      |
-| §6   Backtest, Sharpe, IC                  | `mlquant.backtest.{engine,metrics}`  | `tests/test_metrics`        |
-
----
-
-## Repository layout
+## Project Layout
 
 ```
 ml-quant-trading/
-├── README.md
-├── LICENSE
-├── Makefile
-├── pyproject.toml
-├── configs/
-│   ├── small.yaml          # 200 stocks × 500 days synthetic, ~30s on a laptop
-│   └── paper.yaml          # Full A-share, 2010-2024
-├── docs/
-│   ├── architecture.md
-│   ├── factors.md
-│   └── reproducing_paper.md
 ├── src/mlquant/
-│   ├── data/      features/      training/      models/
-│   ├── portfolio/ backtest/      cli/
-│   └── utils/
-├── tests/                  # pytest suite
-├── scripts/                # one-shot helpers
-└── legacy/                 # original research scripts (unsupported)
+│   ├── data/           # Panel dataclass, loaders, synthetic generator
+│   ├── features/       # Factor engine + 204 legacy + Alpha101
+│   ├── training/       # Dataset, augmentation, trainer
+│   ├── models/         # MLP, Transformer, losses
+│   ├── portfolio/      # Markowitz, frontier sweep
+│   ├── backtest/       # Engine, metrics
+│   └── cli/            # Command-line interface
+├── configs/            # small.yaml (smoke) / paper.yaml (full)
+├── tests/              # pytest suite
+├── scripts/            # IC eval, frontier plot
+├── legacy/             # Original research scripts (archival, unsupported)
+└── docs/               # Architecture, factor docs, paper reproduction
 ```
+
+---
+
+## Reproducing the Paper
+
+See [`docs/reproducing_paper.md`](docs/reproducing_paper.md) for table-by-table mapping.
+
+| Paper section | Code module | Tests |
+|---|---|---|
+| §3.1 Tensor factor engine | `features.tensor_factors` | `test_tensor_factors` |
+| §3.2 Alpha + microstructure factors | `features.alpha101`, `features.legacy_factors` | `test_alpha101` |
+| §3.3 Neutralisation | `features.neutralize` | — |
+| §3.4 Bias correction | `features.bias` | `test_bias` |
+| §4.1 GBM augmentation | `training.augment` | `test_augment` |
+| §4.2 ML models | `models.nets`, `models.losses` | `test_losses` |
+| §5 Portfolio optimisation | `portfolio.markowitz` | `test_markowitz` |
+| §6 Backtest | `backtest.engine`, `backtest.metrics` | `test_metrics` |
 
 ---
 
@@ -164,8 +172,7 @@ ml-quant-trading/
 ```bibtex
 @article{du2025mlquant,
   title  = {Machine Learning Enhanced Multi-Factor Quantitative Trading:
-            A Cross-Sectional Portfolio Optimization Approach with Bias
-            Correction},
+            A Cross-Sectional Portfolio Optimization Approach with Bias Correction},
   author = {Du, Yimin},
   journal= {arXiv preprint arXiv:2507.07107},
   year   = {2025},
@@ -175,6 +182,4 @@ ml-quant-trading/
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Note that the optional MOSEK path is
-governed by MOSEK's own commercial licence; the default install relies
-only on open-source solvers (SCS / ECOS).
+MIT — see [`LICENSE`](LICENSE).

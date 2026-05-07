@@ -29,6 +29,7 @@ from .tensor_factors import (
 from .neutralize import neutralize_cs, neutralize_industry
 from .bias import limit_move_mask
 from .alpha101 import compute_alpha_set, ALPHA_REGISTRY
+from .legacy_factors import compute_legacy_set, LEGACY_REGISTRY
 
 __all__ = [
     "cs_rank", "cs_zscore",
@@ -37,4 +38,5 @@ __all__ = [
     "neutralize_cs", "neutralize_industry",
     "limit_move_mask",
     "compute_alpha_set", "ALPHA_REGISTRY",
+    "compute_legacy_set", "LEGACY_REGISTRY",
 ]
