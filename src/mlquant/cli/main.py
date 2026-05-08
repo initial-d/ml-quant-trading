@@ -15,7 +15,8 @@ import torch
 
 from ..backtest.engine import run_backtest
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
-from ..features.alpha101 import compute_alpha_set
+from ..features.legacy_factors import compute_legacy_set
+from ..features.alpha101 import compute_alpha_set  # backward compat
 from ..features.bias import limit_move_mask
 from ..models.losses import AdjMSELoss
 from ..models.nets import MLPRegressor
@@ -72,7 +73,7 @@ def cmd_features(config_path: str) -> None:
         mask=panel_blob["mask"],
     )
     bias_mask = limit_move_mask(panel, limit_pct=cfg.get("limit_pct", 0.098))
-    factors, mask, names = compute_alpha_set(panel)
+    factors, mask, names = compute_legacy_set(panel)
     mask = mask & bias_mask
     torch.save({"factors": factors, "mask": mask, "names": names}, art / "features.pt")
     click.echo(f"wrote features: {factors.shape}  alphas={names}")

@@ -4,10 +4,14 @@ This page lists every factor shipped in the curated `mlquant.features`
 library, with a one-line rationale and a pointer to its
 implementation.
 
-In addition to the curated Alpha101 set, the repository ships **204
-legacy factors** ported from `legacy/features/Feature.py` into modern
-tensor-based modules. These are auto-registered into
-`LEGACY_REGISTRY` and accessible via `compute_legacy_set()`.
+The full feature set comprises **213 factors**: **9 curated Alpha101
+formulas** (`features.alpha101`) plus **204 hand-crafted legacy factors**
+(`features.legacy_factors`) organised into nine thematic families. All
+factors are mask-contract compliant and GPU-vectorised.
+
+The legacy factors are ported from `legacy/features/Feature.py` into
+modern tensor-based modules, auto-registered into `LEGACY_REGISTRY`
+and accessible via `compute_legacy_set()`.
 
 ## Tensor primitives
 

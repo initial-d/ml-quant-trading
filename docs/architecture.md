@@ -7,7 +7,7 @@ sub-packages are self-contained and have explicit, narrow APIs.
 ```
 src/mlquant/
 ├── data/        loaders, synthetic GBM panel, immutable Panel container
-├── features/    GPU primitives, Alpha101 subset, neutralisation, bias mask
+├── features/    GPU primitives, Alpha101 subset (9), legacy factors (204), neutralisation, bias mask
 ├── training/    FactorDataset, GBM augmentation, Trainer
 ├── models/      MLP / Transformer baselines, sign-aware losses
 ├── portfolio/   cvxpy-based Markowitz with α-sweep

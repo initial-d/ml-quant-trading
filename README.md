@@ -44,9 +44,9 @@ make paper CONFIG=configs/small.yaml
 
 ---
 
-## Factor Library (204 factors)
+## Factor Library (213 factors: 9 Alpha101 + 204 legacy)
 
-All factors are mask-aware PyTorch tensors with signature `Panel → (values[T,N], mask[T,N])`.
+The full feature set comprises **9 curated Alpha101 formulas** (`features.alpha101`) plus **204 hand-crafted legacy factors** (`features.legacy_factors`) for a total of **213 dimensions**. All factors are mask-aware PyTorch tensors with signature `Panel → (values[T,N], mask[T,N])`.
 
 📖 **[完整因子手册 (Factor Handbook)](docs/factor_handbook.md)** — 每个因子一段话详解思想、动机和原理，方便按需选用。
 

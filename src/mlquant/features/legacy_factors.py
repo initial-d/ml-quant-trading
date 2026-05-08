@@ -93,6 +93,7 @@ from . import _factors_original  # noqa: E402, F401
 from . import _factors_old       # noqa: E402, F401
 from . import _factors_better    # noqa: E402, F401
 from . import _factors_market    # noqa: E402, F401
+from . import _factors_alpha101  # noqa: E402, F401
 
 
 # ---------------------------------------------------------------------------

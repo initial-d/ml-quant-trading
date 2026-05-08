@@ -1,6 +1,7 @@
 # 因子手册 (Factor Handbook)
 
-本手册详细描述了 `mlquant.features` 中所有 204 个量化因子的设计思想、动机和原理。
+本手册详细描述了 `mlquant.features.legacy_factors` 中所有 **204 个手工量化因子**的设计思想、动机和原理。
+结合 `mlquant.features.alpha101` 中的 **9 个精选 Alpha101 因子**，系统共提供 **213 维特征**。
 用户可根据自身策略需求选择合适的因子子集。
 
 ---
