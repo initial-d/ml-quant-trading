@@ -24,6 +24,7 @@ from .panel import Panel
 from .synthetic import SyntheticConfig, make_synthetic_panel
 from .loaders import load_ochlv_csv
 from .yfinance_loader import load_yfinance_panel
+from .baostock_loader import load_baostock_panel
 
 __all__ = [
     "Panel",
@@ -31,6 +32,7 @@ __all__ = [
     "make_synthetic_panel",
     "load_ochlv_csv",
     "load_yfinance_panel",
+    "load_baostock_panel",
     "make_panel",
 ]
 
@@ -61,4 +63,11 @@ def make_panel(source: str = "synthetic", **kwargs: Any) -> Panel:
         if tickers is None or start is None or end is None:
             raise TypeError("make_panel(source='yfinance', ...) requires `tickers`, `start`, and `end` kwargs")
         return load_yfinance_panel(tickers, start, end, **kwargs)
+    if source == "baostock":
+        tickers = kwargs.pop("tickers", None)
+        start = kwargs.pop("start", None)
+        end = kwargs.pop("end", None)
+        if tickers is None or start is None or end is None:
+            raise TypeError("make_panel(source='baostock', ...) requires `tickers`, `start`, and `end` kwargs")
+        return load_baostock_panel(tickers, start, end, **kwargs)
     raise ValueError(f"unknown panel source: {source!r}")
