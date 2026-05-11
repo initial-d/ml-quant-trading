@@ -42,6 +42,17 @@ pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
 make paper CONFIG=configs/small.yaml
 ```
 
+### GitHub Codespaces Setup
+
+You can run this project instantly in your browser:
+1. Click the **"Code"** button on this repository.
+2. Select the **"Codespaces"** tab and click **"Create codespace on main"**.
+3. Once the environment loads, run the setup commands directly in the built-in terminal:
+```bash
+pip install -e .[dev]
+make paper CONFIG=configs/small.yaml
+```
+
 ---
 
 ## Factor Library (213 factors: 9 Alpha101 + 204 legacy)
@@ -102,6 +113,21 @@ stock_019  stock_020  stock_021  stock_022
 
 </details>
 
+### Using yfinance data
+
+You can directly fetch stock data from Yahoo Finance via `yfinance`. For A-shares, use standard exchange suffixes (`.SS` for Shanghai, `.SZ` for Shenzhen):
+
+```python
+from mlquant.data import make_panel
+
+panel = make_panel(
+    source="yfinance",
+    tickers=["000001.SZ", "600000.SS"],
+    start="2020-01-01",
+    end="2023-12-31"
+)
+```
+
 ### Usage
 
 ```python
@@ -119,7 +145,7 @@ factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "
 ## Architecture
 
 ```
-raw OCHLV → data.loaders / data.synthetic (Panel with mask)
+raw OCHLV → data.loaders / data.synthetic / data.yfinance_loader (Panel with mask)
          → features.tensor_factors (GPU masked primitives)
          → features.legacy_factors (204 alphas)
          → training.augment + models.nets + models.losses
