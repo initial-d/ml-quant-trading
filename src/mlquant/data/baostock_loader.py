@@ -34,32 +34,35 @@ def load_baostock_panel(
     if not tickers:
         raise ValueError("Tickers list cannot be empty")
 
+    # Uniqueify tickers to avoid issues with duplicates during download or pivoting
+    unique_tickers = list(dict.fromkeys(tickers))
+
     lg = bs.login()
     if lg.error_code != '0':
         raise RuntimeError(f"Baostock login failed: {lg.error_msg}")
 
-    all_data = []
+    try:
+        all_data = []
+        for ticker in unique_tickers:
+            rs = bs.query_history_k_data_plus(
+                ticker,
+                "date,code,open,high,low,close,preclose,volume,amount,tradestatus",
+                start_date=start,
+                end_date=end,
+                frequency="d",
+                adjustflag="2" # 2 for forward adjust
+            )
+            if rs.error_code != '0':
+                print(f"Warning: Failed to fetch {ticker}: {rs.error_msg}")
+                continue
 
-    for ticker in tickers:
-        rs = bs.query_history_k_data_plus(
-            ticker,
-            "date,code,open,high,low,close,preclose,volume,amount,tradestatus",
-            start_date=start,
-            end_date=end,
-            frequency="d",
-            adjustflag="3" # 3 for forward adjust
-        )
-        if rs.error_code != '0':
-            print(f"Warning: Failed to fetch {ticker}: {rs.error_msg}")
-            continue
-
-        while (rs.error_code == '0') & rs.next():
-            all_data.append(rs.get_row_data())
-
-    bs.logout()
+            while (rs.error_code == '0') & rs.next():
+                all_data.append(rs.get_row_data())
+    finally:
+        bs.logout()
 
     if not all_data:
-        raise ValueError(f"No data returned for tickers {tickers} from {start} to {end}")
+        raise ValueError(f"No data returned for tickers {unique_tickers} from {start} to {end}")
 
     df = pd.DataFrame(all_data, columns=["date", "code", "open", "high", "low", "close", "preclose", "volume", "amount", "tradestatus"])
 
@@ -76,10 +79,10 @@ def load_baostock_panel(
     def get_wide_df(col_name):
         wide = df.pivot(index="date", columns="code", values=col_name)
         # Ensure all requested tickers are present
-        for t in tickers:
+        for t in unique_tickers:
             if t not in wide.columns:
                 wide[t] = np.nan
-        return wide[list(tickers)]
+        return wide[list(unique_tickers)]
 
     open_df = get_wide_df("open")
     high_df = get_wide_df("high")
@@ -107,7 +110,7 @@ def load_baostock_panel(
         fields_wide["vwap"] = vwap_actual.fillna(vwap_proxy).replace([np.inf, -np.inf], np.nan).fillna(vwap_proxy)
 
     dates = open_df.index.to_numpy()
-    stocks = np.array(list(tickers))
+    stocks = np.array(list(unique_tickers))
 
     # status_df is string '1' or '0' natively before we pivoted, so convert it properly
     # If a stock was missing on a day, it's NaN. Let's make tradable mask: status == '1'
