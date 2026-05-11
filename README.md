@@ -46,7 +46,7 @@ make paper CONFIG=configs/small.yaml
 
 You can run an end-to-end demo of this project instantly in Google Colab without installing anything locally:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Uwater1/ml-quant-trading/blob/main/demo_baostock.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
 
 ---
 
