@@ -42,6 +42,12 @@ pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
 make paper CONFIG=configs/small.yaml
 ```
 
+### Google Colab Quick Start
+
+You can run an end-to-end demo of this project instantly in Google Colab without installing anything locally:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+
 ---
 
 ## Factor Library (213 factors: 9 Alpha101 + 204 legacy)
@@ -102,6 +108,34 @@ stock_019  stock_020  stock_021  stock_022
 
 </details>
 
+### Data Sources
+
+You can directly fetch stock data from Yahoo Finance or Baostock (for A-shares).
+
+**yfinance:**
+```python
+from mlquant.data import make_panel
+
+panel = make_panel(
+    source="yfinance",
+    tickers=["000001.SZ", "600000.SS"],
+    start="2020-01-01",
+    end="2023-12-31"
+)
+```
+
+**baostock:**
+```python
+from mlquant.data import make_panel
+
+panel = make_panel(
+    source="baostock",
+    tickers=["sh.600000", "sz.000001"],
+    start="2020-01-01",
+    end="2023-12-31"
+)
+```
+
 ### Usage
 
 ```python
@@ -119,7 +153,7 @@ factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "
 ## Architecture
 
 ```
-raw OCHLV → data.loaders / data.synthetic (Panel with mask)
+raw OCHLV → data.loaders / data.synthetic / data.yfinance_loader / data.baostock_loader (Panel with mask)
          → features.tensor_factors (GPU masked primitives)
          → features.legacy_factors (204 alphas)
          → training.augment + models.nets + models.losses
