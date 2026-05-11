@@ -86,7 +86,7 @@ def load_yfinance_panel(
     stocks = np.array(list(tickers))
 
     # Mask where close is not NaN
-    mask = (~close_df.isna()).to_numpy()
+    mask = (~open_df.isna() & ~high_df.isna() & ~low_df.isna() & ~close_df.isna() & ~volume_df.isna()).to_numpy()
 
     tensors = {
         name: torch.from_numpy(df_.fillna(0.0).to_numpy(dtype=np.float32).copy()).to(device)
