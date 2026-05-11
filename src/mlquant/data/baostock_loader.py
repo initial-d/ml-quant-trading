@@ -110,7 +110,7 @@ def load_baostock_panel(
         fields_wide["vwap"] = vwap_actual.fillna(vwap_proxy).replace([np.inf, -np.inf], np.nan).fillna(vwap_proxy)
 
     dates = open_df.index.to_numpy()
-    stocks = np.array(list(unique_tickers))
+    stocks = list(unique_tickers)
 
     # status_df is string '1' or '0' natively before we pivoted, so convert it properly
     # If a stock was missing on a day, it's NaN. Let's make tradable mask: status == '1'
