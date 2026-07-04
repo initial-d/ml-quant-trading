@@ -1,0 +1,51 @@
+name: Bug report
+description: Report a reproducible bug in the code, docs, or examples.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve ml-quant-trading. Please include a minimal reproduction whenever possible.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include commands, config files, or a minimal Python snippet.
+      placeholder: |
+        1. Install with ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, package version, CPU/GPU details, and relevant optional dependencies.
+      placeholder: |
+        - OS:
+        - Python:
+        - PyTorch:
+        - CUDA:
+        - cvxpy solver:
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or traceback
+      render: text
