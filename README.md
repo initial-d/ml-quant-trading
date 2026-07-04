@@ -86,8 +86,13 @@ Benchmark reports from different machines are welcome through the
 - [`CHANGELOG.md`](CHANGELOG.md) summarizes the public baseline release.
 - [`docs/launch_playbook.md`](docs/launch_playbook.md) contains the launch checklist,
   recommended repository topics, and social preview guidance.
+- [`docs/start_here.md`](docs/start_here.md) gives new users a fast path through the project.
+- [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
+- [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
+- [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
+- [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
 
 ---
 
