@@ -8,7 +8,7 @@ import torch
 
 from ..data.panel import Panel
 from .tensor_factors import (
-    cs_rank, delay, delta, ewma, ts_max, ts_mean, ts_rank, ts_std, ts_sum,
+    cs_rank, delay, delta, ewma, ts_max, ts_mean, ts_min, ts_rank, ts_std, ts_sum,
 )
 from .legacy_factors import register_legacy_factor, _close_loc, _amount
 
