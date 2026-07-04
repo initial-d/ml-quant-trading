@@ -1,0 +1,29 @@
+name: Research question
+description: Ask about methodology, experiments, reproducibility, or factor behavior.
+title: "[Research]: "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to understand or reproduce?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Include the module, paper section, config, data source, and date range if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What you tried
+      description: Share commands, snippets, or experiment notes.
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Mention whether the question depends on proprietary data, GPU availability, solver licenses, or market assumptions.
