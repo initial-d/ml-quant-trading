@@ -14,6 +14,8 @@ cannot redistribute. We support two reproduction paths:
    ``configs/paper.yaml`` and rerun. The repository ships the loader;
    it does not ship the data.
 
+Before comparing backtest numbers, read the [backtest assumptions and limitations](backtest_assumptions.md). It explains transaction costs, slippage, survivorship bias, data leakage, limit-up / limit-down handling, and the minimum reporting checklist for credible results.
+
 ## Quick reproduction (synthetic)
 
 ```bash
