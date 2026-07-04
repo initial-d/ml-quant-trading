@@ -1,0 +1,56 @@
+name: Public-data case study
+description: Propose or report a public-data reproduction or example.
+title: "[case-study] "
+labels: ["case study", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Public-data case studies make the project easier for new users to trust and run.
+        Please avoid uploading proprietary market data.
+
+  - type: input
+    id: universe
+    attributes:
+      label: Universe
+      description: Which tickers, market, or asset group does the case study use?
+      placeholder: "Example: A small yfinance universe, 20 US equities, 2020-2024"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Data source
+      placeholder: "yfinance, baostock, Stooq, Kaggle, custom CSV, ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow
+      description: Describe the steps, command, or notebook structure.
+      placeholder: |
+        1. Download data
+        2. Build Panel
+        3. Compute factor subset
+        4. Evaluate IC or run backtest
+    validations:
+      required: true
+
+  - type: textarea
+    id: caveats
+    attributes:
+      label: Caveats
+      description: Note survivorship bias, data quality, liquidity, transaction costs, or missing fields.
+    validations:
+      required: true
+
+  - type: textarea
+    id: contribution
+    attributes:
+      label: Contribution plan
+      description: Are you proposing a notebook, docs page, script, or issue discussion?
+    validations:
+      required: false

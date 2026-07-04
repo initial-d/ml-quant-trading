@@ -10,11 +10,17 @@
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
+![ml-quant-trading social preview](docs/assets/social-preview.svg)
+
 ---
 
 ## What is this?
 
 A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
+
+**In one clone, you get:** a tensor factor engine, 213 factor dimensions, bias correction,
+ML baselines, Markowitz portfolio optimization, vectorized backtesting, synthetic/public-data
+demos, CI, tests, and benchmark tooling.
 
 | Module | What it does |
 |--------|-------------|
@@ -72,6 +78,16 @@ make benchmark
 ```
 
 See [`docs/benchmarking.md`](docs/benchmarking.md) for larger-panel commands and reporting guidance.
+Benchmark reports from different machines are welcome through the
+[`Benchmark result`](.github/ISSUE_TEMPLATE/benchmark_result.yml) issue template.
+
+### Launch and Community Assets
+
+- [`CHANGELOG.md`](CHANGELOG.md) summarizes the public baseline release.
+- [`docs/launch_playbook.md`](docs/launch_playbook.md) contains the launch checklist,
+  recommended repository topics, and social preview guidance.
+- [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
+- [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 
 ---
 
@@ -228,11 +244,12 @@ See [`docs/reproducing_paper.md`](docs/reproducing_paper.md) for table-by-table 
 
 ## Roadmap
 
-- Add more public-data demos for users who do not have proprietary market data.
-- Expand Alpha101 formula coverage.
-- Add benchmark notebooks for factor computation speed and memory use.
-- Add example research reports for factor IC, turnover, drawdown, and portfolio attribution.
-- Improve documentation for live-to-research gaps such as slippage, survivorship bias, and transaction costs.
+See [`docs/roadmap.md`](docs/roadmap.md) for contributor-friendly tasks, research extensions,
+engineering extensions, and community milestones.
+
+For announcements, release posts, and benchmark calls, see the
+[`Promotion Kit`](docs/promotion_kit.md). For the maintainer growth loop, see
+[`docs/growth_plan.md`](docs/growth_plan.md).
 
 ## Contributing
 
