@@ -59,6 +59,10 @@ You can run an end-to-end demo of this project instantly in Google Colab without
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
 
+### Public-Data Factor IC Demo
+
+For a lightweight public-data walkthrough, open [`notebooks/public_factor_ic.ipynb`](notebooks/public_factor_ic.ipynb). It downloads a small yfinance universe, computes a factor subset, and plots one-day forward rank IC. If public data download fails, the notebook falls back to the synthetic panel so the workflow remains runnable.
+
 ---
 
 ## Factor Library (213 factors: 9 Alpha101 + 204 legacy)
