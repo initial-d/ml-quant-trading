@@ -19,9 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-NOTE ON THIRD-PARTY DEPENDENCIES: Some optional dependencies (e.g. MOSEK)
-have their own commercial licences. The MIT licence applies only to the
-source code of this repository, not to those third-party components. The
-MOSEK code path in this repository is gated behind an optional extra; the
-default install uses the open-source SCS / ECOS solvers via cvxpy.
