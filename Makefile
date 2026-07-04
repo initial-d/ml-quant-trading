@@ -7,7 +7,7 @@ PYTEST  ?= $(PY) -m pytest
 RUFF    ?= $(PY) -m ruff
 CONFIG  ?= configs/small.yaml
 
-.PHONY: help install install-dev lint format test cov \
+.PHONY: help install install-dev lint format test cov benchmark \
         gen-data features train portfolio backtest \
         paper clean clean-all
 
@@ -19,6 +19,7 @@ help:
 	@echo "  format        ruff format ."
 	@echo "  test          pytest"
 	@echo "  cov           pytest with coverage"
+	@echo "  benchmark     benchmark tensor factor primitives"
 	@echo "  gen-data      synthesise GBM-based OCHLV panel  (CONFIG=$(CONFIG))"
 	@echo "  features      compute factor matrix"
 	@echo "  train         train ML model"
@@ -44,6 +45,9 @@ test:
 
 cov:
 	$(PYTEST) --cov=mlquant --cov-report=term-missing
+
+benchmark:
+	$(PY) scripts/benchmark_tensor_factors.py --device auto
 
 gen-data:
 	$(PY) -m mlquant.cli.main gen-data --config $(CONFIG)
