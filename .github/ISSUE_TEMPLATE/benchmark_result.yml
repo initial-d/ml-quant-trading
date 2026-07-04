@@ -1,0 +1,61 @@
+name: Benchmark result
+description: Share CPU/GPU benchmark results for the tensor factor engine.
+title: "[benchmark] "
+labels: ["benchmark", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing a benchmark result. These reports help users understand how the
+        factor engine behaves across machines, PyTorch versions, and panel sizes.
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      description: The commit used for the benchmark.
+      placeholder: eff028f
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Paste the exact command you ran.
+      render: bash
+      placeholder: python scripts/benchmark_tensor_factors.py --device auto --n-dates 1500 --n-stocks 3000
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Python, PyTorch, CPU, GPU, CUDA availability, and CUDA device name.
+      placeholder: |
+        OS:
+        Python:
+        PyTorch:
+        CPU:
+        GPU:
+        CUDA:
+    validations:
+      required: true
+
+  - type: textarea
+    id: result
+    attributes:
+      label: Result table
+      description: Paste the Markdown table printed by the benchmark script.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything unusual about the run, such as thermal throttling, shared GPU, or memory limits.
+    validations:
+      required: false

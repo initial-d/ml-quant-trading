@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software or build on the accompanying paper, please cite it as below."
+title: "ml-quant-trading: Machine Learning Enhanced Multi-Factor Quantitative Trading"
+type: software
+authors:
+  - family-names: Du
+    given-names: Yimin
+repository-code: "https://github.com/initial-d/ml-quant-trading"
+url: "https://github.com/initial-d/ml-quant-trading"
+license: MIT
+version: "0.1.0"
+date-released: "2025-07-01"
+abstract: "A research-oriented, end-to-end implementation of ML-enhanced multi-factor quantitative trading with tensor factor computation, bias correction, portfolio optimization, and backtesting."
+keywords:
+  - quantitative-finance
+  - algorithmic-trading
+  - machine-learning
+  - portfolio-optimization
+  - alpha-factors
+  - pytorch
+preferred-citation:
+  type: article
+  title: "Machine Learning Enhanced Multi-Factor Quantitative Trading: A Cross-Sectional Portfolio Optimization Approach with Bias Correction"
+  authors:
+    - family-names: Du
+      given-names: Yimin
+  year: 2025
+  url: "https://arxiv.org/abs/2507.07107"
