@@ -9,5 +9,6 @@ ablations referenced from `docs/reproducing_paper.md`.
 |-------------------------|------------------------------------------------------------------------|
 | `eval_factor_ic.py`     | Compute IC / RankIC of every alpha against forward returns.            |
 | `plot_frontier.py`      | Sweep α and plot the efficient frontier (matplotlib optional dep).     |
+| `benchmark_tensor_factors.py` | Benchmark tensor primitives and a small factor subset on CPU/GPU. |
 | `ablation_bias.py`      | Backtest with / without limit-day masking; reproduces paper table 4.   |
 | `ablation_loss.py`      | Backtest with MSE vs `AdjMSELoss(γ=0.1)`; reproduces paper table 5.    |
