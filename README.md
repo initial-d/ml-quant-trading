@@ -31,6 +31,17 @@ A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
 
 ---
 
+## Why Star or Fork This Repository?
+
+- You want a runnable reference implementation for ML-enhanced multi-factor research.
+- You need a factor pipeline that handles masks, limit-up / limit-down events, halts, and cross-sectional operations.
+- You want to reproduce or extend the accompanying paper without rebuilding data, factor, model, portfolio, and backtest modules from scratch.
+- You are looking for a practical template for testing quantitative finance research code.
+
+If you build on this work, please consider citing the paper and opening issues or pull requests for reproducibility notes, new examples, or benchmark results.
+
+---
+
 ## Quick Start
 
 ```bash
@@ -198,6 +209,24 @@ See [`docs/reproducing_paper.md`](docs/reproducing_paper.md) for table-by-table 
 | §4.2 ML models | `models.nets`, `models.losses` | `test_losses` |
 | §5 Portfolio optimisation | `portfolio.markowitz` | `test_markowitz` |
 | §6 Backtest | `backtest.engine`, `backtest.metrics` | `test_metrics` |
+
+---
+
+## Roadmap
+
+- Add more public-data demos for users who do not have proprietary market data.
+- Expand Alpha101 formula coverage.
+- Add benchmark notebooks for factor computation speed and memory use.
+- Add example research reports for factor IC, turnover, drawdown, and portfolio attribution.
+- Improve documentation for live-to-research gaps such as slippage, survivorship bias, and transaction costs.
+
+## Contributing
+
+Contributions are welcome, especially docs, reproducibility notes, tests, data adapters, and small examples. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup and pull request guidance.
+
+## Disclaimer
+
+This repository is for research and engineering experimentation. It is not financial advice, investment advice, or a trading recommendation. Historical backtests and factor results do not guarantee future performance.
 
 ---
 
