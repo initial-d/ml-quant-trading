@@ -18,6 +18,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - First real-machine tensor benchmark report: <https://github.com/initial-d/ml-quant-trading/issues/15>
 - Public-data mini reproduction note: <https://github.com/initial-d/ml-quant-trading/issues/14>
 - First-run onboarding feedback: <https://github.com/initial-d/ml-quant-trading/issues/10>
+- Public-data mini reproduction doc: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_mini_reproduction.md>
 
 ## Current Positioning
 
@@ -41,7 +42,7 @@ Primary ask:
 ## Next Iterations
 
 - Add more real benchmark results to `docs/benchmark_board.md`.
-- Add a public-data mini reproduction note with a small ticker universe.
+- Add more public-data mini reproductions with larger or differently constructed universes.
 - Post the v0.1.0 release to one relevant community at a time with a customized note.
 - Set a GitHub social preview image through repository settings when browser upload access is available.
 - Convert useful discussion replies into docs, issues, or benchmark board entries.

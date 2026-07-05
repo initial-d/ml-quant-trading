@@ -97,6 +97,7 @@ Benchmark reports from different machines are welcome through the
 - [`docs/start_here.md`](docs/start_here.md) gives new users a fast path through the project.
 - [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
+- [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
 - [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
