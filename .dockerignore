@@ -1,0 +1,16 @@
+.git
+.github
+.mypy_cache
+.pytest_cache
+.ruff_cache
+__pycache__
+*.egg-info
+*.py[cod]
+artifacts
+build
+checkpoints
+data/interim
+data/processed
+dist
+legacy/__pycache__
+outputs

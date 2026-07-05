@@ -114,6 +114,16 @@ Benchmark reports from different machines are welcome through the
 
 ### Reproducible Dev Environment
 
+For a Docker-based CPU environment:
+
+```bash
+docker build -t ml-quant-trading .
+docker run --rm ml-quant-trading make test
+```
+
+See [`docs/docker.md`](docs/docker.md) for Docker benchmark, synthetic pipeline,
+and public-data validation commands.
+
 For VS Code or GitHub Codespaces, use the included Dev Container:
 
 ```text
@@ -131,6 +141,7 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/architecture.md`](docs/architecture.md) shows the factor → model → portfolio → backtest pipeline.
 - [`docs/reality_check.md`](docs/reality_check.md) explains what is real, what is still a smoke test, and what is not claimed.
 - [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
+- [`docs/docker.md`](docs/docker.md) documents the Docker and Dev Container setup.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
 - [`docs/public_data_validation.md`](docs/public_data_validation.md) documents larger public-data walk-forward validation runs.

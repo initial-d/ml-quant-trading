@@ -12,12 +12,22 @@ Thanks for your interest in improving `ml-quant-trading`. The project is intende
 
 ## Development Setup
 
+Local Python setup:
+
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
 pip install -e .[dev]
 pytest
 ruff check .
+```
+
+Docker setup:
+
+```bash
+docker build -t ml-quant-trading .
+docker run --rm ml-quant-trading make test
+docker run --rm ml-quant-trading make lint
 ```
 
 Optional extras:

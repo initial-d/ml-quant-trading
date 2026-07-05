@@ -10,6 +10,8 @@ easier to trust, and easier to extend.
 - Expand first-run onboarding based on new user feedback.
 - Add more examples for factor IC, attribution, and regime-specific diagnostics.
 - Add independent reproductions with explicit survivorship-bias and point-in-time data controls.
+- Evaluate a lightweight GitHub Project board for contributor tasks.
+- Evaluate automated pull-request review tooling after the first external PRs arrive.
 
 ## Completed Launch Items
 
@@ -19,6 +21,7 @@ easier to trust, and easier to extend.
 - Added a larger public-data validation harness with walk-forward baselines, costs, slippage, turnover, and drawdown.
 - Added `docs/reality_check.md` to separate engineering validation, smoke tests, data-gated paper reproduction, and production-readiness claims.
 - Added a Dev Container for reproducible contributor setup.
+- Added a root Dockerfile and Docker setup guide for CPU reproduction.
 - Added a Mermaid architecture diagram in `docs/architecture.md`.
 
 ## Contributor-Friendly Tasks
@@ -44,6 +47,7 @@ easier to trust, and easier to extend.
 - Add optional GPU benchmark reporting.
 - Add parquet-based data loading examples.
 - Add reproducible environment files for CUDA and CPU-only users.
+- Add a CUDA-specific Dockerfile or documented NVIDIA container workflow.
 - Add a minimal web dashboard for benchmark and backtest summaries.
 - Tighten linting gradually after a dedicated formatting pass.
 
