@@ -7,6 +7,7 @@
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
+[![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
@@ -22,6 +23,12 @@ A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
 **In one clone, you get:** a tensor factor engine, 213 factor dimensions, bias correction,
 ML baselines, Markowitz portfolio optimization, vectorized backtesting, synthetic/public-data
 demos, CI, tests, and benchmark tooling.
+
+**Current calls for contributors**
+
+- Try the [`v0.1.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0).
+- Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
+- Pick up a newcomer task: [first benchmark report](https://github.com/initial-d/ml-quant-trading/issues/15) or [public-data mini reproduction](https://github.com/initial-d/ml-quant-trading/issues/14).
 
 | Module | What it does |
 |--------|-------------|
