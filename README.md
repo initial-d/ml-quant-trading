@@ -10,7 +10,7 @@
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
-![ml-quant-trading social preview](docs/assets/social-preview.jpg)
+![ml-quant-trading social preview](docs/assets/readme-preview.png)
 
 ---
 
