@@ -6,6 +6,7 @@
 > [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp; Yimin Du, 2025
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
@@ -94,6 +95,8 @@ Benchmark reports from different machines are welcome through the
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [`docs/community_outreach.md`](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
+- [`v0.1.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0) is the first public research baseline release.
+- [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
 
 ---
 
