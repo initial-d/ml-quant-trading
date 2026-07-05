@@ -186,13 +186,37 @@ command used.
 ## Sharing A Community Report
 
 1. Run the validation command.
-2. Open `artifacts/public_data_validation/submission.md`.
-3. Paste it into the `Public-data validation report` issue template.
-4. Attach or paste `metadata.json` when the run uses a custom universe.
+2. Audit `artifacts/public_data_validation/summary.json`.
+3. Open `artifacts/public_data_validation/submission.md`.
+4. Paste it into the `Public-data validation report` issue template.
+5. Attach or paste `metadata.json` when the run uses a custom universe.
 
 The generated `summary.json` is intended for future aggregation scripts and
 leaderboards. It includes metadata, data coverage, and strategy metrics in a
 machine-readable format.
+
+## Auditing Reports
+
+Before sharing a validation run, audit the generated `summary.json`:
+
+```bash
+python scripts/audit_validation_report.py \
+  artifacts/public_data_validation/summary.json \
+  --output-md artifacts/public_data_validation/audit.md \
+  --output-json artifacts/public_data_validation/audit.json
+```
+
+The audit checks for missing metadata, missing result rows, low data coverage,
+tickers with no data, missing equal-weight baseline, non-finite metrics, negative
+cost settings, unusual turnover/drawdown, and non-positive final equity. It is a
+quality gate for reproducibility reports, not a judgement about whether a
+strategy is good.
+
+For the default artifact path, the Make target is:
+
+```bash
+make audit-validation
+```
 
 ## Aggregating Reports
 

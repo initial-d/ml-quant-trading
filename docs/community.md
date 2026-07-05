@@ -14,6 +14,10 @@ without changing code.
 Add a notebook or docs page that uses a public data source. Keep the universe small, state
 caveats clearly, and avoid performance hype.
 
+For validation reports, run `scripts/audit_validation_report.py` before posting.
+This keeps community results comparable and catches missing metadata, weak data
+coverage, or malformed metric rows before they become maintainer work.
+
 ### Factor Documentation
 
 Improve explanations for factor families, assumptions, masks, and edge cases.
