@@ -102,6 +102,7 @@ Benchmark reports from different machines are welcome through the
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [`docs/community_outreach.md`](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
+- [`docs/visibility_status.md`](docs/visibility_status.md) tracks live launch links, contributor calls, and next outreach steps.
 - [`v0.1.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0) is the first public research baseline release.
 - [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
 
