@@ -27,8 +27,9 @@ demos, CI, tests, and benchmark tooling.
 **Current calls for contributors**
 
 - Try the [`v0.1.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0).
+- Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
-- Pick up a newcomer task: [public-data mini reproduction](https://github.com/initial-d/ml-quant-trading/issues/14) or [first-run onboarding feedback](https://github.com/initial-d/ml-quant-trading/issues/10).
+- Pick up a newcomer task: [first-run onboarding feedback](https://github.com/initial-d/ml-quant-trading/issues/10) or [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7).
 
 | Module | What it does |
 |--------|-------------|
