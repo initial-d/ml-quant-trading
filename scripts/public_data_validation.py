@@ -80,6 +80,7 @@ class ValidationConfig:
     device: str
     costs_bps: float
     slippage_bps: float
+    cost_grid_bps: tuple[float, ...]
     train_window: int
     test_window: int
     step: int
@@ -107,6 +108,24 @@ def _parse_models(value: str) -> tuple[str, ...]:
     if unknown:
         raise click.BadParameter(f"unknown model(s): {', '.join(unknown)}")
     return requested
+
+
+def _parse_cost_grid(value: str) -> tuple[float, ...]:
+    if not value.strip():
+        return ()
+    costs = []
+    for raw in value.split(","):
+        item = raw.strip()
+        if not item:
+            continue
+        try:
+            cost = float(item)
+        except ValueError as exc:
+            raise click.BadParameter(f"invalid cost value {item!r}") from exc
+        if cost < 0:
+            raise click.BadParameter("cost grid values must be non-negative")
+        costs.append(cost)
+    return tuple(dict.fromkeys(costs))
 
 
 def _select_tickers(preset: str, tickers: str, max_tickers: int) -> tuple[str, ...]:
@@ -301,6 +320,7 @@ def _summarise_strategy(
     result = run_backtest(weights, returns, costs_bps=effective_costs_bps, benchmark=benchmark)
     row: dict[str, float | int | str] = {"strategy": name}
     row.update(result.summary())
+    row["effective_costs_bps"] = effective_costs_bps
     row["gross_ann_return"] = metrics.annualised_return(result.gross_returns)
     row["gross_sharpe"] = metrics.sharpe_ratio(result.gross_returns)
     row["final_equity"] = float(result.cumulative_equity[-1]) if result.cumulative_equity.size else 1.0
@@ -345,6 +365,7 @@ def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
         "costs_bps": cfg.costs_bps,
         "slippage_bps": cfg.slippage_bps,
         "effective_costs_bps": cfg.costs_bps + cfg.slippage_bps,
+        "cost_grid_bps": list(cfg.cost_grid_bps),
         "train_window": cfg.train_window,
         "test_window": cfg.test_window,
         "step": cfg.step,
@@ -438,7 +459,35 @@ def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
         )
         for name, weights in strategies.items()
     ]
-    _write_outputs(cfg, panel, rows)
+    cost_sensitivity_rows = _cost_sensitivity_rows(strategies, returns, cfg.cost_grid_bps)
+    _write_outputs(cfg, panel, rows, cost_sensitivity_rows)
+    return rows
+
+
+def _cost_sensitivity_rows(
+    strategies: dict[str, np.ndarray],
+    returns: np.ndarray,
+    cost_grid_bps: Sequence[float],
+) -> list[dict[str, float | int | str]]:
+    rows: list[dict[str, float | int | str]] = []
+    for effective_costs_bps in cost_grid_bps:
+        benchmark_returns = None
+        if "equal_weight" in strategies:
+            benchmark_returns = run_backtest(
+                strategies["equal_weight"],
+                returns,
+                costs_bps=effective_costs_bps,
+            ).portfolio_returns
+        for name, weights in strategies.items():
+            row = _summarise_strategy(
+                name,
+                weights,
+                returns,
+                effective_costs_bps=effective_costs_bps,
+                benchmark=benchmark_returns if name != "equal_weight" else None,
+            )
+            row["cost_scenario"] = f"{effective_costs_bps:.2f}_bps"
+            rows.append(row)
     return rows
 
 
@@ -468,6 +517,27 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
     lines = [
         "| " + " | ".join(columns) + " |",
         "| " + " | ".join(["---"] + ["---:"] * (len(columns) - 1)) + " |",
+    ]
+    for row in rows:
+        lines.append("| " + " | ".join(_format_float(row.get(c, "")) for c in columns) + " |")
+    return "\n".join(lines)
+
+
+def _cost_sensitivity_table(rows: Sequence[dict[str, float | int | str]]) -> str:
+    columns = (
+        "cost_scenario",
+        "strategy",
+        "effective_costs_bps",
+        "ann_return",
+        "sharpe",
+        "max_dd",
+        "turnover",
+        "cost_drag",
+        "final_equity",
+    )
+    lines = [
+        "| " + " | ".join(columns) + " |",
+        "| " + " | ".join(["---"] + ["---"] + ["---:"] * (len(columns) - 2)) + " |",
     ]
     for row in rows:
         lines.append("| " + " | ".join(_format_float(row.get(c, "")) for c in columns) + " |")
@@ -519,21 +589,36 @@ def _submission_body(metadata: dict[str, object], rows: Sequence[dict[str, float
     )
 
 
-def _write_outputs(cfg: ValidationConfig, panel: Panel, rows: Sequence[dict[str, float | int | str]]) -> None:
-    cfg.output_dir.mkdir(parents=True, exist_ok=True)
-    metadata = _metadata(cfg, panel)
+def _write_csv(path: Path, rows: Sequence[dict[str, float | int | str]]) -> None:
     columns = sorted({key for row in rows for key in row})
-    with (cfg.output_dir / "summary.csv").open("w", newline="") as f:
+    with path.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=columns)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _write_outputs(
+    cfg: ValidationConfig,
+    panel: Panel,
+    rows: Sequence[dict[str, float | int | str]],
+    cost_sensitivity_rows: Sequence[dict[str, float | int | str]],
+) -> None:
+    cfg.output_dir.mkdir(parents=True, exist_ok=True)
+    metadata = _metadata(cfg, panel)
+    _write_csv(cfg.output_dir / "summary.csv", rows)
 
     with (cfg.output_dir / "metadata.json").open("w") as f:
         json.dump(_json_safe(metadata), f, indent=2, sort_keys=True)
 
     with (cfg.output_dir / "summary.json").open("w") as f:
         json.dump(
-            _json_safe({"metadata": metadata, "results": list(rows)}),
+            _json_safe(
+                {
+                    "metadata": metadata,
+                    "results": list(rows),
+                    "cost_sensitivity": list(cost_sensitivity_rows),
+                }
+            ),
             f,
             indent=2,
             sort_keys=True,
@@ -559,7 +644,21 @@ def _write_outputs(cfg: ValidationConfig, panel: Panel, rows: Sequence[dict[str,
         f.write(f"| Platform | {platform.platform()} |\n")
         f.write(f"| PyTorch | {torch.__version__} |\n\n")
         f.write(_markdown_table(rows))
+        if cost_sensitivity_rows:
+            f.write("\n\n## Cost Sensitivity\n\n")
+            f.write("The same strategy weights are re-scored under alternative effective cost assumptions.\n\n")
+            f.write(_cost_sensitivity_table(cost_sensitivity_rows))
         f.write("\n")
+
+    if cost_sensitivity_rows:
+        _write_csv(cfg.output_dir / "cost_sensitivity.csv", cost_sensitivity_rows)
+        with (cfg.output_dir / "cost_sensitivity.json").open("w") as f:
+            json.dump(_json_safe(list(cost_sensitivity_rows)), f, indent=2, sort_keys=True)
+        with (cfg.output_dir / "cost_sensitivity.md").open("w") as f:
+            f.write("# Public-Data Cost Sensitivity\n\n")
+            f.write("The same strategy weights are re-scored under alternative effective cost assumptions.\n\n")
+            f.write(_cost_sensitivity_table(cost_sensitivity_rows))
+            f.write("\n")
 
 
 @click.command()
@@ -572,6 +671,7 @@ def _write_outputs(cfg: ValidationConfig, panel: Panel, rows: Sequence[dict[str,
 @click.option("--device", default="cpu", show_default=True)
 @click.option("--costs-bps", default=5.0, show_default=True, type=float)
 @click.option("--slippage-bps", default=2.0, show_default=True, type=float)
+@click.option("--cost-grid-bps", default="", help="Comma-separated effective cost scenarios for sensitivity reports.")
 @click.option("--train-window", default=504, show_default=True, type=int)
 @click.option("--test-window", default=63, show_default=True, type=int)
 @click.option("--step", default=63, show_default=True, type=int)
@@ -594,6 +694,7 @@ def main(
     device: str,
     costs_bps: float,
     slippage_bps: float,
+    cost_grid_bps: str,
     train_window: int,
     test_window: int,
     step: int,
@@ -619,6 +720,7 @@ def main(
         device=device,
         costs_bps=costs_bps,
         slippage_bps=slippage_bps,
+        cost_grid_bps=_parse_cost_grid(cost_grid_bps),
         train_window=train_window,
         test_window=test_window,
         step=step,
@@ -640,6 +742,8 @@ def main(
     click.echo("")
     click.echo(f"Wrote reports to {cfg.output_dir}")
     click.echo("Key files: summary.md, summary.csv, summary.json, metadata.json, submission.md")
+    if cfg.cost_grid_bps:
+        click.echo("Cost sensitivity files: cost_sensitivity.md, cost_sensitivity.csv, cost_sensitivity.json")
     click.echo("Interpret this as validation evidence, not as a deployable trading result.")
 
 

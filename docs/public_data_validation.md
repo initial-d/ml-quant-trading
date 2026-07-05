@@ -160,6 +160,29 @@ The effective cost is:
 effective_cost_bps = costs_bps + slippage_bps
 ```
 
+To check whether the same strategies are fragile to different effective cost
+assumptions, add a cost grid:
+
+```bash
+python scripts/public_data_validation.py \
+  --source yfinance \
+  --preset us-large-100 \
+  --cost-grid-bps 0,7,15,30
+```
+
+This does not retrain the ML models or reselect parameters. It re-scores the
+same generated portfolio weights under each effective cost scenario and writes:
+
+```text
+artifacts/public_data_validation/cost_sensitivity.md
+artifacts/public_data_validation/cost_sensitivity.csv
+artifacts/public_data_validation/cost_sensitivity.json
+```
+
+The same rows are also embedded in `summary.json` under `cost_sensitivity` so
+maintainers can audit or aggregate them later. Use this table to spot strategies
+whose net results depend on one narrow cost assumption.
+
 This is intentionally simple. It is useful for sensitivity checks, but it is not
 a substitute for a broker-, exchange-, order-size-, and liquidity-aware execution
 model.

@@ -80,8 +80,8 @@ You can run an end-to-end demo of this project instantly in Google Colab without
 For a lightweight public-data walkthrough, open [`notebooks/public_factor_ic.ipynb`](notebooks/public_factor_ic.ipynb). It downloads a small yfinance universe, computes a factor subset, and plots one-day forward rank IC. If public data download fails, the notebook falls back to the synthetic panel so the workflow remains runnable.
 
 For a larger public-data validation run with walk-forward baselines, costs,
-slippage, turnover, drawdown, and equal-weight / momentum / Alpha101 / MLP /
-Transformer comparisons:
+slippage, cost-sensitivity reports, turnover, drawdown, and equal-weight /
+momentum / Alpha101 / MLP / Transformer comparisons:
 
 ```bash
 python scripts/public_data_validation.py \
@@ -93,9 +93,10 @@ python scripts/public_data_validation.py \
 See [`docs/public_data_validation.md`](docs/public_data_validation.md). Treat
 these runs as validation diagnostics, not trading recommendations. The script
 writes `summary.md`, `summary.csv`, `summary.json`, `metadata.json`, and a
-copy-ready `submission.md` for community reports. Maintainers can aggregate
-multiple `summary.json` files with `scripts/aggregate_validation_reports.py` and
-audit individual reports with `scripts/audit_validation_report.py`.
+copy-ready `submission.md` for community reports. Add `--cost-grid-bps 0,7,15,30`
+to generate `cost_sensitivity.*` files. Maintainers can aggregate multiple
+`summary.json` files with `scripts/aggregate_validation_reports.py` and audit
+individual reports with `scripts/audit_validation_report.py`.
 
 ### Tensor Factor Benchmark
 

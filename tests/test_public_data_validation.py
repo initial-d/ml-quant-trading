@@ -15,6 +15,7 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
         device="cpu",
         costs_bps=5.0,
         slippage_bps=2.0,
+        cost_grid_bps=(0.0, 7.0, 15.0),
         train_window=40,
         test_window=20,
         step=20,
@@ -38,10 +39,18 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
     assert (tmp_path / "summary.json").exists()
     assert (tmp_path / "metadata.json").exists()
     assert (tmp_path / "submission.md").exists()
+    assert (tmp_path / "cost_sensitivity.md").exists()
+    assert (tmp_path / "cost_sensitivity.csv").exists()
+    assert (tmp_path / "cost_sensitivity.json").exists()
 
     metadata = json.loads((tmp_path / "metadata.json").read_text())
     assert metadata["panel"]["n_stocks"] == 12
+    assert metadata["cost_grid_bps"] == [0.0, 7.0, 15.0]
     assert "tradable_ratio" in metadata["panel"]
+
+    summary = json.loads((tmp_path / "summary.json").read_text())
+    assert len(summary["cost_sensitivity"]) == 9
+    assert summary["cost_sensitivity"][0]["effective_costs_bps"] == 0.0
 
     submission = (tmp_path / "submission.md").read_text()
     assert "Public-data validation report" in submission

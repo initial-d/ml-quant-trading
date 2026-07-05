@@ -10,7 +10,7 @@ ablations referenced from `docs/reproducing_paper.md`.
 | `eval_factor_ic.py`     | Compute IC / RankIC of every alpha against forward returns.            |
 | `plot_frontier.py`      | Sweep α and plot the efficient frontier (matplotlib optional dep).     |
 | `benchmark_tensor_factors.py` | Benchmark tensor primitives and a small factor subset on CPU/GPU. |
-| `public_data_validation.py` | Run public-data walk-forward validation with baseline comparisons. |
+| `public_data_validation.py` | Run public-data walk-forward validation with baseline and cost-sensitivity comparisons. |
 | `audit_validation_report.py` | Audit validation `summary.json` files for reproducibility quality. |
 | `aggregate_validation_reports.py` | Aggregate validation `summary.json` files into Markdown/CSV leaderboards. |
 | `ablation_bias.py`      | Backtest with / without limit-day masking; reproduces paper table 4.   |
