@@ -41,7 +41,7 @@ def main(config_path: str, lookback: int, save: str | None) -> None:
         try:
             import matplotlib.pyplot as plt
         except ImportError:
-            raise SystemExit("install matplotlib to use --save")
+            raise SystemExit("install matplotlib to use --save") from None
         xs = [p.expected_variance for p in points]
         ys = [p.expected_return  for p in points]
         plt.figure()

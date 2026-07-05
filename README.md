@@ -30,6 +30,7 @@ demos, CI, tests, and benchmark tooling.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
 - Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or an [ETF/larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16).
+- Read the [Reality Check and Validation Status](docs/reality_check.md) before interpreting any backtest as evidence of deployable alpha.
 
 | Module | What it does |
 |--------|-------------|
@@ -78,6 +79,20 @@ You can run an end-to-end demo of this project instantly in Google Colab without
 
 For a lightweight public-data walkthrough, open [`notebooks/public_factor_ic.ipynb`](notebooks/public_factor_ic.ipynb). It downloads a small yfinance universe, computes a factor subset, and plots one-day forward rank IC. If public data download fails, the notebook falls back to the synthetic panel so the workflow remains runnable.
 
+For a larger public-data validation run with walk-forward baselines, costs,
+slippage, turnover, drawdown, and equal-weight / momentum / Alpha101 / MLP /
+Transformer comparisons:
+
+```bash
+python scripts/public_data_validation.py \
+  --source yfinance \
+  --preset us-large-100 \
+  --max-tickers 100
+```
+
+See [`docs/public_data_validation.md`](docs/public_data_validation.md). Treat
+these runs as validation diagnostics, not trading recommendations.
+
 ### Tensor Factor Benchmark
 
 To benchmark core tensor primitives and a small factor subset on CPU/GPU, run:
@@ -107,9 +122,11 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
   recommended repository topics, and social preview guidance.
 - [`docs/start_here.md`](docs/start_here.md) gives new users a fast path through the project.
 - [`docs/architecture.md`](docs/architecture.md) shows the factor → model → portfolio → backtest pipeline.
+- [`docs/reality_check.md`](docs/reality_check.md) explains what is real, what is still a smoke test, and what is not claimed.
 - [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
+- [`docs/public_data_validation.md`](docs/public_data_validation.md) documents larger public-data walk-forward validation runs.
 - [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.

@@ -3,6 +3,10 @@
 This page tracks benchmark reports shared by users. Submit results with the
 `Benchmark result` issue template.
 
+For trading-workflow validation rather than tensor throughput, use
+[`public_data_validation.md`](public_data_validation.md). That path reports
+walk-forward baselines, transaction costs, slippage, turnover, and drawdown.
+
 ## How to Submit
 
 ```bash

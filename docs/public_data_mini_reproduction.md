@@ -99,4 +99,4 @@ downloaded ticker data, missing values, and dependency versions.
 - Repeat the workflow on ETFs or sector-balanced universes.
 - Add a larger public universe with clear membership rules.
 - Compare US equities with A-share symbols supported by public providers.
-- Turn this IC diagnostic into a small portfolio backtest with explicit transaction costs and leakage controls.
+- Run the larger walk-forward validation harness in [`public_data_validation.md`](public_data_validation.md), which includes portfolio construction, transaction costs, slippage, turnover, drawdown, and baseline comparisons.

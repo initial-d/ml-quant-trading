@@ -7,7 +7,7 @@ PYTEST  ?= $(PY) -m pytest
 RUFF    ?= $(PY) -m ruff
 CONFIG  ?= configs/small.yaml
 
-.PHONY: help install install-dev lint format test cov benchmark \
+.PHONY: help install install-dev lint format test cov benchmark public-validation \
         gen-data features train portfolio backtest \
         paper clean clean-all
 
@@ -20,6 +20,7 @@ help:
 	@echo "  test          pytest"
 	@echo "  cov           pytest with coverage"
 	@echo "  benchmark     benchmark tensor factor primitives"
+	@echo "  public-validation  run public-data validation benchmark"
 	@echo "  gen-data      synthesise GBM-based OCHLV panel  (CONFIG=$(CONFIG))"
 	@echo "  features      compute factor matrix"
 	@echo "  train         train ML model"
@@ -35,7 +36,7 @@ install-dev:
 	$(PIP) install -e .[dev]
 
 lint:
-	$(RUFF) check src tests
+	$(RUFF) check src tests scripts
 
 format:
 	$(RUFF) format src tests
@@ -48,6 +49,9 @@ cov:
 
 benchmark:
 	$(PY) scripts/benchmark_tensor_factors.py --device auto
+
+public-validation:
+	$(PY) scripts/public_data_validation.py --source synthetic --models equal_weight,momentum_20,alpha101_mean
 
 gen-data:
 	$(PY) -m mlquant.cli.main gen-data --config $(CONFIG)

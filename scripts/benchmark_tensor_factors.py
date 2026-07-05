@@ -114,14 +114,17 @@ def main(device: str, n_dates: int, n_stocks: int, window: int, repeat: int, war
         factor_subset = ("best_001", "best_002", "original_001", "stock_001", "add_015", "old_042")
 
         cases = [
-            BenchCase("cs_rank(close)", lambda: cs_rank(panel.close, panel.mask)),
-            BenchCase(f"ts_mean(close,{window})", lambda: ts_mean(panel.close, panel.mask, window)),
-            BenchCase(f"ts_rank(close,{window})", lambda: ts_rank(panel.close, panel.mask, window)),
-            BenchCase(f"ts_corr(close,returns,{window})", lambda: ts_corr(panel.close, returns, panel.mask, window)),
-            BenchCase("ewma(close,0.05)", lambda: ewma(panel.close, panel.mask, 0.05)),
+            BenchCase("cs_rank(close)", lambda panel=panel: cs_rank(panel.close, panel.mask)),
+            BenchCase(f"ts_mean(close,{window})", lambda panel=panel: ts_mean(panel.close, panel.mask, window)),
+            BenchCase(f"ts_rank(close,{window})", lambda panel=panel: ts_rank(panel.close, panel.mask, window)),
+            BenchCase(
+                f"ts_corr(close,returns,{window})",
+                lambda panel=panel, returns=returns: ts_corr(panel.close, returns, panel.mask, window),
+            ),
+            BenchCase("ewma(close,0.05)", lambda panel=panel: ewma(panel.close, panel.mask, 0.05)),
             BenchCase(
                 "compute_legacy_set(6 factors)",
-                lambda: compute_legacy_set(panel, names=factor_subset),
+                lambda panel=panel, factor_subset=factor_subset: compute_legacy_set(panel, names=factor_subset),
             ),
         ]
 

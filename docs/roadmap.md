@@ -5,17 +5,19 @@ easier to trust, and easier to extend.
 
 ## Near Term
 
-- Extend public-data case studies beyond the first yfinance mini reproduction.
+- Collect larger public-data validation reports using `scripts/public_data_validation.py`.
 - Collect benchmark results from different CPUs, GPUs, CUDA versions, and PyTorch versions.
 - Expand first-run onboarding based on new user feedback.
-- Add more examples for factor IC, turnover, drawdown, and attribution.
-- Document assumptions around transaction costs, survivorship bias, and slippage.
+- Add more examples for factor IC, attribution, and regime-specific diagnostics.
+- Add independent reproductions with explicit survivorship-bias and point-in-time data controls.
 
 ## Completed Launch Items
 
 - Published `v0.1.0` as the first public research baseline.
 - Added a maintainer CPU benchmark baseline to `docs/benchmark_board.md`.
 - Added a yfinance public-data mini reproduction to `docs/public_data_mini_reproduction.md`.
+- Added a larger public-data validation harness with walk-forward baselines, costs, slippage, turnover, and drawdown.
+- Added `docs/reality_check.md` to separate engineering validation, smoke tests, data-gated paper reproduction, and production-readiness claims.
 - Added a Dev Container for reproducible contributor setup.
 - Added a Mermaid architecture diagram in `docs/architecture.md`.
 
@@ -25,6 +27,7 @@ easier to trust, and easier to extend.
 - Add tests for neutralization and backtest edge cases.
 - Add a small example using a custom CSV data source.
 - Add benchmark results through the benchmark issue template.
+- Run `scripts/public_data_validation.py` on a new public-data universe and report the exact command.
 - Improve docstrings for factor families.
 - Add one new ETF or larger-universe public-data example with a clearly documented universe.
 
