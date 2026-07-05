@@ -13,10 +13,13 @@ Examples
 from __future__ import annotations
 
 import csv
+import json
 import math
 import platform
 import random
+import sys
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -89,6 +92,7 @@ class ValidationConfig:
     output_dir: Path
     synthetic_dates: int
     synthetic_stocks: int
+    command: tuple[str, ...] = ()
 
 
 def _seed_everything(seed: int) -> None:
@@ -303,6 +307,78 @@ def _summarise_strategy(
     return row
 
 
+def _panel_coverage(panel: Panel) -> dict[str, object]:
+    mask = _to_numpy(panel.mask).astype(bool)
+    per_stock_count = mask.sum(axis=0)
+    no_data = [str(stock) for stock, count in zip(panel.stocks, per_stock_count) if int(count) == 0]
+    partial_data = [
+        str(stock)
+        for stock, count in zip(panel.stocks, per_stock_count)
+        if 0 < int(count) < panel.n_dates
+    ]
+    return {
+        "n_dates": panel.n_dates,
+        "n_stocks": panel.n_stocks,
+        "date_start": str(panel.dates[0]),
+        "date_end": str(panel.dates[-1]),
+        "tradable_cells": int(mask.sum()),
+        "total_cells": int(mask.size),
+        "tradable_ratio": float(mask.mean()) if mask.size else 0.0,
+        "stocks_with_any_data": int((per_stock_count > 0).sum()),
+        "stocks_with_no_data": no_data,
+        "stocks_with_partial_data_count": len(partial_data),
+        "stocks_with_partial_data_sample": partial_data[:20],
+    }
+
+
+def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
+    return {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "command": " ".join(cfg.command),
+        "source": cfg.source,
+        "preset": cfg.preset,
+        "tickers": list(cfg.tickers),
+        "start": cfg.start,
+        "end": cfg.end,
+        "max_tickers": cfg.max_tickers,
+        "models": list(cfg.models),
+        "costs_bps": cfg.costs_bps,
+        "slippage_bps": cfg.slippage_bps,
+        "effective_costs_bps": cfg.costs_bps + cfg.slippage_bps,
+        "train_window": cfg.train_window,
+        "test_window": cfg.test_window,
+        "step": cfg.step,
+        "top_quantile": cfg.top_quantile,
+        "seed": cfg.seed,
+        "epochs": cfg.epochs,
+        "batch_size": cfg.batch_size,
+        "hidden": cfg.hidden,
+        "synthetic_dates": cfg.synthetic_dates,
+        "synthetic_stocks": cfg.synthetic_stocks,
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "pytorch": torch.__version__,
+        "cuda_available": bool(torch.cuda.is_available()),
+        "cuda_version": torch.version.cuda or "unavailable",
+        "cuda_device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none",
+        "panel": _panel_coverage(panel),
+    }
+
+
+def _json_safe(value: object) -> object:
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, np.generic):
+        return _json_safe(value.item())
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            return None
+        return value
+    return value
+
+
 def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
     _seed_everything(cfg.seed)
     panel = load_validation_panel(cfg)
@@ -398,13 +474,74 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
     return "\n".join(lines)
 
 
+def _submission_body(metadata: dict[str, object], rows: Sequence[dict[str, float | int | str]]) -> str:
+    panel = metadata["panel"]
+    assert isinstance(panel, dict)
+    command = metadata.get("command") or "python scripts/public_data_validation.py ..."
+    return "\n".join(
+        [
+            "## Public-data validation report",
+            "",
+            "### Command",
+            "",
+            "```bash",
+            str(command),
+            "```",
+            "",
+            "### Environment",
+            "",
+            f"- Python: {metadata['python']}",
+            f"- Platform: {metadata['platform']}",
+            f"- PyTorch: {metadata['pytorch']}",
+            f"- CUDA available: {metadata['cuda_available']}",
+            f"- CUDA version: {metadata['cuda_version']}",
+            f"- CUDA device: {metadata['cuda_device']}",
+            "",
+            "### Data Coverage",
+            "",
+            f"- Source: {metadata['source']}",
+            f"- Preset: {metadata['preset']}",
+            f"- Dates x stocks: {panel['n_dates']} x {panel['n_stocks']}",
+            f"- Date range: {panel['date_start']} to {panel['date_end']}",
+            f"- Tradable ratio: {float(panel['tradable_ratio']):.4f}",
+            f"- Stocks with no data: {panel['stocks_with_no_data']}",
+            f"- Partial-data stock count: {panel['stocks_with_partial_data_count']}",
+            "",
+            "### Results",
+            "",
+            _markdown_table(rows),
+            "",
+            "### Interpretation Notes",
+            "",
+            "- This is a validation diagnostic, not a trading recommendation.",
+            "- Please mention any data-provider warnings, failed tickers, rate limits, or local changes.",
+        ]
+    )
+
+
 def _write_outputs(cfg: ValidationConfig, panel: Panel, rows: Sequence[dict[str, float | int | str]]) -> None:
     cfg.output_dir.mkdir(parents=True, exist_ok=True)
+    metadata = _metadata(cfg, panel)
     columns = sorted({key for row in rows for key in row})
     with (cfg.output_dir / "summary.csv").open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=columns)
         writer.writeheader()
         writer.writerows(rows)
+
+    with (cfg.output_dir / "metadata.json").open("w") as f:
+        json.dump(_json_safe(metadata), f, indent=2, sort_keys=True)
+
+    with (cfg.output_dir / "summary.json").open("w") as f:
+        json.dump(
+            _json_safe({"metadata": metadata, "results": list(rows)}),
+            f,
+            indent=2,
+            sort_keys=True,
+        )
+
+    with (cfg.output_dir / "submission.md").open("w") as f:
+        f.write(_submission_body(metadata, rows))
+        f.write("\n")
 
     with (cfg.output_dir / "summary.md").open("w") as f:
         f.write("# Public-Data Validation Summary\n\n")
@@ -414,6 +551,8 @@ def _write_outputs(cfg: ValidationConfig, panel: Panel, rows: Sequence[dict[str,
         f.write(f"| Preset | {cfg.preset} |\n")
         f.write(f"| Dates x stocks | {panel.n_dates} x {panel.n_stocks} |\n")
         f.write(f"| Date range | {panel.dates[0]} to {panel.dates[-1]} |\n")
+        f.write(f"| Tradable ratio | {metadata['panel']['tradable_ratio']:.4f} |\n")
+        f.write(f"| Stocks with no data | {metadata['panel']['stocks_with_no_data']} |\n")
         f.write(f"| Costs + slippage | {cfg.costs_bps:.2f} + {cfg.slippage_bps:.2f} bps |\n")
         f.write(f"| Walk-forward train/test/step | {cfg.train_window}/{cfg.test_window}/{cfg.step} days |\n")
         f.write(f"| Python | {platform.python_version()} |\n")
@@ -492,13 +631,15 @@ def main(
         output_dir=output_dir,
         synthetic_dates=synthetic_dates,
         synthetic_stocks=synthetic_stocks,
+        command=tuple(sys.argv),
     )
 
     rows = run_validation(cfg)
     click.echo("")
     click.echo(_markdown_table(rows))
     click.echo("")
-    click.echo(f"Wrote {cfg.output_dir / 'summary.md'} and {cfg.output_dir / 'summary.csv'}")
+    click.echo(f"Wrote reports to {cfg.output_dir}")
+    click.echo("Key files: summary.md, summary.csv, summary.json, metadata.json, submission.md")
     click.echo("Interpret this as validation evidence, not as a deployable trading result.")
 
 

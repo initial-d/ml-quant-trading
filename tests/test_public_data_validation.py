@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from scripts.public_data_validation import ValidationConfig, run_validation
@@ -34,3 +35,14 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
     assert all("sharpe" in row for row in rows)
     assert (tmp_path / "summary.md").exists()
     assert (tmp_path / "summary.csv").exists()
+    assert (tmp_path / "summary.json").exists()
+    assert (tmp_path / "metadata.json").exists()
+    assert (tmp_path / "submission.md").exists()
+
+    metadata = json.loads((tmp_path / "metadata.json").read_text())
+    assert metadata["panel"]["n_stocks"] == 12
+    assert "tradable_ratio" in metadata["panel"]
+
+    submission = (tmp_path / "submission.md").read_text()
+    assert "Public-data validation report" in submission
+    assert "Data Coverage" in submission

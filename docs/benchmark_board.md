@@ -6,6 +6,8 @@ This page tracks benchmark reports shared by users. Submit results with the
 For trading-workflow validation rather than tensor throughput, use
 [`public_data_validation.md`](public_data_validation.md). That path reports
 walk-forward baselines, transaction costs, slippage, turnover, and drawdown.
+It also writes a copy-ready `submission.md` and machine-readable JSON files for
+community reports.
 
 ## How to Submit
 

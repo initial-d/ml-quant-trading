@@ -91,7 +91,9 @@ python scripts/public_data_validation.py \
 ```
 
 See [`docs/public_data_validation.md`](docs/public_data_validation.md). Treat
-these runs as validation diagnostics, not trading recommendations.
+these runs as validation diagnostics, not trading recommendations. The script
+writes `summary.md`, `summary.csv`, `summary.json`, `metadata.json`, and a
+copy-ready `submission.md` for community reports.
 
 ### Tensor Factor Benchmark
 

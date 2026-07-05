@@ -1,0 +1,78 @@
+name: Public-data validation report
+description: Share walk-forward public-data validation results.
+title: "[validation] "
+labels: ["public data", "benchmark", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing a public-data validation result. The most useful
+        reports include the exact command, generated metadata, and the Markdown
+        table from `artifacts/public_data_validation/submission.md`.
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      description: The commit used for the validation run.
+      placeholder: 9cc65cd
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Paste the exact command you ran.
+      render: bash
+      placeholder: python scripts/public_data_validation.py --source yfinance --preset us-large-100 --max-tickers 100
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Python, PyTorch, CPU, GPU, CUDA availability, CUDA version, and data provider.
+      placeholder: |
+        OS:
+        Python:
+        PyTorch:
+        CPU:
+        GPU:
+        CUDA available:
+        CUDA version:
+        Data provider:
+    validations:
+      required: true
+
+  - type: textarea
+    id: coverage
+    attributes:
+      label: Data coverage
+      description: Paste the panel coverage block from `submission.md` or summarize the universe, date range, tradable ratio, and failed tickers.
+      placeholder: |
+        Universe:
+        Date range:
+        Dates x stocks:
+        Tradable ratio:
+        Stocks with no data:
+    validations:
+      required: true
+
+  - type: textarea
+    id: results
+    attributes:
+      label: Result table
+      description: Paste the Markdown table from `summary.md` or `submission.md`.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Interpretation notes
+      description: Mention data-provider warnings, rate limits, failed tickers, local code changes, or why the universe is useful.
+    validations:
+      required: false

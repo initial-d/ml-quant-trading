@@ -32,7 +32,14 @@ The command writes:
 ```text
 artifacts/public_data_validation/summary.md
 artifacts/public_data_validation/summary.csv
+artifacts/public_data_validation/summary.json
+artifacts/public_data_validation/metadata.json
+artifacts/public_data_validation/submission.md
 ```
+
+Use `submission.md` when opening a GitHub issue. It contains the command,
+environment, data coverage, result table, and interpretation notes in one
+copy-ready report.
 
 ## Larger Public-Data Run
 
@@ -175,3 +182,14 @@ It still should not be read as proof of deployable alpha:
 The most valuable community contributions are additional benchmark reports with
 clear universe definitions, dependency versions, hardware details, and the exact
 command used.
+
+## Sharing A Community Report
+
+1. Run the validation command.
+2. Open `artifacts/public_data_validation/submission.md`.
+3. Paste it into the `Public-data validation report` issue template.
+4. Attach or paste `metadata.json` when the run uses a custom universe.
+
+The generated `summary.json` is intended for future aggregation scripts and
+leaderboards. It includes metadata, data coverage, and strategy metrics in a
+machine-readable format.
