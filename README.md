@@ -93,7 +93,8 @@ python scripts/public_data_validation.py \
 See [`docs/public_data_validation.md`](docs/public_data_validation.md). Treat
 these runs as validation diagnostics, not trading recommendations. The script
 writes `summary.md`, `summary.csv`, `summary.json`, `metadata.json`, and a
-copy-ready `submission.md` for community reports.
+copy-ready `submission.md` for community reports. Maintainers can aggregate
+multiple `summary.json` files with `scripts/aggregate_validation_reports.py`.
 
 ### Tensor Factor Benchmark
 

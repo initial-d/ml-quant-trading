@@ -193,3 +193,24 @@ command used.
 The generated `summary.json` is intended for future aggregation scripts and
 leaderboards. It includes metadata, data coverage, and strategy metrics in a
 machine-readable format.
+
+## Aggregating Reports
+
+Maintainers can aggregate one or more validation result directories:
+
+```bash
+python scripts/aggregate_validation_reports.py \
+  artifacts/public_data_validation \
+  --output-md artifacts/public_data_validation/leaderboard.md \
+  --output-csv artifacts/public_data_validation/leaderboard.csv
+```
+
+The script scans for `summary.json` files and writes a compact leaderboard with
+source, preset, date range, panel size, strategy, return, Sharpe, drawdown,
+turnover, data coverage, and environment columns.
+
+For the default artifact path, the Make target is:
+
+```bash
+make aggregate-validation
+```
