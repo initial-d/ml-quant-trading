@@ -5,11 +5,19 @@ easier to trust, and easier to extend.
 
 ## Near Term
 
-- Add a public-data case study with a small, stable ticker universe.
-- Collect benchmark results from different CPUs, GPUs, and PyTorch versions.
-- Add release notes for the first public release.
+- Extend public-data case studies beyond the first yfinance mini reproduction.
+- Collect benchmark results from different CPUs, GPUs, CUDA versions, and PyTorch versions.
+- Expand first-run onboarding based on new user feedback.
 - Add more examples for factor IC, turnover, drawdown, and attribution.
 - Document assumptions around transaction costs, survivorship bias, and slippage.
+
+## Completed Launch Items
+
+- Published `v0.1.0` as the first public research baseline.
+- Added a maintainer CPU benchmark baseline to `docs/benchmark_board.md`.
+- Added a yfinance public-data mini reproduction to `docs/public_data_mini_reproduction.md`.
+- Added a Dev Container for reproducible contributor setup.
+- Added a Mermaid architecture diagram in `docs/architecture.md`.
 
 ## Contributor-Friendly Tasks
 
@@ -18,7 +26,7 @@ easier to trust, and easier to extend.
 - Add a small example using a custom CSV data source.
 - Add benchmark results through the benchmark issue template.
 - Improve docstrings for factor families.
-- Add one new public-data notebook with a clearly documented universe.
+- Add one new ETF or larger-universe public-data example with a clearly documented universe.
 
 ## Research Extensions
 

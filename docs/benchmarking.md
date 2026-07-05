@@ -47,7 +47,7 @@ When sharing benchmark results, include:
 - Python version
 - PyTorch version
 - CPU and GPU model
-- CUDA availability and CUDA device name
+- CUDA availability, CUDA version, and CUDA device name
 - `n_dates`, `n_stocks`, `window`, `repeat`, and `warmup`
 - whether the run used CPU, CUDA, or both
 

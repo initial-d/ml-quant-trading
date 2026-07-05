@@ -29,7 +29,7 @@ demos, CI, tests, and benchmark tooling.
 - Try the [`v0.1.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0).
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
-- Pick up a newcomer task: [first-run onboarding feedback](https://github.com/initial-d/ml-quant-trading/issues/10) or [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7).
+- Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or an [ETF/larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16).
 
 | Module | What it does |
 |--------|-------------|
@@ -90,12 +90,23 @@ See [`docs/benchmarking.md`](docs/benchmarking.md) for larger-panel commands and
 Benchmark reports from different machines are welcome through the
 [`Benchmark result`](.github/ISSUE_TEMPLATE/benchmark_result.yml) issue template.
 
+### Reproducible Dev Environment
+
+For VS Code or GitHub Codespaces, use the included Dev Container:
+
+```text
+.devcontainer/devcontainer.json
+```
+
+It installs Python 3.11 and the project with `pip install -e .[dev]`.
+
 ### Launch and Community Assets
 
 - [`CHANGELOG.md`](CHANGELOG.md) summarizes the public baseline release.
 - [`docs/launch_playbook.md`](docs/launch_playbook.md) contains the launch checklist,
   recommended repository topics, and social preview guidance.
 - [`docs/start_here.md`](docs/start_here.md) gives new users a fast path through the project.
+- [`docs/architecture.md`](docs/architecture.md) shows the factor → model → portfolio → backtest pipeline.
 - [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.

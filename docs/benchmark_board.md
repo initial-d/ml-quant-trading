@@ -26,9 +26,9 @@ python scripts/benchmark_tensor_factors.py \
 
 ## Results
 
-| Contributor | Commit | OS | Python | PyTorch | CPU | GPU | Command | Notes |
-|---|---|---|---|---|---|---|---|---|
-| Maintainer | `d3a99b6` | macOS 26.5.1 arm64 | 3.9.6 | 2.8.0 | Apple M5, 10 cores, 32 GB RAM | CUDA unavailable | `python scripts/benchmark_tensor_factors.py --device auto` | CPU-only report on MacBook Air |
+| Contributor | Commit | OS | Python | PyTorch | CUDA | CPU | GPU | Command | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| Maintainer | `d3a99b6` | macOS 26.5.1 arm64 | 3.9.6 | 2.8.0 | unavailable | Apple M5, 10 cores, 32 GB RAM | none | `python scripts/benchmark_tensor_factors.py --device auto` | CPU-only report on MacBook Air |
 
 ### Maintainer CPU Baseline: Apple M5 MacBook Air
 
@@ -40,6 +40,7 @@ Environment:
 - Python: 3.9.6
 - PyTorch: 2.8.0
 - CUDA available: false
+- CUDA version: unavailable
 - Synthetic panel: 750 dates x 1000 stocks
 - Warmup / repeat: 2 / 5
 

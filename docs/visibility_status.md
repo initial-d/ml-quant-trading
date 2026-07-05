@@ -12,6 +12,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/12>
 - GitHub Community post: <https://github.com/orgs/community/discussions/201001>
 - v0.2.0 community benchmark milestone: <https://github.com/initial-d/ml-quant-trading/milestone/1>
+- Dev Container setup: `.devcontainer/devcontainer.json`
 
 ## Current Contributor Funnel
 
@@ -43,6 +44,7 @@ Primary ask:
 
 - Add more real benchmark results to `docs/benchmark_board.md`.
 - Add more public-data mini reproductions with larger or differently constructed universes.
+- Ask new users to try the Dev Container and report first-run friction.
 - Post the v0.1.0 release to one relevant community at a time with a customized note.
 - Set a GitHub social preview image through repository settings when browser upload access is available.
 - Convert useful discussion replies into docs, issues, or benchmark board entries.

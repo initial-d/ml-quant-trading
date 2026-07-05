@@ -23,35 +23,15 @@ Everything operates on a `Panel` — a frozen dataclass holding seven
 (or tensors that share its layout); they never reach into each other's
 internals.
 
-```
-                                Panel
-                                  │
-                                  ▼
-            ┌────────────────────────────────────┐
-            │ features.tensor_factors             │
-            │ features.alpha101 → factors [T,N,F] │
-            │ features.bias     → mask    [T,N]   │
-            │ features.neutralize                 │
-            └────────────────────────────────────┘
-                                  │
-                                  ▼
-            ┌────────────────────────────────────┐
-            │ training.dataset → (x, y) pairs     │
-            │ training.augment (GBM bootstrap)    │
-            │ models.{nets, losses}               │
-            │ training.trainer                    │
-            └────────────────────────────────────┘
-                                  │
-                                  ▼
-            ┌────────────────────────────────────┐
-            │ portfolio.markowitz                 │
-            │ portfolio.frontier                  │
-            └────────────────────────────────────┘
-                                  │
-                                  ▼
-            ┌────────────────────────────────────┐
-            │ backtest.engine + backtest.metrics  │
-            └────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["Public / synthetic OHLCV data"] --> B["Panel<br/>prices, volume, mask"]
+    B --> C["Factor engine<br/>tensor primitives + 213 factors"]
+    C --> D["Bias and mask handling<br/>halts, limit-up/down, missing cells"]
+    D --> E["Model training<br/>MLP / Transformer + IC losses"]
+    E --> F["Portfolio construction<br/>Markowitz + constraints"]
+    F --> G["Vectorized backtest<br/>returns, IC, IR, drawdown"]
+    G --> H["Reports<br/>benchmarks, public-data notes, reproducibility issues"]
 ```
 
 ## Why this layout?

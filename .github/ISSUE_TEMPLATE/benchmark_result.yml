@@ -32,14 +32,15 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: Include OS, Python, PyTorch, CPU, GPU, CUDA availability, and CUDA device name.
+      description: Include OS, Python, PyTorch, CPU, GPU, CUDA availability, CUDA version, and CUDA device name.
       placeholder: |
         OS:
         Python:
         PyTorch:
         CPU:
         GPU:
-        CUDA:
+        CUDA available:
+        CUDA version:
     validations:
       required: true
 

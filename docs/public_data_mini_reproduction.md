@@ -14,6 +14,7 @@ of live profitability.
 - Date range returned: `2021-01-04` to `2024-12-31`
 - Observations: 1005 dates x 10 stocks
 - Device: CPU
+- Random seed: not used for the yfinance path; the synthetic fallback in the notebook uses `seed=7`
 
 Factor subset:
 
@@ -80,6 +81,18 @@ Best mean IC in this small run: `old_042`.
 - The universe is deliberately tiny, so cross-sectional IC is noisy.
 - `yfinance` adjusts and backfills data differently from institutional market data vendors; treat this as an API/reproducibility check rather than a paper replication.
 - No transaction costs, survivorship-bias controls, portfolio construction, or slippage model are included in this mini note.
+
+## Expected Output Check
+
+Use the table above as a setup check. A successful run should produce:
+
+- a `Panel` with 10 stocks and roughly 1000 trading dates for the requested range
+- one-day rank IC rows for all six factors
+- `old_042` near the top of the small-universe mean IC ranking in the maintainer run
+
+Small numerical differences are expected when yfinance revises data or when pandas,
+PyTorch, or BLAS versions change. Treat large differences as a prompt to check the
+downloaded ticker data, missing values, and dependency versions.
 
 ## Next Useful Reproductions
 
