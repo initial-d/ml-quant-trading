@@ -13,8 +13,9 @@ The validation script compares:
 - walk-forward Transformer baseline on Alpha101 features
 
 It reports annual return, volatility, Sharpe, max drawdown, turnover, cost drag,
-gross return, and active metrics versus equal weight. Transaction costs and
-slippage are combined into the effective cost charged on weight changes.
+gross return, optional bootstrap uncertainty intervals, and active metrics
+versus equal weight. Transaction costs and slippage are combined into the
+effective cost charged on weight changes.
 
 ## Quick Synthetic Check
 
@@ -187,11 +188,38 @@ This is intentionally simple. It is useful for sensitivity checks, but it is not
 a substitute for a broker-, exchange-, order-size-, and liquidity-aware execution
 model.
 
+## Bootstrap Uncertainty Intervals
+
+Point estimates can be noisy, especially for short public-data windows. Add a
+block bootstrap to report 95% intervals for annualized return and Sharpe:
+
+```bash
+python scripts/public_data_validation.py \
+  --source yfinance \
+  --preset us-large-100 \
+  --bootstrap-samples 500 \
+  --bootstrap-block-size 20
+```
+
+The bootstrap samples contiguous return blocks instead of individual days so the
+resampled paths preserve some short-horizon autocorrelation. The output adds:
+
+```text
+ann_return_ci_low
+ann_return_ci_high
+sharpe_ci_low
+sharpe_ci_high
+```
+
+These intervals are diagnostics, not formal proof of statistical significance.
+They are most useful for spotting fragile point estimates and for comparing
+community reports that use the same universe and date range.
+
 ## Interpreting Results
 
 This benchmark is stronger than the tiny public-data IC note because it includes
 a larger universe, walk-forward prediction, portfolio construction, turnover,
-drawdown, costs, and baseline comparisons.
+drawdown, costs, uncertainty intervals, and baseline comparisons.
 
 It still should not be read as proof of deployable alpha:
 

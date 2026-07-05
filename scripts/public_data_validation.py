@@ -81,6 +81,8 @@ class ValidationConfig:
     costs_bps: float
     slippage_bps: float
     cost_grid_bps: tuple[float, ...]
+    bootstrap_samples: int
+    bootstrap_block_size: int
     train_window: int
     test_window: int
     step: int
@@ -316,6 +318,9 @@ def _summarise_strategy(
     *,
     effective_costs_bps: float,
     benchmark: np.ndarray | None,
+    bootstrap_samples: int,
+    bootstrap_block_size: int,
+    bootstrap_seed: int,
 ) -> dict[str, float | int | str]:
     result = run_backtest(weights, returns, costs_bps=effective_costs_bps, benchmark=benchmark)
     row: dict[str, float | int | str] = {"strategy": name}
@@ -324,7 +329,47 @@ def _summarise_strategy(
     row["gross_ann_return"] = metrics.annualised_return(result.gross_returns)
     row["gross_sharpe"] = metrics.sharpe_ratio(result.gross_returns)
     row["final_equity"] = float(result.cumulative_equity[-1]) if result.cumulative_equity.size else 1.0
+    row.update(
+        _bootstrap_intervals(
+            result.portfolio_returns,
+            samples=bootstrap_samples,
+            block_size=bootstrap_block_size,
+            seed=bootstrap_seed,
+        )
+    )
     return row
+
+
+def _bootstrap_intervals(
+    returns: np.ndarray,
+    *,
+    samples: int,
+    block_size: int,
+    seed: int,
+) -> dict[str, float | int]:
+    if samples <= 0 or returns.size < 2:
+        return {}
+    block_size = max(1, min(block_size, returns.size))
+    n_blocks = int(math.ceil(returns.size / block_size))
+    max_start = max(0, returns.size - block_size)
+    rng = np.random.default_rng(seed)
+    ann_returns = np.empty(samples, dtype=np.float64)
+    sharpes = np.empty(samples, dtype=np.float64)
+    for i in range(samples):
+        starts = rng.integers(0, max_start + 1, size=n_blocks)
+        sampled = np.concatenate([returns[start : start + block_size] for start in starts])[: returns.size]
+        ann_returns[i] = metrics.annualised_return(sampled)
+        sharpes[i] = metrics.sharpe_ratio(sampled)
+    ann_low, ann_high = np.percentile(ann_returns, [2.5, 97.5])
+    sharpe_low, sharpe_high = np.percentile(sharpes, [2.5, 97.5])
+    return {
+        "bootstrap_samples": int(samples),
+        "bootstrap_block_size": int(block_size),
+        "ann_return_ci_low": float(ann_low),
+        "ann_return_ci_high": float(ann_high),
+        "sharpe_ci_low": float(sharpe_low),
+        "sharpe_ci_high": float(sharpe_high),
+    }
 
 
 def _panel_coverage(panel: Panel) -> dict[str, object]:
@@ -366,6 +411,8 @@ def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
         "slippage_bps": cfg.slippage_bps,
         "effective_costs_bps": cfg.costs_bps + cfg.slippage_bps,
         "cost_grid_bps": list(cfg.cost_grid_bps),
+        "bootstrap_samples": cfg.bootstrap_samples,
+        "bootstrap_block_size": cfg.bootstrap_block_size,
         "train_window": cfg.train_window,
         "test_window": cfg.test_window,
         "step": cfg.step,
@@ -449,17 +496,21 @@ def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
     if "equal_weight" in strategies:
         benchmark_returns = run_backtest(strategies["equal_weight"], returns, costs_bps=effective_costs_bps).portfolio_returns
 
-    rows = [
-        _summarise_strategy(
-            name,
-            weights,
-            returns,
-            effective_costs_bps=effective_costs_bps,
-            benchmark=benchmark_returns if name != "equal_weight" else None,
+    rows = []
+    for strategy_id, (name, weights) in enumerate(strategies.items()):
+        rows.append(
+            _summarise_strategy(
+                name,
+                weights,
+                returns,
+                effective_costs_bps=effective_costs_bps,
+                benchmark=benchmark_returns if name != "equal_weight" else None,
+                bootstrap_samples=cfg.bootstrap_samples,
+                bootstrap_block_size=cfg.bootstrap_block_size,
+                bootstrap_seed=cfg.seed + strategy_id,
+            )
         )
-        for name, weights in strategies.items()
-    ]
-    cost_sensitivity_rows = _cost_sensitivity_rows(strategies, returns, cfg.cost_grid_bps)
+    cost_sensitivity_rows = _cost_sensitivity_rows(strategies, returns, cfg.cost_grid_bps, cfg)
     _write_outputs(cfg, panel, rows, cost_sensitivity_rows)
     return rows
 
@@ -468,9 +519,10 @@ def _cost_sensitivity_rows(
     strategies: dict[str, np.ndarray],
     returns: np.ndarray,
     cost_grid_bps: Sequence[float],
+    cfg: ValidationConfig,
 ) -> list[dict[str, float | int | str]]:
     rows: list[dict[str, float | int | str]] = []
-    for effective_costs_bps in cost_grid_bps:
+    for cost_id, effective_costs_bps in enumerate(cost_grid_bps):
         benchmark_returns = None
         if "equal_weight" in strategies:
             benchmark_returns = run_backtest(
@@ -478,13 +530,16 @@ def _cost_sensitivity_rows(
                 returns,
                 costs_bps=effective_costs_bps,
             ).portfolio_returns
-        for name, weights in strategies.items():
+        for strategy_id, (name, weights) in enumerate(strategies.items()):
             row = _summarise_strategy(
                 name,
                 weights,
                 returns,
                 effective_costs_bps=effective_costs_bps,
                 benchmark=benchmark_returns if name != "equal_weight" else None,
+                bootstrap_samples=cfg.bootstrap_samples,
+                bootstrap_block_size=cfg.bootstrap_block_size,
+                bootstrap_seed=cfg.seed + 1000 * (cost_id + 1) + strategy_id,
             )
             row["cost_scenario"] = f"{effective_costs_bps:.2f}_bps"
             rows.append(row)
@@ -500,7 +555,7 @@ def _format_float(value: object) -> str:
 
 
 def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
-    columns = (
+    columns = [
         "strategy",
         "ann_return",
         "ann_vol",
@@ -513,7 +568,9 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
         "info_ratio",
         "alpha_ann",
         "final_equity",
-    )
+    ]
+    if any("sharpe_ci_low" in row for row in rows):
+        columns.extend(("ann_return_ci_low", "ann_return_ci_high", "sharpe_ci_low", "sharpe_ci_high"))
     lines = [
         "| " + " | ".join(columns) + " |",
         "| " + " | ".join(["---"] + ["---:"] * (len(columns) - 1)) + " |",
@@ -524,7 +581,7 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
 
 
 def _cost_sensitivity_table(rows: Sequence[dict[str, float | int | str]]) -> str:
-    columns = (
+    columns = [
         "cost_scenario",
         "strategy",
         "effective_costs_bps",
@@ -534,7 +591,9 @@ def _cost_sensitivity_table(rows: Sequence[dict[str, float | int | str]]) -> str
         "turnover",
         "cost_drag",
         "final_equity",
-    )
+    ]
+    if any("sharpe_ci_low" in row for row in rows):
+        columns.extend(("ann_return_ci_low", "ann_return_ci_high", "sharpe_ci_low", "sharpe_ci_high"))
     lines = [
         "| " + " | ".join(columns) + " |",
         "| " + " | ".join(["---"] + ["---"] + ["---:"] * (len(columns) - 2)) + " |",
@@ -639,6 +698,8 @@ def _write_outputs(
         f.write(f"| Tradable ratio | {metadata['panel']['tradable_ratio']:.4f} |\n")
         f.write(f"| Stocks with no data | {metadata['panel']['stocks_with_no_data']} |\n")
         f.write(f"| Costs + slippage | {cfg.costs_bps:.2f} + {cfg.slippage_bps:.2f} bps |\n")
+        if cfg.bootstrap_samples:
+            f.write(f"| Bootstrap samples / block size | {cfg.bootstrap_samples} / {cfg.bootstrap_block_size} days |\n")
         f.write(f"| Walk-forward train/test/step | {cfg.train_window}/{cfg.test_window}/{cfg.step} days |\n")
         f.write(f"| Python | {platform.python_version()} |\n")
         f.write(f"| Platform | {platform.platform()} |\n")
@@ -672,6 +733,8 @@ def _write_outputs(
 @click.option("--costs-bps", default=5.0, show_default=True, type=float)
 @click.option("--slippage-bps", default=2.0, show_default=True, type=float)
 @click.option("--cost-grid-bps", default="", help="Comma-separated effective cost scenarios for sensitivity reports.")
+@click.option("--bootstrap-samples", default=0, show_default=True, type=click.IntRange(0, 10000), help="Block-bootstrap samples for return and Sharpe confidence intervals.")
+@click.option("--bootstrap-block-size", default=20, show_default=True, type=click.IntRange(1, 252), help="Trading-day block size for bootstrap intervals.")
 @click.option("--train-window", default=504, show_default=True, type=int)
 @click.option("--test-window", default=63, show_default=True, type=int)
 @click.option("--step", default=63, show_default=True, type=int)
@@ -695,6 +758,8 @@ def main(
     costs_bps: float,
     slippage_bps: float,
     cost_grid_bps: str,
+    bootstrap_samples: int,
+    bootstrap_block_size: int,
     train_window: int,
     test_window: int,
     step: int,
@@ -721,6 +786,8 @@ def main(
         costs_bps=costs_bps,
         slippage_bps=slippage_bps,
         cost_grid_bps=_parse_cost_grid(cost_grid_bps),
+        bootstrap_samples=bootstrap_samples,
+        bootstrap_block_size=bootstrap_block_size,
         train_window=train_window,
         test_window=test_window,
         step=step,

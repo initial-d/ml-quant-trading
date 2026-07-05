@@ -16,6 +16,8 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
         costs_bps=5.0,
         slippage_bps=2.0,
         cost_grid_bps=(0.0, 7.0, 15.0),
+        bootstrap_samples=25,
+        bootstrap_block_size=10,
         train_window=40,
         test_window=20,
         step=20,
@@ -34,6 +36,7 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
 
     assert [row["strategy"] for row in rows] == ["equal_weight", "momentum_20", "alpha101_mean"]
     assert all("sharpe" in row for row in rows)
+    assert all("sharpe_ci_low" in row for row in rows)
     assert (tmp_path / "summary.md").exists()
     assert (tmp_path / "summary.csv").exists()
     assert (tmp_path / "summary.json").exists()
@@ -46,11 +49,14 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
     metadata = json.loads((tmp_path / "metadata.json").read_text())
     assert metadata["panel"]["n_stocks"] == 12
     assert metadata["cost_grid_bps"] == [0.0, 7.0, 15.0]
+    assert metadata["bootstrap_samples"] == 25
+    assert metadata["bootstrap_block_size"] == 10
     assert "tradable_ratio" in metadata["panel"]
 
     summary = json.loads((tmp_path / "summary.json").read_text())
     assert len(summary["cost_sensitivity"]) == 9
     assert summary["cost_sensitivity"][0]["effective_costs_bps"] == 0.0
+    assert summary["results"][0]["bootstrap_samples"] == 25
 
     submission = (tmp_path / "submission.md").read_text()
     assert "Public-data validation report" in submission
