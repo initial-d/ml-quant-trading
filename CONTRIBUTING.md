@@ -45,6 +45,24 @@ pip install -e .[mosek]    # MOSEK license may be required
 - Run `pytest` and `ruff check .` before opening the PR.
 - Avoid committing private market data, credentials, broker configuration, or large generated artifacts.
 
+## Contributor Workflow
+
+Use issues as the source of truth for upcoming work. The roadmap in
+`docs/roadmap.md` is intentionally lightweight so contributors can see the next
+useful tasks without needing access to a private project board.
+
+Recommended flow:
+
+1. Open or claim an issue before doing a larger change.
+2. Keep pull requests small enough to review in one sitting.
+3. Link the PR to the issue it addresses.
+4. Include the command output or environment details for benchmark and
+   reproducibility changes.
+5. Prefer human review and CI signals before introducing automated review tools.
+
+Automated review assistance may be used later for repetitive checks, but it
+should not replace clear tests, reproducible examples, or maintainer judgment.
+
 ## Research Reproducibility
 
 When reporting results, include the config, random seed, data source, date range, benchmark universe, transaction-cost assumptions, and evaluation metrics. Results that depend on proprietary data are welcome, but please provide a synthetic or public-data reproduction path when possible.

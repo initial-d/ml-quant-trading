@@ -38,6 +38,26 @@ Document ablations, failed experiments, or limitations. Honest negative results 
 - Keep issues small enough for first-time contributors.
 - Prefer clear caveats over inflated claims.
 
+## Contributor Operations
+
+The project should stay easy to contribute to without requiring proprietary
+tools or private maintainer context.
+
+Current decision:
+
+- Use GitHub issues plus `docs/roadmap.md` as the public contributor board.
+- Keep labels focused on contribution type and review priority.
+- Link each community request, benchmark report, or reproduction PR back to a
+  small issue when practical.
+- Defer a formal GitHub Project board until there are enough simultaneous
+  contributor tasks to justify the extra maintenance.
+- Defer automated PR review services until repeated review bottlenecks appear.
+
+Review automation can help with style, missing tests, and documentation drift,
+but it should not generate noisy comments or gate small documentation
+contributions. CI, reproducible commands, and maintainer review remain the
+baseline workflow.
+
 ## Labels to Use
 
 - `good first issue`: small, self-contained contribution.
