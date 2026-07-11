@@ -1,0 +1,40 @@
+ETF cross-asset public-data reproduction
+yfinance version: 0.2.40
+Requested date range: 2021-01-01 to 2025-01-01 (end exclusive)
+Returned panel: 1005 dates x 20 ETFs, 2021-01-04 to 2024-12-31
+Bulk download error: none
+Failed tickers: none
+
+Per-ticker data coverage:
+Ticker   Status   Observations   First Date    Last Date   Coverage
+---------------------------------------------------------------------
+SPY      full             1005   2021-01-04   2024-12-31   100.00%
+QQQ      full             1005   2021-01-04   2024-12-31   100.00%
+IWM      full             1005   2021-01-04   2024-12-31   100.00%
+DIA      full             1005   2021-01-04   2024-12-31   100.00%
+XLK      full             1005   2021-01-04   2024-12-31   100.00%
+XLF      full             1005   2021-01-04   2024-12-31   100.00%
+XLE      full             1005   2021-01-04   2024-12-31   100.00%
+XLV      full             1005   2021-01-04   2024-12-31   100.00%
+XLY      full             1005   2021-01-04   2024-12-31   100.00%
+XLP      full             1005   2021-01-04   2024-12-31   100.00%
+XLI      full             1005   2021-01-04   2024-12-31   100.00%
+XLB      full             1005   2021-01-04   2024-12-31   100.00%
+XLU      full             1005   2021-01-04   2024-12-31   100.00%
+AGG      full             1005   2021-01-04   2024-12-31   100.00%
+TLT      full             1005   2021-01-04   2024-12-31   100.00%
+GLD      full             1005   2021-01-04   2024-12-31   100.00%
+HYG      full             1005   2021-01-04   2024-12-31   100.00%
+EFA      full             1005   2021-01-04   2024-12-31   100.00%
+EEM      full             1005   2021-01-04   2024-12-31   100.00%
+FXI      full             1005   2021-01-04   2024-12-31   100.00%
+
+One-day forward Spearman rank IC summary:
+Factor             Mean IC   Median IC    IC Std  Positive Rate  Observations
+------------------------------------------------------------------------------
+original_001        0.0131      0.0090    0.3782        49.65%           985
+add_015            -0.0031     -0.0060    0.3595        48.46%           985
+stock_001          -0.0044      0.0030    0.2618        49.15%           985
+old_042            -0.0057     -0.0045    0.3108        48.06%           985
+best_002           -0.0061     -0.0108    0.3174        47.46%           985
+best_001           -0.0136     -0.0030    0.3150        48.56%           982
