@@ -41,8 +41,10 @@ def sortino_ratio(returns: np.ndarray, *, rf: float = 0.0, periods: int = DAYS_P
     downside = excess[excess < 0]
     if downside.size == 0:
         return float("inf")
+    if downside.size < 2:
+        return 0.0
     dd = downside.std(ddof=1)
-    if dd < 1e-12:
+    if not np.isfinite(dd) or dd < 1e-12:
         return 0.0
     return float(excess.mean() / dd * np.sqrt(periods))
 
