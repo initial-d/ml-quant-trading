@@ -14,7 +14,7 @@ def _write_report(path: Path, *, preset: str, strategy: str, sharpe: float) -> N
                     "preset": preset,
                     "python": "3.11.0",
                     "pytorch": "2.8.0",
-                    "platform": "test",
+                    "platform": "Linux | test",
                     "panel": {
                         "date_start": "2021-01-01",
                         "date_end": "2021-12-31",
@@ -49,6 +49,7 @@ def test_aggregate_validation_reports(tmp_path: Path):
     table = markdown_table(rows)
     assert "fast" in table
     assert "1.5000" in table
+    assert "Linux \\| test" in table
 
     write_markdown(tmp_path / "leaderboard.md", rows)
     write_csv(tmp_path / "leaderboard.csv", rows)

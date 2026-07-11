@@ -69,6 +69,11 @@ def _fmt(value: Any) -> str:
     return "" if value is None else str(value)
 
 
+def _md_cell(value: Any) -> str:
+    """Format a value for a Markdown table cell."""
+    return _fmt(value).replace("|", "\\|")
+
+
 def _flatten_report(path: Path) -> list[dict[str, Any]]:
     report = json.loads(path.read_text())
     metadata = report.get("metadata", {})
@@ -124,7 +129,7 @@ def markdown_table(rows: Sequence[dict[str, Any]]) -> str:
         "| " + " | ".join(["---"] * len(LEADERBOARD_COLUMNS)) + " |",
     ]
     for row in rows:
-        lines.append("| " + " | ".join(_fmt(row.get(column)) for column in LEADERBOARD_COLUMNS) + " |")
+        lines.append("| " + " | ".join(_md_cell(row.get(column)) for column in LEADERBOARD_COLUMNS) + " |")
     return "\n".join(lines)
 
 
