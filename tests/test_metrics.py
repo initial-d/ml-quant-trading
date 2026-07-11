@@ -48,3 +48,13 @@ def test_sortino_and_calmar_finite_on_random():
     assert np.isfinite(sortino_ratio(r))
     assert np.isfinite(calmar_ratio(r))
     assert np.isfinite(annualised_vol(r))
+
+
+def test_sortino_handles_single_downside_observation():
+    r = np.array([0.02, 0.01, -0.005, 0.03])
+    assert sortino_ratio(r) == 0.0
+
+
+def test_sortino_inf_when_no_downside_observations():
+    r = np.array([0.01, 0.02, 0.03])
+    assert sortino_ratio(r) == float("inf")
