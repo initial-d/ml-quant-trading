@@ -1,7 +1,12 @@
 import json
 from pathlib import Path
 
-from scripts.public_data_validation import ValidationConfig, run_validation
+from scripts.public_data_validation import (
+    ValidationConfig,
+    _cost_sensitivity_table,
+    _markdown_table,
+    run_validation,
+)
 
 
 def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
@@ -61,3 +66,47 @@ def test_public_data_validation_runs_on_synthetic(tmp_path: Path):
     submission = (tmp_path / "submission.md").read_text()
     assert "Public-data validation report" in submission
     assert "Data Coverage" in submission
+
+
+def test_public_data_validation_markdown_escapes_pipes():
+    table = _markdown_table(
+        [
+            {
+                "strategy": "alpha | beta",
+                "ann_return": 0.1,
+                "ann_vol": 0.2,
+                "sharpe": 0.3,
+                "max_dd": 0.4,
+                "turnover": 0.5,
+                "cost_drag": 0.6,
+                "gross_ann_return": 0.7,
+                "gross_sharpe": 0.8,
+                "info_ratio": 0.9,
+                "alpha_ann": 1.0,
+                "final_equity": 1.1,
+            }
+        ]
+    )
+
+    assert "alpha \\| beta" in table
+
+
+def test_public_data_validation_cost_table_escapes_pipes():
+    table = _cost_sensitivity_table(
+        [
+            {
+                "cost_scenario": "0 | 7 bps",
+                "strategy": "equal | weight",
+                "effective_costs_bps": 7.0,
+                "ann_return": 0.1,
+                "sharpe": 0.2,
+                "max_dd": 0.3,
+                "turnover": 0.4,
+                "cost_drag": 0.5,
+                "final_equity": 1.6,
+            }
+        ]
+    )
+
+    assert "0 \\| 7 bps" in table
+    assert "equal \\| weight" in table
