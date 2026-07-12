@@ -554,6 +554,11 @@ def _format_float(value: object) -> str:
     return str(value)
 
 
+def _markdown_cell(value: object) -> str:
+    """Format a value for a Markdown table cell."""
+    return _format_float(value).replace("|", "\\|")
+
+
 def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
     columns = [
         "strategy",
@@ -576,7 +581,7 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
         "| " + " | ".join(["---"] + ["---:"] * (len(columns) - 1)) + " |",
     ]
     for row in rows:
-        lines.append("| " + " | ".join(_format_float(row.get(c, "")) for c in columns) + " |")
+        lines.append("| " + " | ".join(_markdown_cell(row.get(c, "")) for c in columns) + " |")
     return "\n".join(lines)
 
 
@@ -599,7 +604,7 @@ def _cost_sensitivity_table(rows: Sequence[dict[str, float | int | str]]) -> str
         "| " + " | ".join(["---"] + ["---"] + ["---:"] * (len(columns) - 2)) + " |",
     ]
     for row in rows:
-        lines.append("| " + " | ".join(_format_float(row.get(c, "")) for c in columns) + " |")
+        lines.append("| " + " | ".join(_markdown_cell(row.get(c, "")) for c in columns) + " |")
     return "\n".join(lines)
 
 
