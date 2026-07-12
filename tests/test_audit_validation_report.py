@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from scripts.audit_validation_report import audit_report, has_errors, markdown_report
+from scripts.audit_validation_report import AuditFinding, audit_report, has_errors, markdown_report
 
 
 def _valid_report():
@@ -65,3 +65,13 @@ def test_audit_validation_report_flags_errors_and_warnings():
 def test_audit_validation_report_fixture_is_json_serializable():
     encoded = json.dumps(_valid_report())
     assert "equal_weight" in encoded
+
+
+def test_audit_validation_report_markdown_escapes_pipes(tmp_path: Path):
+    text = markdown_report(
+        [AuditFinding("warning", "panel|coverage", "value contains | pipe")],
+        source=tmp_path / "summary.json",
+    )
+
+    assert "panel\\|coverage" in text
+    assert "value contains \\| pipe" in text

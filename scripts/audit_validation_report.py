@@ -132,6 +132,10 @@ def has_errors(findings: Sequence[AuditFinding]) -> bool:
     return any(item.severity == "error" for item in findings)
 
 
+def _markdown_cell(value: object) -> str:
+    return str(value).replace("|", "\\|")
+
+
 def markdown_report(findings: Sequence[AuditFinding], *, source: Path) -> str:
     lines = [
         "# Validation Report Audit",
@@ -142,7 +146,9 @@ def markdown_report(findings: Sequence[AuditFinding], *, source: Path) -> str:
         "|---|---|---|",
     ]
     for item in findings:
-        lines.append(f"| {item.severity} | `{item.check}` | {item.message} |")
+        lines.append(
+            f"| {_markdown_cell(item.severity)} | `{_markdown_cell(item.check)}` | {_markdown_cell(item.message)} |"
+        )
     return "\n".join(lines) + "\n"
 
 
