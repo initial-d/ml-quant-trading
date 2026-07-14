@@ -67,19 +67,35 @@ def _format_seconds(value: float) -> str:
     return f"{value:.3f} s"
 
 
+def _markdown_cell(value: object) -> str:
+    return str(value).replace("|", "\\|")
+
+
+def _environment_row(field: str, value: object) -> str:
+    return f"| {_markdown_cell(field)} | {_markdown_cell(value)} |"
+
+
+def _benchmark_row(device: str, case_name: str, mean_s: float, std_s: float, peak_mem: str) -> str:
+    return (
+        f"| {_markdown_cell(device)} | `{_markdown_cell(case_name)}` | "
+        f"{_markdown_cell(_format_seconds(mean_s))} | {_markdown_cell(_format_seconds(std_s))} | "
+        f"{_markdown_cell(peak_mem)} |"
+    )
+
+
 def _print_environment(*, n_dates: int, n_stocks: int, repeat: int, warmup: int) -> None:
     click.echo("# Tensor Factor Benchmark")
     click.echo("")
     click.echo("| Field | Value |")
     click.echo("| --- | --- |")
-    click.echo(f"| Python | {platform.python_version()} |")
-    click.echo(f"| Platform | {platform.platform()} |")
-    click.echo(f"| PyTorch | {torch.__version__} |")
-    click.echo(f"| CUDA available | {torch.cuda.is_available()} |")
+    click.echo(_environment_row("Python", platform.python_version()))
+    click.echo(_environment_row("Platform", platform.platform()))
+    click.echo(_environment_row("PyTorch", torch.__version__))
+    click.echo(_environment_row("CUDA available", torch.cuda.is_available()))
     if torch.cuda.is_available():
-        click.echo(f"| CUDA device | {torch.cuda.get_device_name(0)} |")
-    click.echo(f"| Synthetic panel | {n_dates} dates x {n_stocks} stocks |")
-    click.echo(f"| Warmup / repeat | {warmup} / {repeat} |")
+        click.echo(_environment_row("CUDA device", torch.cuda.get_device_name(0)))
+    click.echo(_environment_row("Synthetic panel", f"{n_dates} dates x {n_stocks} stocks"))
+    click.echo(_environment_row("Warmup / repeat", f"{warmup} / {repeat}"))
     click.echo("")
 
 
@@ -135,10 +151,7 @@ def main(device: str, n_dates: int, n_stocks: int, window: int, repeat: int, war
             peak_mem = "-"
             if dev == "cuda":
                 peak_mem = f"{torch.cuda.max_memory_allocated() / 1024**2:.1f} MB"
-            click.echo(
-                f"| {dev} | `{case.name}` | {_format_seconds(mean_s)} | "
-                f"{_format_seconds(std_s)} | {peak_mem} |"
-            )
+            click.echo(_benchmark_row(dev, case.name, mean_s, std_s, peak_mem))
 
 
 if __name__ == "__main__":  # pragma: no cover
