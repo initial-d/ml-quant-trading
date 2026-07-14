@@ -1,0 +1,60 @@
+name: Pairing request
+description: Propose a small co-authored contribution or ask to pair on an existing task.
+title: "[pairing] "
+labels: ["community", "good first issue", "pairing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a pairing task. The best pairing requests are small,
+        reproducible, and clear about what each contributor will do.
+
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: What should the paired contribution change or validate?
+      placeholder: Run a public-data validation report, add a focused benchmark, document an edge case, or add a small test.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_split
+    attributes:
+      label: Proposed split
+      description: How can the work be split between contributors?
+      placeholder: |
+        Contributor A:
+        Contributor B:
+        Maintainer help needed:
+    validations:
+      required: true
+
+  - type: textarea
+    id: commands
+    attributes:
+      label: Reproduction commands
+      description: Paste the commands or checklist needed to verify the paired work.
+      render: bash
+      placeholder: python scripts/public_data_validation.py --source yfinance --preset etf-20
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_output
+    attributes:
+      label: Expected output
+      description: What artifact, report, table, test, or doc page should the PR include?
+    validations:
+      required: true
+
+  - type: textarea
+    id: coauthor_notes
+    attributes:
+      label: Co-author notes
+      description: Mention who will contribute materially. Co-authored-by trailers should only be added when each person contributes to the PR.
+      placeholder: |
+        Proposed co-authors:
+        Contribution evidence:
+    validations:
+      required: false
