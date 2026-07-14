@@ -63,6 +63,21 @@ Recommended flow:
 Automated review assistance may be used later for repetitive checks, but it
 should not replace clear tests, reproducible examples, or maintainer judgment.
 
+## Paired Contributions
+
+Paired contributions are welcome when the work can be split clearly. Good
+pairing candidates include public-data validation reports, benchmark runs on
+different hardware, focused docs improvements, and small tests for edge cases.
+
+Use the pairing request issue template when you want to pair on a task. A good
+request should include the proposed task, the split of work, reproduction
+commands, and the expected PR output.
+
+Only add `Co-authored-by:` trailers when each named person materially
+contributed to the merged PR. Useful contributions include writing code or docs,
+running and interpreting a reproducible benchmark, debugging a failing test, or
+reviewing generated reports closely enough to change the final result.
+
 ## Research Reproducibility
 
 When reporting results, include the config, random seed, data source, date range, benchmark universe, transaction-cost assumptions, and evaluation metrics. Results that depend on proprietary data are welcome, but please provide a synthetic or public-data reproduction path when possible.

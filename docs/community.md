@@ -9,6 +9,14 @@ The project grows best when people can contribute small, credible improvements.
 Run the benchmark script and submit hardware/runtime details. This is the easiest way to help
 without changing code.
 
+### Paired Contributions
+
+Open a pairing request when a contribution would benefit from two people, such
+as one person running a public-data validation and another turning the result
+into a reviewed report. Keep the task small, include reproduction commands, and
+only use co-author trailers for people who materially contributed to the merged
+PR.
+
 ### Public-Data Examples
 
 Add a notebook or docs page that uses a public data source. Keep the universe small, state
