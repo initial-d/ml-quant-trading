@@ -12,6 +12,8 @@
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
+Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
+
 ![ml-quant-trading social preview](docs/assets/readme-preview.png)
 
 ---
