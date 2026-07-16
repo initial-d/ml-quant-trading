@@ -68,7 +68,7 @@ research pipeline.
 | Module | What it does |
 |--------|-------------|
 | `features.tensor_factors` | GPU-vectorised masked primitives (`rank`, `corr`, `ewma`, `ts_*`) |
-| `features.legacy_factors` | **204 hand-crafted alpha factors** ([handbook](docs/factor_handbook.md)) |
+| `features.legacy_factors` | **204 hand-crafted alpha factors** ([English handbook](docs/factor_handbook_en.md) · [中文](docs/factor_handbook.md)) |
 | `features.alpha101` | Alpha101-style formulaic factors |
 | `features.neutralize` | Cross-sectional & industry neutralisation |
 | `features.bias` | Limit-up / limit-down / halt bias correction |
@@ -206,7 +206,7 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 
 The full feature set comprises **9 curated Alpha101 formulas** (`features.alpha101`) plus **204 hand-crafted legacy factors** (`features.legacy_factors`) for a total of **213 dimensions**. All factors are mask-aware PyTorch tensors with signature `Panel → (values[T,N], mask[T,N])`.
 
-📖 **[完整因子手册 (Factor Handbook)](docs/factor_handbook.md)** — 每个因子一段话详解思想、动机和原理，方便按需选用。
+📖 **Factor Handbook:** [English](docs/factor_handbook_en.md) · [中文](docs/factor_handbook.md) — design notes and implementation rationale for each factor.
 
 | Family | Count | Description |
 |--------|-------|-------------|
