@@ -28,7 +28,15 @@ def load_baostock_panel(
         Where to allocate the resulting tensors.
     proxy_vwap : bool
         If True, estimates VWAP as (Open + Close + High + Low) / 4.
+        Baostock does not expose an adjustment-consistent raw VWAP, so False
+        is rejected rather than mixing adjusted OHLC with unadjusted turnover.
     """
+    if not proxy_vwap:
+        raise ValueError(
+            "Baostock cannot provide an adjustment-consistent raw VWAP; "
+            "use proxy_vwap=True"
+        )
+
     import baostock as bs
 
     if not tickers:
@@ -101,13 +109,9 @@ def load_baostock_panel(
     fields_wide["amount"] = amount_df
     fields_wide["last_close"] = preclose_df
 
-    if proxy_vwap:
-        # Avoid division by zero by filling NaNs or 0s
-        # Only compute vwap where volume > 0, otherwise use proxy
-        vwap_actual = amount_df / volume_df
-        # If amount or volume is 0 or NaN, fallback to typical price
-        vwap_proxy = (open_df + close_df + high_df + low_df) / 4.0
-        fields_wide["vwap"] = vwap_actual.fillna(vwap_proxy).replace([np.inf, -np.inf], np.nan).fillna(vwap_proxy)
+    # OHLC are forward-adjusted (adjustflag="2"), while amount and volume are
+    # not. The typical-price proxy keeps every price field on the same basis.
+    fields_wide["vwap"] = (open_df + close_df + high_df + low_df) / 4.0
 
     dates = open_df.index.to_numpy()
     stocks = list(unique_tickers)

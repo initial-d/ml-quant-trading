@@ -147,6 +147,23 @@ def _select_tickers(preset: str, tickers: str, max_tickers: int) -> tuple[str, .
     return selected[:max_tickers]
 
 
+def _normalize_baostock_tickers(tickers: Sequence[str]) -> tuple[str, ...]:
+    normalized = tuple(t.lower() for t in tickers)
+    invalid = [
+        ticker
+        for ticker in normalized
+        if len(ticker) != 9
+        or not ticker.startswith(("sh.", "sz."))
+        or not ticker[3:].isdigit()
+    ]
+    if invalid:
+        raise ValueError(
+            "Baostock validation requires tickers in baostock format "
+            f"such as 'sh.600000' or 'sz.000001'; got {invalid[:5]}"
+        )
+    return normalized
+
+
 def load_validation_panel(cfg: ValidationConfig) -> Panel:
     """Load a public-data, Baostock A-share, or deterministic synthetic panel."""
     if cfg.source == "synthetic":
@@ -159,13 +176,7 @@ def load_validation_panel(cfg: ValidationConfig) -> Panel:
             )
         )
     if cfg.source == "baostock":
-        tickers = tuple(t.lower() for t in cfg.tickers)
-        invalid = [t for t in tickers if not t.startswith(("sh.", "sz."))]
-        if invalid:
-            raise ValueError(
-                "Baostock validation requires tickers in baostock format "
-                f"such as 'sh.600000' or 'sz.000001'; got {invalid[:5]}"
-            )
+        tickers = _normalize_baostock_tickers(cfg.tickers)
         return make_panel(
             source="baostock",
             tickers=tickers,

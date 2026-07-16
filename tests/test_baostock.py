@@ -47,6 +47,12 @@ def test_load_baostock_panel_mock():
         # Check close prices (T x N)
         expected_close = torch.tensor([[10.5, 20.5], [11.5, 21.5]], dtype=torch.float32)
         assert torch.allclose(panel.close, expected_close)
+
+        expected_vwap = torch.tensor(
+            [[10.125, 20.125], [11.0, 21.0]],
+            dtype=torch.float32,
+        )
+        assert torch.allclose(panel.vwap, expected_vwap)
         
         # Check mask
         assert panel.mask.all()
@@ -54,6 +60,17 @@ def test_load_baostock_panel_mock():
 def test_load_baostock_panel_empty_tickers():
     with pytest.raises(ValueError, match="Tickers list cannot be empty"):
         load_baostock_panel([], "2023-01-01", "2023-01-02")
+
+
+def test_load_baostock_panel_rejects_raw_vwap():
+    with pytest.raises(ValueError, match="adjustment-consistent raw VWAP"):
+        load_baostock_panel(
+            ["sh.600000"],
+            "2023-01-01",
+            "2023-01-02",
+            proxy_vwap=False,
+        )
+
 
 def test_load_baostock_panel_login_fail():
     with mock.patch("baostock.login") as mock_login:
