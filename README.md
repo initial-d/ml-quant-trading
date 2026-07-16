@@ -277,8 +277,8 @@ panel = make_panel(
 ```python
 from mlquant.features import compute_legacy_set, LEGACY_REGISTRY
 
-# Compute all 204 factors
-factors, mask, names = compute_legacy_set(panel)  # → [T, N, 204]
+# Compute all 213 factors (204 legacy + 9 Alpha101)
+factors, mask, names = compute_legacy_set(panel)  # → [T, N, 213]
 
 # Or a subset
 factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "old_042"))
@@ -288,14 +288,33 @@ factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    subgraph Data["1. Data"]
+        A[Raw OHLCV] --> B[loaders<br/>synthetic / yfinance / baostock]
+    end
+    subgraph Features["2. Features"]
+        B --> C[tensor_factors<br/>GPU masked primitives]
+        C --> D[bias<br/>limit-up/down/halt correction]
+        D --> E[compute_legacy_set<br/>213-factor tensor<br/>204 legacy + 9 Alpha101]
+    end
+    subgraph Training["3. Training"]
+        E --> F[FactorDataset<br/>forward returns + masks]
+        F --> G[MLP Regressor]
+        F -.->|optional| GBM[GBM augment]
+        G -.->|alternative| T[Transformer]
+        G --> H[losses<br/>AdjMSE / IC / RankIC]
+    end
+    subgraph Portfolio["4. Portfolio"]
+        H --> I[Markowitz<br/>Ledoit-Wolf shrunk cov<br/>no-short constraint]
+    end
+    subgraph Backtest["5. Backtest"]
+        I --> J[engine<br/>vectorized backtest]
+        J --> K[Sharpe / IC / IR / DD]
+    end
 ```
-raw OCHLV → data.loaders / data.synthetic / data.yfinance_loader / data.baostock_loader (Panel with mask)
-         → features.tensor_factors (GPU masked primitives)
-         → features.legacy_factors (204 alphas)
-         → training.augment + models.nets + models.losses
-         → portfolio.markowitz (efficient frontier)
-         → backtest.engine → Sharpe / IC / IR / DD / turnover
-```
+
+> Solid = required in default pipeline. Dashed = optional / alternative module (not called by CLI).
 
 ---
 
