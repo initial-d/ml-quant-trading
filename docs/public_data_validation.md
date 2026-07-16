@@ -246,6 +246,76 @@ The generated `summary.json` is intended for future aggregation scripts and
 leaderboards. It includes metadata, data coverage, and strategy metrics in a
 machine-readable format.
 
+## Troubleshooting yfinance Rate Limiting
+
+Yahoo Finance may throttle requests from certain networks or IP ranges. When
+this happens, the validation script fails during the data-download stage before
+any backtest or report is generated. If no public-data result was produced,
+report the blocker first instead of opening a validation PR.
+
+### How to recognise rate limiting
+
+Rate limiting can surface in several misleading forms. The underlying cause is
+usually an HTTP 429 (`Edge: Too Many Requests`) response from Yahoo, but
+yfinance may report it as one or more of:
+
+- `YFRateLimitError: Too Many Requests. Rate limited. Try after a while.`
+- `JSONDecodeError: Expecting value: line 1 column 1 (char 0)` — the response
+  body is not valid JSON because Yahoo returned an error page
+- `YFTzMissingError: possibly delisted; No timezone found` — tickers that
+  normally download fine suddenly appear "delisted"
+- request timeouts or connection errors around the same run
+
+Dozens of tickers failing at once — especially a preset like `etf-50` or
+`us-large-100` that has worked in prior runs — is a strong signal that the
+problem is network-side, not ticker-side.
+
+### What to do
+
+1. **Stop.** Do not retry the full 50-ticker run immediately — repeated
+   requests may extend the rate-limit window.
+2. **Report the blocker** in the relevant issue rather than opening a PR. An
+   incomplete validation run is still useful as a blocker report, but it should
+   not be submitted as a benchmark result. Mention the exact errors, the
+   date/time, yfinance version, and any non-sensitive network context you are
+   comfortable sharing.
+3. **Wait and retry with a smoke test** before scaling back up:
+
+```bash
+python scripts/public_data_validation.py \
+  --source yfinance \
+  --tickers SPY,QQQ,TLT,GLD,AGG \
+  --start 2021-01-01 \
+  --end 2025-01-01 \
+  --models equal_weight,momentum_20 \
+  --epochs 1 \
+  --batch-size 4096 \
+  --hidden 32 \
+  --cost-grid-bps 0,7,15,30 \
+  --bootstrap-samples 50 \
+  --bootstrap-block-size 20
+```
+
+4. If the 5-ticker smoke test succeeds, scale to 20 and then to the full
+   preset. If it still returns 429, wait longer or retry from a different
+   network.
+5. Once the full run completes, open a PR with the generated `submission.md`
+   report.
+
+### Fallback: synthetic validation
+
+If yfinance remains unavailable, the synthetic data path is always usable as a
+reproducibility check:
+
+```bash
+python scripts/public_data_validation.py \
+  --source synthetic \
+  --models equal_weight,momentum_20,alpha101_mean
+```
+
+A synthetic run cannot replace a public-data report, but it confirms that the
+validation harness itself is working on your platform.
+
 ## Auditing Reports
 
 Before sharing a validation run, audit the generated `summary.json`:
