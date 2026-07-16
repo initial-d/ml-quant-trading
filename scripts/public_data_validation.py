@@ -163,9 +163,16 @@ def load_validation_panel(cfg: ValidationConfig) -> Panel:
             )
         )
     if cfg.source == "baostock":
+        tickers = tuple(t.lower() for t in cfg.tickers)
+        invalid = [t for t in tickers if not t.startswith(("sh.", "sz."))]
+        if invalid:
+            raise ValueError(
+                "Baostock validation requires tickers in baostock format "
+                f"such as 'sh.600000' or 'sz.000001'; got {invalid[:5]}"
+            )
         return make_panel(
             source="baostock",
-            tickers=cfg.tickers,
+            tickers=tickers,
             start=cfg.start,
             end=cfg.end,
             device=cfg.device,
