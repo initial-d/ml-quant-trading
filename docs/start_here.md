@@ -29,7 +29,7 @@ Expected local runtime:
 
 This runs the synthetic-data pipeline end to end:
 
-1. generate a masked OCHLV panel
+1. generate a masked OHLCV panel
 2. compute factor features
 3. train a model
 4. build a portfolio
@@ -63,6 +63,10 @@ machines. Treat them as warnings unless the command exits with an error or the f
 `Backtest summary` is missing.
 
 ## 3. Try a Public-Data Notebook
+
+Before interpreting any result, skim the
+[Research Card](research_card.md). It explains the intended use, non-goals,
+data assumptions, and current validation status in one place.
 
 Open:
 

@@ -26,9 +26,24 @@ A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
 ML baselines, Markowitz portfolio optimization, vectorized backtesting, synthetic/public-data
 demos, CI, tests, and benchmark tooling.
 
+## Fast Path
+
+| If you want to... | Start here | What you get |
+|---|---|---|
+| See the project run | `make paper CONFIG=configs/small.yaml` | A 30-90 second synthetic end-to-end smoke test |
+| Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
+| Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
+| Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
+| Contribute results | [Benchmark discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) | A place to share benchmark and reproduction reports |
+
+This repository is validation-first: simple baselines, transaction costs,
+public-data failure modes, and negative results are documented alongside the
+research pipeline.
+
 **Current calls for contributors**
 
 - Try the [`v0.1.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0).
+- Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
 - Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or an [ETF/larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16).
@@ -168,6 +183,7 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/launch_playbook.md`](docs/launch_playbook.md) contains the launch checklist,
   recommended repository topics, and social preview guidance.
 - [`docs/start_here.md`](docs/start_here.md) gives new users a fast path through the project.
+- [`docs/research_card.md`](docs/research_card.md) summarizes intended use, validation status, data assumptions, and known risks.
 - [`docs/architecture.md`](docs/architecture.md) shows the factor → model → portfolio → backtest pipeline.
 - [`docs/reality_check.md`](docs/reality_check.md) explains what is real, what is still a smoke test, and what is not claimed.
 - [`docs/faq.md`](docs/faq.md) answers common setup, data, and reproducibility questions.
