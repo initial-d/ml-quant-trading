@@ -32,6 +32,22 @@ demos, CI, tests, and benchmark tooling.
 - Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or an [ETF/larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16).
 - Read the [Reality Check and Validation Status](docs/reality_check.md) before interpreting any backtest as evidence of deployable alpha.
 
+> **Research and educational use only.** This project is not investment
+> advice and is not production-ready. Backtest results do not represent live
+> trading performance; they depend on data quality, transaction costs,
+> slippage, and modeling assumptions that differ from real markets. Treat all
+> results as research validation, not verified out-of-sample performance
+> claims. See [Reality Check](docs/reality_check.md) for known limitations.
+
+<details>
+<summary>中文说明</summary>
+
+> **仅用于研究和教学。** 本项目不构成投资建议，也不是可直接用于实盘交易的
+> 生产系统。回测结果会受到数据质量、交易成本、滑点和建模假设影响，不代表
+> 真实交易表现。请先阅读 [Reality Check](docs/reality_check.md) 中的限制说明。
+
+</details>
+
 | Module | What it does |
 |--------|-------------|
 | `features.tensor_factors` | GPU-vectorised masked primitives (`rank`, `corr`, `ewma`, `ts_*`) |
@@ -57,6 +73,18 @@ demos, CI, tests, and benchmark tooling.
 If you build on this work, please consider citing the paper and opening issues or pull requests for reproducibility notes, new examples, or benchmark results.
 
 ---
+
+## Data Sources
+
+| Source | Market | Access | Notes |
+|--------|--------|--------|-------|
+| [Baostock](http://baostock.com) | A-shares | Free registration | Supported A-share loader; requires account |
+| [yfinance](https://pypi.org/project/yfinance/) | US equities / ETFs | Public, rate-limited | Used for public-data validation and cross-market examples |
+| Synthetic | N/A | Zero-config | Deterministic GBM panel for smoke testing the pipeline |
+
+The repository does not redistribute market data. Baostock and yfinance data
+are downloaded on-demand by the loader scripts. Synthetic data is generated
+deterministically from a fixed seed.
 
 ## Quick Start
 
