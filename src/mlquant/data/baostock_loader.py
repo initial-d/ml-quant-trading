@@ -102,12 +102,16 @@ def load_baostock_panel(
     fields_wide["last_close"] = preclose_df
 
     if proxy_vwap:
-        # Avoid division by zero by filling NaNs or 0s
-        # Only compute vwap where volume > 0, otherwise use proxy
-        vwap_actual = amount_df / volume_df
-        # If amount or volume is 0 or NaN, fallback to typical price
+        # OHLC are forward-adjusted (adjustflag="2"); (O+H+L+C)/4 is internally
+        # consistent.  Using amount/volume would mix unadjusted and adjusted data.
+        fields_wide["vwap"] = (open_df + close_df + high_df + low_df) / 4.0
+    else:
+        # amount and volume are NOT forward-adjusted, so vwap_actual is raw.
+        # Still fall back to proxy where data is missing.
+        vwap_raw = (amount_df / volume_df.replace(0, np.nan)).fillna(np.nan)
+        vwap_raw = vwap_raw.replace([np.inf, -np.inf], np.nan)
         vwap_proxy = (open_df + close_df + high_df + low_df) / 4.0
-        fields_wide["vwap"] = vwap_actual.fillna(vwap_proxy).replace([np.inf, -np.inf], np.nan).fillna(vwap_proxy)
+        fields_wide["vwap"] = vwap_raw.fillna(vwap_proxy)
 
     dates = open_df.index.to_numpy()
     stocks = list(unique_tickers)

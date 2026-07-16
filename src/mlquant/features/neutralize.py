@@ -62,8 +62,14 @@ def neutralize_industry(
         # least-squares  Xβ = y   via lstsq for numerical stability
         beta = torch.linalg.lstsq(X, y.unsqueeze(1)).solution.squeeze(1)
         residual = y - X @ beta
-        # cross-sectional z-score the residual to scale-normalise
-        residual = (residual - residual.mean()) / residual.std().clamp_min(1e-12)
+        # Degeneracy guard: if the signal is almost entirely explained by the
+        # regressors (float32 lstsq residual std ∼ 1e-7 for a perfect fit),
+        # return zero rather than amplifying tiny noise to unit variance.
+        rms_residual = residual.std(unbiased=False)
+        if rms_residual < 1e-6:
+            out[t][m] = 0.0
+            continue
+        residual = (residual - residual.mean()) / rms_residual.clamp_min(1e-6)
         out[t][m] = residual
 
     return out

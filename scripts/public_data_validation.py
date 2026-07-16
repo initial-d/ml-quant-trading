@@ -60,10 +60,19 @@ ETF_50 = (
     "EWT", "EWJ", "EWG", "EWU", "FXI", "MCHI", "INDA", "EWZ", "EWW", "EWC",
 )
 
+CN_LARGE_25 = (
+    "sh.600000", "sh.600036", "sh.600519", "sh.600585", "sh.600809",
+    "sh.600887", "sh.601012", "sh.601088", "sh.601166", "sh.601318",
+    "sh.601398", "sh.601668", "sh.601857", "sh.601888", "sh.601899",
+    "sz.000001", "sz.000002", "sz.000333", "sz.000651", "sz.000858",
+    "sz.002415", "sz.002594", "sz.300750", "sz.300059", "sz.300124",
+)
+
 PRESETS = {
     "us-large-100": US_LARGE_100,
     "etf-50": ETF_50,
     "mixed-150": US_LARGE_100 + ETF_50,
+    "cn-large-25": CN_LARGE_25,
 }
 
 DEFAULT_MODELS = ("equal_weight", "momentum_20", "alpha101_mean", "mlp_alpha101", "transformer_alpha101")
@@ -130,16 +139,20 @@ def _parse_cost_grid(value: str) -> tuple[float, ...]:
     return tuple(dict.fromkeys(costs))
 
 
-def _select_tickers(preset: str, tickers: str, max_tickers: int) -> tuple[str, ...]:
+def _select_tickers(preset: str, tickers: str, max_tickers: int, source: str = "yfinance") -> tuple[str, ...]:
     if tickers:
-        selected = tuple(t.strip().upper() for t in tickers.split(",") if t.strip())
+        raw = tuple(t.strip() for t in tickers.split(",") if t.strip())
+        if source == "baostock":
+            selected = raw  # preserve case: baostock uses lowercase exchange prefixes
+        else:
+            selected = tuple(t.upper() for t in raw)
     else:
         selected = PRESETS[preset]
     return selected[:max_tickers]
 
 
 def load_validation_panel(cfg: ValidationConfig) -> Panel:
-    """Load either a public yfinance panel or a deterministic synthetic panel."""
+    """Load a public-data, Baostock A-share, or deterministic synthetic panel."""
     if cfg.source == "synthetic":
         return make_synthetic_panel(
             SyntheticConfig(
@@ -148,6 +161,14 @@ def load_validation_panel(cfg: ValidationConfig) -> Panel:
                 seed=cfg.seed,
                 device=cfg.device,
             )
+        )
+    if cfg.source == "baostock":
+        return make_panel(
+            source="baostock",
+            tickers=cfg.tickers,
+            start=cfg.start,
+            end=cfg.end,
+            device=cfg.device,
         )
     return make_panel(
         source="yfinance",
@@ -728,7 +749,7 @@ def _write_outputs(
 
 
 @click.command()
-@click.option("--source", type=click.Choice(["yfinance", "synthetic"]), default="yfinance", show_default=True)
+@click.option("--source", type=click.Choice(["yfinance", "synthetic", "baostock"]), default="yfinance", show_default=True)
 @click.option("--preset", type=click.Choice(sorted(PRESETS)), default="us-large-100", show_default=True)
 @click.option("--tickers", default="", help="Comma-separated tickers. Overrides --preset.")
 @click.option("--start", default="2021-01-01", show_default=True)
@@ -783,7 +804,7 @@ def main(
     cfg = ValidationConfig(
         source=source,
         preset=preset,
-        tickers=_select_tickers(preset, tickers, max_tickers),
+        tickers=_select_tickers(preset, tickers, max_tickers, source),
         start=start,
         end=end,
         max_tickers=max_tickers,

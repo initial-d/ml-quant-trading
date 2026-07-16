@@ -5,6 +5,7 @@ from scripts.public_data_validation import (
     ValidationConfig,
     _cost_sensitivity_table,
     _markdown_table,
+    _select_tickers,
     run_validation,
 )
 
@@ -89,6 +90,34 @@ def test_public_data_validation_markdown_escapes_pipes():
     )
 
     assert "alpha \\| beta" in table
+
+
+def test_select_tickers_preserves_baostock_case():
+    """baostock tickers must not be uppercased: sh.600000 → SH.600000 breaks the loader."""
+    tickers = _select_tickers(
+        "cn-large-25",
+        "sh.600000,sz.000001",
+        10,
+        source="baostock",
+    )
+    assert tickers == ("sh.600000", "sz.000001")
+
+
+def test_select_tickers_uppercases_yfinance():
+    """yfinance tickers are uppercased as before."""
+    tickers = _select_tickers(
+        "us-large-100",
+        "aapl,msft",
+        10,
+        source="yfinance",
+    )
+    assert tickers == ("AAPL", "MSFT")
+
+
+def test_select_tickers_preset_fallback():
+    """Preset fallback works for baostock source."""
+    tickers = _select_tickers("cn-large-25", "", 10, source="baostock")
+    assert tickers[:2] == ("sh.600000", "sh.600036")
 
 
 def test_public_data_validation_cost_table_escapes_pipes():
