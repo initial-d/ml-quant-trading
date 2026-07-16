@@ -1,10 +1,13 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.public_data_validation import (
     ValidationConfig,
     _cost_sensitivity_table,
     _markdown_table,
+    _normalize_baostock_tickers,
     run_validation,
 )
 
@@ -89,6 +92,17 @@ def test_public_data_validation_markdown_escapes_pipes():
     )
 
     assert "alpha \\| beta" in table
+
+
+def test_normalize_baostock_tickers_lowercases_valid_codes():
+    tickers = _normalize_baostock_tickers(("SH.600000", "sz.000001"))
+
+    assert tickers == ("sh.600000", "sz.000001")
+
+
+def test_normalize_baostock_tickers_rejects_invalid_codes():
+    with pytest.raises(ValueError, match="baostock format"):
+        _normalize_baostock_tickers(("600000.SS", "sh.bad"))
 
 
 def test_public_data_validation_cost_table_escapes_pipes():
