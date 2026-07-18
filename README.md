@@ -46,7 +46,7 @@ research pipeline.
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
-- Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or an [ETF/larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16).
+- Pick up a newcomer task: [more benchmark reports](https://github.com/initial-d/ml-quant-trading/issues/7) or a [paired public-data validation or benchmark contribution](https://github.com/initial-d/ml-quant-trading/issues/22).
 - Read the [Reality Check and Validation Status](docs/reality_check.md) before interpreting any backtest as evidence of deployable alpha.
 
 > **Research and educational use only.** This project is not investment

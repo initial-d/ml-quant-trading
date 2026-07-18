@@ -16,13 +16,18 @@ Post only where you already have an account and can reply to comments.
 | Channel | Angle | Suggested ask |
 |---|---|---|
 | GitHub Issues / Discussions | Project launch and benchmark call | Submit CPU/GPU benchmark results |
+| Hugging Face Papers | Paper and reproducibility artifacts | Try the public-data and synthetic reproduction paths |
+| Awesome Quant | Curated open-source discovery | Evaluate the documented research stack |
+| Hacker News Show HN | Runnable open-source research stack | Run the quick start and critique the design |
+| QuantConnect forum | Reproducible factor and backtest research | Compare assumptions and public-data results |
 | LinkedIn | Research software announcement | Feedback from quant/ML engineers |
 | X / Twitter | Short technical launch | Star, benchmark, or try notebook |
-| Reddit r/algotrading | Practical backtesting/factor pipeline | Reproducibility and caveat feedback |
-| Reddit r/quant | Research baseline | Public-data reproduction feedback |
-| Hacker News Show HN | Open-source research stack | Try quick start and critique design |
 | Quant StackExchange chat / communities | Factor-engine discussion | Edge cases and assumptions |
 | University quant clubs | Student-friendly baseline | Run Start Here and report issues |
+
+Reddit communities often remove direct repository promotion. Share there only when a
+substantive, self-contained technical write-up is allowed by the current community rules;
+the repository link should support the analysis rather than be the purpose of the post.
 
 ## Short Post
 
@@ -71,4 +76,5 @@ Paper: https://arxiv.org/abs/2507.07107
 - Disclose limitations clearly.
 - Do not imply live trading profitability.
 - Do not ask directly for stars before asking for useful feedback.
+- Verify the current community rules before posting, especially for self-promotion.
 - Reply to comments and convert repeated questions into docs.

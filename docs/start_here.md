@@ -118,7 +118,7 @@ Good current entry points:
 
 - [Collect community CPU/GPU benchmark results](https://github.com/initial-d/ml-quant-trading/issues/7)
 - [Share benchmark and public-data reproductions](https://github.com/initial-d/ml-quant-trading/issues/12)
-- [Add an ETF or larger-universe public-data reproduction](https://github.com/initial-d/ml-quant-trading/issues/16)
+- [Pair on a public-data validation or benchmark contribution](https://github.com/initial-d/ml-quant-trading/issues/22)
 
 ## 6. What Not to Expect
 
