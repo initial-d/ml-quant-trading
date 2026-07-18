@@ -6,6 +6,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 - Repository: <https://github.com/initial-d/ml-quant-trading>
 - Paper: <https://arxiv.org/abs/2507.07107>
+- Hugging Face paper page: <https://huggingface.co/papers/2507.07107>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - Benchmark and reproduction discussion: <https://github.com/initial-d/ml-quant-trading/discussions/13>
