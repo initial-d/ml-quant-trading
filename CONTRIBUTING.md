@@ -45,6 +45,9 @@ pip install -e .[mosek]    # MOSEK license may be required
 - Run `pytest` and `ruff check .` before opening the PR.
 - Avoid committing private market data, credentials, broker configuration, or large generated artifacts.
 
+Suspected security vulnerabilities should be reported privately according to
+the [security policy](SECURITY.md), not through a public issue.
+
 ## Contributor Workflow
 
 Use issues as the source of truth for upcoming work. The roadmap in
