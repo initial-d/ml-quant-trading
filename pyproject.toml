@@ -56,8 +56,10 @@ mlquant = "mlquant.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/initial-d/ml-quant-trading"
+Documentation = "https://initial-d.github.io/ml-quant-trading/"
 Paper    = "https://arxiv.org/abs/2507.07107"
 Issues   = "https://github.com/initial-d/ml-quant-trading/issues"
+Changelog = "https://github.com/initial-d/ml-quant-trading/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]

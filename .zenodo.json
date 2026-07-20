@@ -1,0 +1,35 @@
+{
+  "title": "ml-quant-trading: Machine Learning Enhanced Multi-Factor Quantitative Trading",
+  "upload_type": "software",
+  "publication_date": "2026-07-20",
+  "creators": [
+    {
+      "name": "Du, Yimin"
+    }
+  ],
+  "description": "A research-oriented PyTorch toolkit for ML-enhanced multi-factor quantitative trading with tensor factor computation, bias correction, ML baselines, portfolio optimization, vectorized backtesting, and public validation workflows.",
+  "access_right": "open",
+  "license": "mit-license",
+  "keywords": [
+    "quantitative finance",
+    "algorithmic trading",
+    "machine learning",
+    "portfolio optimization",
+    "alpha factors",
+    "PyTorch",
+    "backtesting"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://arxiv.org/abs/2507.07107",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/initial-d/ml-quant-trading",
+      "relation": "isSupplementedBy",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Research and educational use only. This software is not investment advice and is not production-ready for live trading."
+}

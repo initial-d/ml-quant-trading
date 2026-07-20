@@ -8,8 +8,8 @@ authors:
 repository-code: "https://github.com/initial-d/ml-quant-trading"
 url: "https://github.com/initial-d/ml-quant-trading"
 license: MIT
-version: "0.1.0"
-date-released: "2025-07-01"
+version: "0.2.0"
+date-released: "2026-07-20"
 abstract: "A research-oriented, end-to-end implementation of ML-enhanced multi-factor quantitative trading with tensor factor computation, bias correction, portfolio optimization, and backtesting."
 keywords:
   - quantitative-finance

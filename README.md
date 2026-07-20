@@ -8,6 +8,7 @@
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
+[![Project site](https://img.shields.io/badge/project-site-0f7b63.svg)](https://initial-d.github.io/ml-quant-trading/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -43,7 +44,7 @@ research pipeline.
 
 **Current calls for contributors**
 
-- Try the [`v0.1.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0).
+- Try the [`v0.2.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).

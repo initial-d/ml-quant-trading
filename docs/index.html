@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ml-quant-trading</title>
+  <meta name="description" content="A research-first PyTorch toolkit for ML-enhanced multi-factor quantitative trading, public validation, and portfolio backtesting.">
+  <meta property="og:title" content="ml-quant-trading">
+  <meta property="og:description" content="Research-first toolkit for factor computation, bias correction, ML baselines, portfolio optimization, and public validation.">
+  <meta property="og:image" content="https://initial-d.github.io/ml-quant-trading/assets/readme-preview.png">
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #151718;
+      --muted: #58616b;
+      --line: #d7dee4;
+      --paper: #f8faf9;
+      --panel: #ffffff;
+      --green: #0f7b63;
+      --blue: #285f9e;
+      --red: #9d2f36;
+      --amber: #a36a12;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: rgba(40, 95, 158, 0.45);
+      text-underline-offset: 0.18em;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(18px, 4vw, 48px);
+      color: #fff;
+      background: rgba(14, 20, 22, 0.72);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.94rem;
+    }
+
+    .nav a {
+      text-decoration: none;
+    }
+
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      align-items: end;
+      position: relative;
+      padding: 112px clamp(18px, 5vw, 72px) 58px;
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(10, 14, 16, 0.84), rgba(10, 14, 16, 0.48), rgba(10, 14, 16, 0.18)),
+        url("assets/readme-preview.png") center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent 58%, rgba(248, 250, 249, 0.94) 100%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.86rem;
+      font-weight: 720;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 6.4rem;
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 760px;
+      margin: 24px 0 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.24rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #fff;
+      color: #111;
+      font-weight: 710;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: #eef4f2;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .hero .button.secondary {
+      background: rgba(255, 255, 255, 0.11);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.32);
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      margin-top: -24px;
+    }
+
+    .section {
+      padding: 52px clamp(18px, 5vw, 72px);
+    }
+
+    .section-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 20px;
+      border: 1px solid rgba(157, 47, 54, 0.34);
+      border-left: 5px solid var(--red);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .notice p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 2.35rem;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .text-block p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-height: 116px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .metric b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .band {
+      background: #eef4f2;
+      border-top: 1px solid #d7e4df;
+      border-bottom: 1px solid #d7e4df;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      min-height: 196px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--green);
+      font-size: 0.78rem;
+      font-weight: 720;
+    }
+
+    .tag.blue {
+      background: var(--blue);
+    }
+
+    .tag.amber {
+      background: var(--amber);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      counter-reset: step;
+    }
+
+    .step {
+      min-height: 150px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      counter-increment: step;
+    }
+
+    .step::before {
+      content: counter(step);
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 14px;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 760;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    pre {
+      overflow: auto;
+      margin: 0;
+      padding: 18px;
+      border-radius: 8px;
+      background: #111718;
+      color: #eef7f4;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .link-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .link-list a {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-decoration: none;
+    }
+
+    .link-list span {
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 36px clamp(18px, 5vw, 72px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+    }
+
+    footer .section-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        position: absolute;
+        align-items: flex-start;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: 76vh;
+        padding-top: 98px;
+      }
+
+      h1 {
+        font-size: 3.35rem;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+      }
+
+      .lede {
+        font-size: 1.04rem;
+      }
+
+      .intro-grid,
+      .split,
+      .cards,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .notice {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">ml-quant-trading</div>
+    <nav class="nav" aria-label="Primary">
+      <a href="#validation">Validation</a>
+      <a href="#start">Start</a>
+      <a href="#contribute">Contribute</a>
+      <a href="https://github.com/initial-d/ml-quant-trading">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">PyTorch quantitative research toolkit</p>
+      <h1>ml-quant-trading</h1>
+      <p class="lede">
+        A research-first implementation of ML-enhanced multi-factor trading:
+        masked tensor factors, bias correction, ML baselines, portfolio
+        optimization, vectorized backtesting, and public validation workflows.
+      </p>
+      <div class="actions">
+        <a class="button" href="https://github.com/initial-d/ml-quant-trading">View repository</a>
+        <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0">v0.2.0 release</a>
+        <a class="button secondary" href="https://arxiv.org/abs/2507.07107">Read paper</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section">
+      <div class="section-inner notice">
+        <div>
+          <strong>Research and educational use only.</strong>
+          <p>
+            This project is not investment advice and is not production-ready.
+            Backtests depend on data quality, transaction costs, slippage, and
+            assumptions that differ from live markets.
+          </p>
+        </div>
+        <a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/reality_check.md">Read the reality check</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-inner intro-grid">
+        <div class="text-block">
+          <h2>A runnable baseline for factor research.</h2>
+          <p>
+            The repository packages the full research loop into one forkable
+            codebase: data panels, tensor factor computation, neutralization,
+            bias correction, ML models, portfolio construction, backtesting,
+            reproducibility notes, and contributor benchmark lanes.
+          </p>
+          <p>
+            The goal is not to claim deployable alpha. It is to make the
+            assumptions visible, run the pipeline end to end, and invite
+            public validation across machines, data sources, and markets.
+          </p>
+        </div>
+        <div class="metric-grid" aria-label="Project highlights">
+          <div class="metric">
+            <b>213</b>
+            <span>factor dimensions across Alpha101-style and legacy families</span>
+          </div>
+          <div class="metric">
+            <b>3</b>
+            <span>data routes: synthetic, yfinance, and Baostock A-share panels</span>
+          </div>
+          <div class="metric">
+            <b>v0.2.0</b>
+            <span>public validation and contributor workflow release</span>
+          </div>
+          <div class="metric">
+            <b>MIT</b>
+            <span>open-source license with citation metadata</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="validation" class="section band">
+      <div class="section-inner">
+        <h2>Validation surface</h2>
+        <div class="cards">
+          <article class="card">
+            <span class="tag">Synthetic</span>
+            <h3>Cross-platform plumbing check</h3>
+            <p>
+              Deterministic GBM panels exercise the CLI, report generation,
+              cost grids, bootstrap paths, and Windows CPU reproducibility.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Baostock</span>
+            <h3>A-share public-data route</h3>
+            <p>
+              A China-market data path helps contributors validate the pipeline
+              without depending on Yahoo Finance access.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag amber">yfinance</span>
+            <h3>Failure modes documented</h3>
+            <p>
+              HTTP 429 rate limits can surface as several Python errors, so the
+              docs include a smoke-test workflow before larger ETF runs.
+            </p>
+          </article>
+        </div>
+        <div class="actions">
+          <a class="button" href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md">Validation digest</a>
+          <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_validation.md">Public-data validation guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="start" class="section">
+      <div class="section-inner split">
+        <div>
+          <h2>Run the small pipeline.</h2>
+          <p class="lede" style="color: var(--muted); margin-top: 0;">
+            The synthetic smoke test is designed for ordinary laptops and CI
+            runners. It checks that the pipeline completes, not that a metric
+            matches exactly across every BLAS, solver, and PyTorch build.
+          </p>
+        </div>
+        <pre><code>git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e .[dev]
+make paper CONFIG=configs/small.yaml</code></pre>
+      </div>
+    </section>
+
+    <section id="contribute" class="section band">
+      <div class="section-inner">
+        <h2>Useful first contributions</h2>
+        <div class="steps">
+          <div class="step">
+            <strong>Run a benchmark</strong>
+            <span>Share CPU, GPU, or Apple Silicon tensor-factor results.</span>
+          </div>
+          <div class="step">
+            <strong>Try public data</strong>
+            <span>Report whether yfinance or Baostock validation works from your network.</span>
+          </div>
+          <div class="step">
+            <strong>Add caveats</strong>
+            <span>Improve assumptions, data notes, or factor-family explanations.</span>
+          </div>
+          <div class="step">
+            <strong>Pair on a report</strong>
+            <span>Use the maintainer pairing issue for reproducible validation PRs.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-inner split">
+        <div class="text-block">
+          <h2>Project links</h2>
+          <p>
+            Start with the research card and validation digest before reading
+            any backtest number as evidence. The current evidence is best read
+            as reproducibility diagnostics and a base for community experiments.
+          </p>
+        </div>
+        <ul class="link-list">
+          <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/start_here.md"><strong>Start Here</strong><span>quick path</span></a></li>
+          <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/research_card.md"><strong>Research Card</strong><span>scope and non-goals</span></a></li>
+          <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/benchmark_board.md"><strong>Benchmark Board</strong><span>community reports</span></a></li>
+          <li><a href="https://github.com/initial-d/ml-quant-trading/discussions/13"><strong>Benchmark Discussion</strong><span>share results</span></a></li>
+          <li><a href="https://huggingface.co/papers/2507.07107"><strong>Hugging Face Paper</strong><span>paper page</span></a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="section-inner">
+      <span>ml-quant-trading by Yimin Du</span>
+      <span><a href="https://github.com/initial-d/ml-quant-trading/blob/main/LICENSE">MIT License</a></span>
+    </div>
+  </footer>
+</body>
+</html>
