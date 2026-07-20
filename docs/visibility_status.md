@@ -9,6 +9,8 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Hugging Face paper page: <https://huggingface.co/papers/2507.07107>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
+- v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
+- Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Benchmark and reproduction discussion: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 - Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/12>
 - Pairing and public-data validation issue: <https://github.com/initial-d/ml-quant-trading/issues/22>
@@ -22,6 +24,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Public-data mini reproduction note: <https://github.com/initial-d/ml-quant-trading/issues/14>
 - First-run onboarding feedback: <https://github.com/initial-d/ml-quant-trading/issues/10>
 - Public-data mini reproduction doc: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_mini_reproduction.md>
+- Public validation digest for v0.2.0: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 
 ## Current Contributor Funnel
 
@@ -53,8 +56,8 @@ Primary ask:
 - Add more real benchmark results to `docs/benchmark_board.md`.
 - Add more public-data mini reproductions with larger or differently constructed universes.
 - Ask new users to try the Dev Container and report first-run friction.
-- Post the v0.1.0 release to one relevant community at a time with a customized note.
+- Post the v0.2.0 validation release to one relevant community at a time with a customized note.
 - Submit the paper to Hugging Face Papers and link the repository and reproduction paths.
-- Propose the repository for the Awesome Quant curated list.
+- Follow up on open high-relevance awesome-list pull requests after maintainers have had time to review.
 - Set a GitHub social preview image through repository settings when browser upload access is available.
 - Convert useful discussion replies into docs, issues, or benchmark board entries.

@@ -192,13 +192,16 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
 - [`docs/public_data_validation.md`](docs/public_data_validation.md) documents larger public-data walk-forward validation runs.
+- [`docs/validation_digest_20260720.md`](docs/validation_digest_20260720.md) summarizes the public validation surface for `v0.2.0`.
 - [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
+- [`docs/release_draft_v0.2.0.md`](docs/release_draft_v0.2.0.md) is the public validation and contributor-workflow release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [`docs/community_outreach.md`](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
 - [`docs/visibility_status.md`](docs/visibility_status.md) tracks live launch links, contributor calls, and next outreach steps.
 - [`v0.1.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0) is the first public research baseline release.
+- [`v0.2.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0) is the public validation and contributor-workflow release.
 - [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
 
 ---

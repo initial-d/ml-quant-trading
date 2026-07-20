@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.2.0 - Public Validation and Contributor Workflow
+
+This release moves `ml-quant-trading` beyond the first public baseline and into
+a more reviewable open-source research workflow.
+
+### Highlights
+
+- Added first-class public validation paths:
+  - synthetic reproducibility baseline
+  - Baostock A-share validation report
+  - yfinance rate-limit troubleshooting and smoke-test workflow
+- Added Baostock as a CLI-accessible public-data source.
+- Hardened neutralization and Baostock data handling with additional tests.
+- Added an English factor handbook for the 213-factor research surface.
+- Added Chinese README summaries in `README.zh-CN.md` and `README.zh-TW.md`.
+- Added a contributor pairing workflow for public-data validation and benchmark
+  reports.
+- Added security reporting guidance in `SECURITY.md`.
+- Refreshed community outreach and visibility tracking docs.
+
+### Validation Notes
+
+- The public reports are validation diagnostics, not evidence of deployable
+  alpha.
+- Public-data reports currently show that simple baselines remain difficult to
+  beat after costs.
+- yfinance may return HTTP 429 rate limits; contributors should run a small
+  smoke test before scaling to larger ETF universes.
+
 ## 0.1.0 - Public Research Baseline
 
 This is the first public baseline release of `ml-quant-trading`.
