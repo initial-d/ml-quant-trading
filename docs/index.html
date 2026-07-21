@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ml-quant-trading</title>
-  <meta name="description" content="A research-first PyTorch toolkit for ML-enhanced multi-factor quantitative trading, public validation, and portfolio backtesting.">
-  <meta property="og:title" content="ml-quant-trading">
-  <meta property="og:description" content="Research-first toolkit for factor computation, bias correction, ML baselines, portfolio optimization, and public validation.">
+  <title>ml-quant-trading Research Arena</title>
+  <meta name="description" content="A research arena for PyTorch multi-factor trading experiments, validation reports, public-data reproducibility, and portfolio backtesting.">
+  <meta property="og:title" content="ml-quant-trading Research Arena">
+  <meta property="og:description" content="Compare factor, model, data-source, and cost assumptions through public validation reports and reproducible research workflows.">
   <meta property="og:image" content="https://initial-d.github.io/ml-quant-trading/assets/readme-preview.png">
   <meta property="og:type" content="website">
   <style>
@@ -244,6 +244,157 @@
       font-size: 0.95rem;
     }
 
+    .arena-board {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .arena-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .arena-head p {
+      max-width: 760px;
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .arena-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid #c8dad4;
+      border-radius: 8px;
+      color: #0b5948;
+      background: #eff8f5;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+      background: #fbfdfc;
+    }
+
+    .score {
+      min-height: 108px;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .score:last-child {
+      border-right: 0;
+    }
+
+    .score strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.16rem;
+    }
+
+    .score span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .arena-table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+    }
+
+    .arena-table th,
+    .arena-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .arena-table th {
+      color: #334047;
+      background: #f3f7f5;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+
+    .arena-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .arena-table td {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .arena-table strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .arena-table td a {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: #0c5c4a;
+      background: #e4f3ee;
+      font-size: 0.78rem;
+      font-weight: 720;
+    }
+
+    .pill.warn {
+      color: #7b4b05;
+      background: #fff1d8;
+    }
+
+    .arena-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 18px;
+      border-top: 1px solid var(--line);
+      background: #fbfdfc;
+    }
+
+    .arena-action {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-decoration: none;
+    }
+
+    .arena-action strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .arena-action span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
     .band {
       background: #eef4f2;
       border-top: 1px solid #d7e4df;
@@ -426,6 +577,21 @@
         grid-template-columns: 1fr;
       }
 
+      .arena-head,
+      .scoreboard,
+      .arena-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .score {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .score:last-child {
+        border-bottom: 0;
+      }
+
       .notice {
         grid-template-columns: 1fr;
       }
@@ -436,6 +602,7 @@
   <header class="topbar">
     <div class="brand">ml-quant-trading</div>
     <nav class="nav" aria-label="Primary">
+      <a href="#arena">Arena</a>
       <a href="#validation">Validation</a>
       <a href="#start">Start</a>
       <a href="#contribute">Contribute</a>
@@ -445,17 +612,17 @@
 
   <section class="hero">
     <div class="hero-inner">
-      <p class="eyebrow">PyTorch quantitative research toolkit</p>
+      <p class="eyebrow">Research validation arena</p>
       <h1>ml-quant-trading</h1>
       <p class="lede">
-        A research-first implementation of ML-enhanced multi-factor trading:
-        masked tensor factors, bias correction, ML baselines, portfolio
-        optimization, vectorized backtesting, and public validation workflows.
+        Compare factor, model, data-source, and transaction-cost assumptions
+        through reproducible PyTorch research workflows. No black-box signal
+        claims, just public validation reports and inspectable backtests.
       </p>
       <div class="actions">
         <a class="button" href="https://github.com/initial-d/ml-quant-trading">View repository</a>
         <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0">v0.2.0 release</a>
-        <a class="button secondary" href="https://arxiv.org/abs/2507.07107">Read paper</a>
+        <a class="button secondary" href="#arena">Open arena board</a>
       </div>
     </div>
   </section>
@@ -472,6 +639,100 @@
           </p>
         </div>
         <a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/reality_check.md">Read the reality check</a>
+      </div>
+    </section>
+
+    <section id="arena" class="section">
+      <div class="section-inner arena-board">
+        <div class="arena-head">
+          <div>
+            <h2>Research Arena</h2>
+            <p>
+              A compact view of the current validation surface: which data
+              routes run, what each report is allowed to prove, and where the
+              next useful community submissions should land.
+            </p>
+          </div>
+          <span class="arena-status">Validation-first baseline</span>
+        </div>
+
+        <div class="scoreboard" aria-label="Arena summary">
+          <div class="score">
+            <strong>4 public lanes</strong>
+            <span>Synthetic, Baostock, yfinance mini, and ETF-50 blocker notes.</span>
+          </div>
+          <div class="score">
+            <strong>Cost grid</strong>
+            <span>0, 7, 15, and 30 bps scenarios expose turnover sensitivity.</span>
+          </div>
+          <div class="score">
+            <strong>Bootstrap CIs</strong>
+            <span>Reports include uncertainty estimates instead of single-number claims.</span>
+          </div>
+          <div class="score">
+            <strong>Open reports</strong>
+            <span>Every row links back to source docs, issues, or reproducible commands.</span>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="arena-table">
+            <thead>
+              <tr>
+                <th>Lane</th>
+                <th>Data route</th>
+                <th>Current evidence</th>
+                <th>Interpretation</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Synthetic baseline</strong><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_synthetic_20260716.md">Report</a></td>
+                <td>Generated GBM panel</td>
+                <td>CLI, report writing, cost grids, and bootstrap paths complete on Windows CPU.</td>
+                <td>Plumbing and reproducibility check. Not a predictive-signal claim.</td>
+                <td><span class="pill">Merged</span></td>
+              </tr>
+              <tr>
+                <td><strong>Baostock A-share route</strong><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_baostock_20260716.md">Report</a></td>
+                <td>Public China-market data</td>
+                <td>A Baostock validation path gives Chinese contributors a non-Yahoo route.</td>
+                <td>Useful for public-data access and A-share workflow testing.</td>
+                <td><span class="pill">Merged</span></td>
+              </tr>
+              <tr>
+                <td><strong>yfinance mini reproduction</strong><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_mini_reproduction.md">Report</a></td>
+                <td>Liquid US equities</td>
+                <td>Small public-data factor-IC smoke test with documented assumptions.</td>
+                <td>Good first check before scaling to larger ETF or equity universes.</td>
+                <td><span class="pill">Merged</span></td>
+              </tr>
+              <tr>
+                <td><strong>ETF-50 validation attempt</strong><a href="https://github.com/initial-d/ml-quant-trading/issues/22#issuecomment-4989435338">Blocker note</a></td>
+                <td>yfinance ETF-50</td>
+                <td>HTTP 429 rate limiting can surface as multiple Python-side errors.</td>
+                <td>Failure evidence is tracked so empty result PRs do not pollute the board.</td>
+                <td><span class="pill warn">Blocked</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="arena-actions">
+          <a class="arena-action" href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md">
+            <strong>Read the digest</strong>
+            <span>Release-level summary of the validation surface.</span>
+          </a>
+          <a class="arena-action" href="https://github.com/initial-d/ml-quant-trading/discussions/13">
+            <strong>Submit a run</strong>
+            <span>Share benchmark or public-data reproduction notes.</span>
+          </a>
+          <a class="arena-action" href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/roadmap.md">
+            <strong>Next arena lanes</strong>
+            <span>External factor adapters, larger panels, and GPU reports.</span>
+          </a>
+        </div>
       </div>
     </section>
 
