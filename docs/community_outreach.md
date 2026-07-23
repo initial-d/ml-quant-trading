@@ -31,6 +31,18 @@ Reddit communities often remove direct repository promotion. Share there only wh
 substantive, self-contained technical write-up is allowed by the current community rules;
 the repository link should support the analysis rather than be the purpose of the post.
 
+## Current Live Leads
+
+Use these as warm, high-relevance entry points. Do not repost the same pitch; reply only
+when the thread context makes the project genuinely useful.
+
+| Lead | Status | Good angle |
+|---|---|---|
+| Qlib discussion #2284 | Open discussion about A-share factor labs and AI research reports | Share validation-first design notes and mention the repo as a narrower PyTorch/A-share reference, not as a Qlib replacement |
+| awesome-quant-ai PR #43 | Merged directly by maintainer | Keep relationship warm; future follow-up should be about concrete benchmarks or an arena-style demo, not another listing request |
+| awesome-math-and-trading issue #3 | Open resource suggestion | Wait for maintainer activity before following up; keep the ask about fit and category placement |
+| awesome-fintech PR #50 | Open listing PR | No pressure follow-up only if the maintainer asks for changes or the PR becomes stale |
+
 ## Short Post
 
 I released `ml-quant-trading` v0.2.0, an end-to-end PyTorch stack for ML multi-factor research.

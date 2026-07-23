@@ -26,18 +26,22 @@ Primary audience:
 - It includes CI, tests, issue templates, contribution docs, and benchmark tooling.
 - It has enough real engineering depth to be fork-worthy, not just a notebook.
 
-## Next High-Leverage Work
+## Current High-Leverage Work
 
 1. Add a polished social preview image in GitHub repository settings.
-2. Add repository topics:
-   `quantitative-finance`, `algorithmic-trading`, `machine-learning`, `pytorch`,
-   `portfolio-optimization`, `alpha-factors`, `backtesting`, `research`.
-3. Create a first tagged release with release notes and a benchmark table.
-4. Publish one short launch post with a reproducible claim:
+2. Publish one short launch post with a reproducible claim:
    "Clone, install, and run a full synthetic factor-to-backtest pipeline in one command."
-5. Invite benchmark submissions through the benchmark issue template.
-6. Add one public-data case study with a small universe and clear caveats.
-7. Add a "good first issue" backlog for docs, factors, examples, and tests.
+3. Invite benchmark submissions through the benchmark issue template.
+4. Add one public-data case study with a small universe and clear caveats.
+5. Add a small Hugging Face demo artifact or model card that uses synthetic or clearly redistributable data only.
+6. Convert repeated external questions into docs, issues, or benchmark board entries.
+7. Follow up on high-relevance awesome-list submissions only after maintainers have had time to review.
+
+Already done:
+
+- Repository topics are filled out for quantitative finance, PyTorch, backtesting, and reproducibility discovery.
+- Tagged releases exist for `v0.1.0` and `v0.2.0`.
+- Hugging Face Papers has a verified paper entry.
 
 ## Ethical Promotion Rules
 
