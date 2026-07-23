@@ -6,7 +6,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 - Repository: <https://github.com/initial-d/ml-quant-trading>
 - Paper: <https://arxiv.org/abs/2507.07107>
-- Hugging Face paper page: <https://huggingface.co/papers/2507.07107>
+- Hugging Face paper page (verified authorship claim): <https://huggingface.co/papers/2507.07107>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
@@ -31,6 +31,12 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Community CPU/GPU benchmarks: <https://github.com/initial-d/ml-quant-trading/issues/7>
 - Paired public-data validation and benchmark work: <https://github.com/initial-d/ml-quant-trading/issues/22>
 - Benchmark and reproduction reports: <https://github.com/initial-d/ml-quant-trading/discussions/13>
+
+## Artifact Boundary
+
+- Public artifacts should be synthetic, metadata-only, or generated from clearly redistributable data.
+- Do not publish proprietary, paid, or license-unclear market data as repository or Hugging Face artifacts.
+- Hugging Face is useful as a paper and demo-artifact entry point, not as a place to mirror restricted financial datasets.
 
 ## Current Positioning
 
@@ -57,7 +63,7 @@ Primary ask:
 - Add more public-data mini reproductions with larger or differently constructed universes.
 - Ask new users to try the Dev Container and report first-run friction.
 - Post the v0.2.0 validation release to one relevant community at a time with a customized note.
-- Submit the paper to Hugging Face Papers and link the repository and reproduction paths.
+- Define a safe Hugging Face demo artifact or model card that uses synthetic or redistributable data only.
 - Follow up on open high-relevance awesome-list pull requests after maintainers have had time to review.
 - Set a GitHub social preview image through repository settings when browser upload access is available.
 - Convert useful discussion replies into docs, issues, or benchmark board entries.
