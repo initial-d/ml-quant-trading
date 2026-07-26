@@ -29,16 +29,16 @@ The current public results do not claim deployable alpha. They mainly show:
 - why simple baselines are important controls;
 - where contributors can add more reproducible reports.
 
-See [`docs/validation_digest_20260720.md`](validation_digest_20260720.md) for
+See [`docs/validation_digest_20260720.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/validation_digest_20260720.md) for
 the release validation summary.
 
 ## Useful Entry Points
 
-- Start here: [`docs/start_here.md`](start_here.md)
-- Public-data validation: [`docs/public_data_validation.md`](public_data_validation.md)
-- Validation digest: [`docs/validation_digest_20260720.md`](validation_digest_20260720.md)
-- Benchmark board: [`docs/benchmark_board.md`](benchmark_board.md)
-- Reality check: [`docs/reality_check.md`](reality_check.md)
+- Start here: [`docs/start_here.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/start_here.md)
+- Public-data validation: [`docs/public_data_validation.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/public_data_validation.md)
+- Validation digest: [`docs/validation_digest_20260720.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/validation_digest_20260720.md)
+- Benchmark board: [`docs/benchmark_board.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/benchmark_board.md)
+- Reality check: [`docs/reality_check.md`](https://github.com/initial-d/ml-quant-trading/blob/v0.2.0/docs/reality_check.md)
 - Pairing issue: <https://github.com/initial-d/ml-quant-trading/issues/22>
 
 ## Compatibility Notes
@@ -47,4 +47,3 @@ the release validation summary.
 - The project remains Python 3.9+ and PyTorch based.
 - The paper remains the research snapshot; `main` continues to evolve as a
   living open-source toolkit.
-
