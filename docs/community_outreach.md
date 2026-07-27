@@ -57,6 +57,9 @@ when the thread context makes the project genuinely useful.
 | NASDX issue #45 | Technical reply posted | A-share backtest weight validation, fail-fast contracts, and executed-weight diagnostics |
 | PortfolioOptimisers.jl issue #174 | Technical reply posted | Portfolio terminology boundary for assets, factors, features, and similarity matrices |
 | lookaheadbench issue #1 | Technical reply posted | Structured finance-context leakage, bitemporal artifacts, and replay-safe factor validation |
+| AI-Quant-Research-System issue #1 | Technical reply posted | PIT vendor ingestion contract, synthetic fixtures, and no-redistribution data boundary |
+| Algo-Quant-Backtester issue #5 | Technical reply posted | Evidence ladder for quickstart, baselines, costs, bias checks, and README claims |
+| ernie55ernie/awesome-quant PR #1 | External listing PR opened | Add ml-quant-trading to Research Frameworks source data for an auto-refreshed quant list |
 
 ## Short Post
 

@@ -86,5 +86,6 @@ Primary ask:
 - Post the v0.2.0 validation release to one relevant community at a time with a customized note.
 - Define a safe Hugging Face demo artifact or model card that uses synthetic or redistributable data only.
 - Follow up on open high-relevance awesome-list pull requests after maintainers have had time to review.
+- Follow up on the auto-refreshed Awesome Quant listing PR after maintainer review.
 - Set a GitHub social preview image through repository settings when browser upload access is available.
 - Convert useful discussion replies into docs, issues, or benchmark board entries.
