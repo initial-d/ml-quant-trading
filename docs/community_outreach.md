@@ -85,6 +85,10 @@ when the thread context makes the project genuinely useful.
 | stellarlend issue #666 | Technical reply posted | Auto-compounding break-even rules and gas-vs-yield sensitivity |
 | ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the new-project outreach pass and reproduction-report ask |
 | External listing PRs | Status checked, no nudges posted | Reviewed open awesome-list PRs and avoided premature maintainer pings |
+| twopercent issue #60 | Technical reply posted | Multiple-comparison accounting, promotion-band provenance, and shuffled-label baseline discipline |
+| quant_intel_system issue #1 | Technical reply posted | Qlib parallel backtest reconciliation boundary for A-share signals and custom engine comparison |
+| skrymer/trading issue #182 | Technical reply posted | Regime recall validation with CRISIS protection scorecard and pre-registered anchor-span reporting |
+| ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the fresh-project outreach pass and reproduction-report ask |
 
 ## Short Post
 
