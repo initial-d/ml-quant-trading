@@ -49,7 +49,7 @@ when the thread context makes the project genuinely useful.
 | quant-trading-system issue #1 | Technical reply posted | Research-only validation workflow discussion; no follow-up unless the maintainer asks |
 | Velocity issue #48 | Technical reply posted | Soft-market archive / CLV validation discussion; no follow-up unless the maintainer asks |
 | Sport-Betting-Engine issue #46 | Technical reply posted | Model-change validation tier policy discussion; no follow-up unless the maintainer asks |
-| ml-quant-trading discussion #13 | Maintainer update posted | Public discovery surface and benchmark ask consolidated for visitors |
+| ml-quant-trading discussion #13 | Maintainer updates posted | Public discovery surface, Colab demo fix, and benchmark ask consolidated for visitors |
 | tradingV3 issue #323 | Technical reply posted | French backtest UI / proof-contract discussion; no follow-up unless the maintainer asks |
 | claude-ai-trading-automation issue #38 | Technical reply posted | Earnings-event backtest boundary and point-in-time event-table design |
 | quant-scratch issue #6 | Technical reply posted | Source-agnostic local data cache, replay manifests, and yfinance rate-limit visibility |
