@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.1 - Validation Entrypoints and Outreach Follow-through
+
+This patch release improves the public reproduction funnel after the `v0.2.0`
+validation release. It does not change the research claim or add a new trading
+signal; it makes the existing validation surface easier to find, run, and
+follow up.
+
+### Highlights
+
+- Fixed the Colab Baostock demo bootstrap so fresh runtimes clone the canonical
+  `initial-d/ml-quant-trading` repository.
+- Added the Colab demo to the tracked public entry points.
+- Added a follow-up validation digest for the outreach and reproduction surface.
+- Tracked external validation-oriented discussions around backtest correctness,
+  public-data blockers, Qlib reconciliation, and replay-safe research contracts.
+- Refreshed the visibility pulse after the outreach window.
+
+### Validation Notes
+
+- The project remains research-only and validation-first.
+- Public-data failures, rate limits, and blocked reproductions should be reported
+  as blockers rather than converted into empty benchmark claims.
+- `v0.2.1` is mainly an entrypoint and documentation patch over `v0.2.0`.
+
 ## 0.2.0 - Public Validation and Contributor Workflow
 
 This release moves `ml-quant-trading` beyond the first public baseline and into

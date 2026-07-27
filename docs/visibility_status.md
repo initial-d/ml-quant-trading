@@ -12,8 +12,10 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Awesome AI Trading Research listing (B1 Factor Investing): <https://github.com/ohselab/awesome-ai-trading-research/blob/main/papers.md#b1-factor-investing-23>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
+- v0.2.1 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1>
 - Colab Baostock demo: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb>
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
+- Follow-up validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>
 - Benchmark and reproduction discussion: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 - Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/12>
 - Pairing and public-data validation issue: <https://github.com/initial-d/ml-quant-trading/issues/22>
@@ -84,7 +86,7 @@ Primary ask:
 - Add more real benchmark results to `docs/benchmark_board.md`.
 - Add more public-data mini reproductions with larger or differently constructed universes.
 - Ask new users to try the Dev Container and report first-run friction.
-- Post the v0.2.0 validation release to one relevant community at a time with a customized note.
+- Post the v0.2.1 validation entrypoint release to one relevant community at a time with a customized note.
 - Define a safe Hugging Face demo artifact or model card that uses synthetic or redistributable data only.
 - Follow up on open high-relevance awesome-list pull requests after maintainers have had time to review.
 - Follow up on the auto-refreshed Awesome Quant listing PR after maintainer review.

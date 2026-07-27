@@ -12,7 +12,7 @@ Use this page to share the project with relevant communities without spam.
 ## Recommended Communities
 
 Post only where you already have an account and can reply to comments. Prefer
-the `v0.2.0` validation release when the audience cares about reproducibility
+the `v0.2.1` validation entrypoint release when the audience cares about reproducibility
 more than launch novelty.
 
 | Channel | Angle | Suggested ask |
@@ -92,21 +92,21 @@ when the thread context makes the project genuinely useful.
 
 ## Short Post
 
-I released `ml-quant-trading` v0.2.0, an end-to-end PyTorch stack for ML multi-factor research.
+I released `ml-quant-trading` v0.2.1, an end-to-end PyTorch stack for ML multi-factor research.
 
 It includes 213 factors, masked tensor ops, bias correction, MLP/Transformer baselines,
 Markowitz optimization, vectorized backtesting, a public-data notebook, CI, and benchmark
 tooling.
 
 Repo: https://github.com/initial-d/ml-quant-trading
-Release: https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0
+Release: https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1
 Paper: https://arxiv.org/abs/2507.07107
 
 I am looking for CPU/GPU benchmark results and public-data reproduction feedback.
 
 ## Longer Community Post
 
-I released `ml-quant-trading` v0.2.0, a research-oriented implementation of
+I released `ml-quant-trading` v0.2.1, a research-oriented implementation of
 ML-enhanced multi-factor quantitative trading.
 
 The goal is to provide a reproducible baseline rather than a trading signal claim. The repo
@@ -131,7 +131,7 @@ reproduction paths. I would especially appreciate:
 - documentation and setup feedback
 
 Repo: https://github.com/initial-d/ml-quant-trading
-Release: https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0
+Release: https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1
 Paper: https://arxiv.org/abs/2507.07107
 
 ## Posting Rules

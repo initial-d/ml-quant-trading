@@ -40,7 +40,7 @@ Primary audience:
 Already done:
 
 - Repository topics are filled out for quantitative finance, PyTorch, backtesting, and reproducibility discovery.
-- Tagged releases exist for `v0.1.0` and `v0.2.0`.
+- Tagged releases exist for `v0.1.0`, `v0.2.0`, and `v0.2.1`.
 - Hugging Face Papers has a verified paper entry.
 
 ## Ethical Promotion Rules
