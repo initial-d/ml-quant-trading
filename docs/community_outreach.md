@@ -53,6 +53,10 @@ when the thread context makes the project genuinely useful.
 | tradingV3 issue #323 | Technical reply posted | French backtest UI / proof-contract discussion; no follow-up unless the maintainer asks |
 | claude-ai-trading-automation issue #38 | Technical reply posted | Earnings-event backtest boundary and point-in-time event-table design |
 | quant-scratch issue #6 | Technical reply posted | Source-agnostic local data cache, replay manifests, and yfinance rate-limit visibility |
+| yfinance discussion #2503 | Technical reply posted | Single-ticker rate-limit diagnostics and explicit public-data blocker reporting |
+| NASDX issue #45 | Technical reply posted | A-share backtest weight validation, fail-fast contracts, and executed-weight diagnostics |
+| PortfolioOptimisers.jl issue #174 | Technical reply posted | Portfolio terminology boundary for assets, factors, features, and similarity matrices |
+| lookaheadbench issue #1 | Technical reply posted | Structured finance-context leakage, bitemporal artifacts, and replay-safe factor validation |
 
 ## Short Post
 
