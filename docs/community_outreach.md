@@ -78,6 +78,13 @@ when the thread context makes the project genuinely useful.
 | algua issue #479 | Technical reply posted | PIT-safe deterministic portfolio construction, correlation pruning, and config hashing |
 | Quant-Lab issue #2 | Technical reply posted | A-share roadmap ordering around data, labels, factor validation, walk-forward, and models |
 | Trading-engine issue #1243 | Technical reply posted | Predeclared calibration report template and test-set discipline for RSI2 validation |
+| librae issue #18 | Technical reply posted | Backtest, simulation, and live-trading mode contracts with broker-fill provenance |
+| truealpha issue #429 | Technical reply posted | Fixture-vs-real-data provenance and deployed-output drift detection |
+| etoro_nautilus issue #736 | Technical reply posted | Process handoff provenance for orchestrator, live node, and optimization artifacts |
+| stellarlend issue #682 | Technical reply posted | Risk-aware lending allocation optimizer with gas, liquidity, and attribution reporting |
+| stellarlend issue #666 | Technical reply posted | Auto-compounding break-even rules and gas-vs-yield sensitivity |
+| ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the new-project outreach pass and reproduction-report ask |
+| External listing PRs | Status checked, no nudges posted | Reviewed open awesome-list PRs and avoided premature maintainer pings |
 
 ## Short Post
 

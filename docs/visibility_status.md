@@ -42,6 +42,7 @@ Recorded on 2026-07-27 from GitHub's rolling 14-day traffic window:
 - Views: 1,206 total, 246 unique visitors.
 - Clones: 465 total, 249 unique cloners.
 - Repository stars/forks at snapshot time: 54 stars, 28 forks.
+- Follow-up pulse during outreach on 2026-07-27: 55 stars, 28 forks, 4 watchers.
 - Top referrers: GitHub, Google, Bing, arXiv, ChatGPT, Zhihu, Baidu.
 - High-interest paths beyond the repository root: `README.zh-CN.md`,
   `docs/factor_handbook.md`, issue #22, discussion #13, and contributor PRs.
