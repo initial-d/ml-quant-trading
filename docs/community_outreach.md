@@ -60,6 +60,16 @@ when the thread context makes the project genuinely useful.
 | AI-Quant-Research-System issue #1 | Technical reply posted | PIT vendor ingestion contract, synthetic fixtures, and no-redistribution data boundary |
 | Algo-Quant-Backtester issue #5 | Technical reply posted | Evidence ladder for quickstart, baselines, costs, bias checks, and README claims |
 | ernie55ernie/awesome-quant PR #1 | External listing PR opened | Add ml-quant-trading to Research Frameworks source data for an auto-refreshed quant list |
+| NASDX issue #44 | Technical reply posted | Missing/suspended-price handling, stale valuation prices, and execution-price separation |
+| NASDX issue #43 | Technical reply posted | Explicit weekly/monthly rebalance calendar semantics and no-lookahead schedule tests |
+| yfinance discussion #2912 | Technical reply posted | EDGAR filing backend provenance, accession IDs, same-day filing collisions, and public-data validation |
+| yfinance discussion #2783 | Technical reply posted | Polars migration benchmark contract and golden-output compatibility checks |
+| yfinance discussion #2854 | Technical reply posted | Daily-bar freshness diagnostics, exchange timezone checks, and data-vintage discipline |
+| Alembic issue #57 | Technical reply posted | SPX VRP option-strip data contract, quote provenance, and evidence-first NO-GO criteria |
+| beacon-trader issue #61 | Technical reply posted | Replay-safe market-structure versions and shadow attribution before gating |
+| AI-Quant-Portfolio-Manager issue #3 | Technical reply posted | Multi-provider market-data contract for source, timezone, vintage, missingness, and license boundaries |
+| AI-Quant-Portfolio-Manager issue #1 | Technical reply posted | Research, paper-trading, and live-trading boundary with independent risk gates |
+| ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the validation-focused outreach campaign and reproduction-report ask |
 
 ## Short Post
 
