@@ -89,6 +89,10 @@ when the thread context makes the project genuinely useful.
 | quant_intel_system issue #1 | Technical reply posted | Qlib parallel backtest reconciliation boundary for A-share signals and custom engine comparison |
 | skrymer/trading issue #182 | Technical reply posted | Regime recall validation with CRISIS protection scorecard and pre-registered anchor-span reporting |
 | ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the fresh-project outreach pass and reproduction-report ask |
+| v0.2.1 release | Published | Validation entrypoints, Colab bootstrap fix, and outreach follow-through release |
+| awesome-systematic-trading PR #72 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
+| Awesome-pytorch-list PR #177 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
+| awesome-ai-in-finance PR #193 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
 
 ## Short Post
 

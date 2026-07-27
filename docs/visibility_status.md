@@ -30,6 +30,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - First-run onboarding feedback: <https://github.com/initial-d/ml-quant-trading/issues/10>
 - Public-data mini reproduction doc: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_mini_reproduction.md>
 - Public validation digest for v0.2.0: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
+- Public validation digest for v0.2.1: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>
 
 ## Current Contributor Funnel
 
