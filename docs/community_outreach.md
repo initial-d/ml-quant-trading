@@ -70,6 +70,14 @@ when the thread context makes the project genuinely useful.
 | AI-Quant-Portfolio-Manager issue #3 | Technical reply posted | Multi-provider market-data contract for source, timezone, vintage, missingness, and license boundaries |
 | AI-Quant-Portfolio-Manager issue #1 | Technical reply posted | Research, paper-trading, and live-trading boundary with independent risk gates |
 | ml-quant-trading discussion #13 | Maintainer update posted | Landing update for the validation-focused outreach campaign and reproduction-report ask |
+| AlphaGPT issue #1 | Technical reply posted | A-share factor-mining output contract, RankIC diagnostics, and SIGNAL_DIR manifest design |
+| historical issue #120 | Technical reply posted | StockGPT replication boundary, PIT universe checks, baselines, and factor attribution |
+| digithings issue #396 | Technical reply posted | Quant sandbox deterministic smoke tests and public-data-vs-synthetic validation split |
+| AlphaForge issue #8 | Technical reply posted | Constrained Markowitz post-solve audit object and baseline comparison evidence |
+| finance-query issue #274 | Technical reply posted | Margin/leverage accounting, sizing schemes, and multi-objective optimization separation |
+| algua issue #479 | Technical reply posted | PIT-safe deterministic portfolio construction, correlation pruning, and config hashing |
+| Quant-Lab issue #2 | Technical reply posted | A-share roadmap ordering around data, labels, factor validation, walk-forward, and models |
+| Trading-engine issue #1243 | Technical reply posted | Predeclared calibration report template and test-set discipline for RSI2 validation |
 
 ## Short Post
 
