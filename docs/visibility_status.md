@@ -9,6 +9,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Hugging Face paper page (verified authorship claim): <https://huggingface.co/papers/2507.07107>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - Awesome Quant listing (Factor Analysis): <https://github.com/wilsonfreitas/awesome-quant#factor-analysis>
+- Awesome AI Trading Research listing (B1 Factor Investing): <https://github.com/ohselab/awesome-ai-trading-research/blob/main/papers.md#b1-factor-investing-23>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
