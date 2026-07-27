@@ -47,6 +47,7 @@ when the thread context makes the project genuinely useful.
 | ai-trade-flow-platform issue #63 | Technical reply posted | Taiwan-market live-trading boundary discussion; no follow-up unless the maintainer asks |
 | MCI-GRU issue #116 | Technical reply posted | PIT universe / benchmark-basis correctness discussion; no follow-up unless the maintainer asks |
 | quant-trading-system issue #1 | Technical reply posted | Research-only validation workflow discussion; no follow-up unless the maintainer asks |
+| Velocity issue #48 | Technical reply posted | Soft-market archive / CLV validation discussion; no follow-up unless the maintainer asks |
 
 ## Short Post
 
