@@ -11,6 +11,7 @@
 [![Project site](https://img.shields.io/badge/project-site-0f7b63.svg)](https://initial-d.github.io/ml-quant-trading/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
 [![Hugging Face Papers](https://img.shields.io/badge/Hugging%20Face-Papers-ffcc4d.svg)](https://huggingface.co/papers/2507.07107)
+[![Awesome Quant](https://img.shields.io/badge/Awesome%20Quant-Factor%20Analysis-4c78a8.svg)](https://github.com/wilsonfreitas/awesome-quant#factor-analysis)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
