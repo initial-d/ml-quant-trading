@@ -42,7 +42,7 @@ when the thread context makes the project genuinely useful.
 | awesome-quant-ai PR #43 | Merged directly by maintainer | Keep relationship warm; future follow-up should be about concrete benchmarks or an arena-style demo, not another listing request |
 | awesome-math-and-trading issue #3 | Open resource suggestion | Wait for maintainer activity before following up; keep the ask about fit and category placement |
 | awesome-fintech PR #50 | Open listing PR | No pressure follow-up only if the maintainer asks for changes or the PR becomes stale |
-| awesome-ai-trading PR #5 | Open listing PR | Wait for maintainer review; no follow-up unless requested or stale for several weeks |
+| awesome-ai-trading PR #4 | Open listing PR | Wait for maintainer review; no follow-up unless requested or stale for several weeks |
 
 ## Short Post
 
