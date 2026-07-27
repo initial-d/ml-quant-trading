@@ -12,6 +12,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Awesome AI Trading Research listing (B1 Factor Investing): <https://github.com/ohselab/awesome-ai-trading-research/blob/main/papers.md#b1-factor-investing-23>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
+- Colab Baostock demo: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb>
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Benchmark and reproduction discussion: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 - Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/12>
