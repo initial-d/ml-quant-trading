@@ -45,6 +45,7 @@ when the thread context makes the project genuinely useful.
 | awesome-ai-trading PR #4 | Open listing PR | Wait for maintainer review; no follow-up unless requested or stale for several weeks |
 | coinbase_futures_bot issue #405 | Technical reply posted | Good validation/replay-manifest discussion; no follow-up unless the maintainer asks |
 | ai-trade-flow-platform issue #63 | Technical reply posted | Taiwan-market live-trading boundary discussion; no follow-up unless the maintainer asks |
+| MCI-GRU issue #116 | Technical reply posted | PIT universe / benchmark-basis correctness discussion; no follow-up unless the maintainer asks |
 
 ## Short Post
 
