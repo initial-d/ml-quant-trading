@@ -34,6 +34,24 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Paired public-data validation and benchmark work: <https://github.com/initial-d/ml-quant-trading/issues/22>
 - Benchmark and reproduction reports: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 
+## Traffic Snapshot
+
+Recorded on 2026-07-27 from GitHub's rolling 14-day traffic window:
+
+- Views: 1,206 total, 246 unique visitors.
+- Clones: 465 total, 249 unique cloners.
+- Repository stars/forks at snapshot time: 54 stars, 28 forks.
+- Top referrers: GitHub, Google, Bing, arXiv, ChatGPT, Zhihu, Baidu.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, issue #22, discussion #13, and contributor PRs.
+
+Operating takeaways:
+
+- Chinese-language onboarding and the factor handbook are real discovery surfaces.
+- arXiv and search traffic are already contributing steady external discovery.
+- Contributor-facing issues and discussions are receiving enough traffic to keep
+  benchmark/reproduction asks visible.
+
 ## Artifact Boundary
 
 - Public artifacts should be synthetic, metadata-only, or generated from clearly redistributable data.
