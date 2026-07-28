@@ -4,15 +4,21 @@ The package treats market data as a pair of ``[date, stock]`` torch
 tensors plus a boolean mask telling us which cells are tradable. All
 downstream code (factors, training, portfolio) operates on this layout.
 
-Two data sources are wired up out of the box:
+Five data sources are wired up out of the box:
 
 * ``"synthetic"`` — :func:`make_synthetic_panel`, deterministic GBM panel
   for tests, demos and CI.
 * ``"csv"`` — :func:`load_ochlv_csv`, generic tab-separated Wind / Tushare
   dump with optional ``LIMIT_UP`` / ``LIMIT_DOWN`` / ``LAST_CLOSE`` /
   ``S_DQ_AMOUNT`` columns.
+* ``"yfinance"`` — :func:`load_yfinance_panel`, public Yahoo Finance
+  market data.
+* ``"baostock"`` — :func:`load_baostock_panel`, authenticated A-share
+  daily data.
+* ``"akshare"`` — :func:`load_akshare_panel`, zero-auth A-share daily
+  data from public upstream interfaces.
 
-Both return the same :class:`Panel`, so consumers should never branch
+All return the same :class:`Panel`, so consumers should never branch
 on the source.
 """
 from __future__ import annotations
@@ -25,6 +31,7 @@ from .synthetic import SyntheticConfig, make_synthetic_panel
 from .loaders import load_ochlv_csv
 from .yfinance_loader import load_yfinance_panel
 from .baostock_loader import load_baostock_panel
+from .akshare_loader import load_akshare_panel
 
 __all__ = [
     "Panel",
@@ -33,18 +40,19 @@ __all__ = [
     "load_ochlv_csv",
     "load_yfinance_panel",
     "load_baostock_panel",
+    "load_akshare_panel",
     "make_panel",
 ]
 
 
 def make_panel(source: str = "synthetic", **kwargs: Any) -> Panel:
-    """Unified factory: ``make_panel("synthetic", ...)`` or ``make_panel("csv", path=...)``.
+    """Build a panel from synthetic, CSV, yfinance, Baostock, or AkShare data.
 
     Parameters
     ----------
     source : str
-        Either ``"synthetic"`` (forwarded to :class:`SyntheticConfig`) or
-        ``"csv"`` (forwarded to :func:`load_ochlv_csv`).
+        One of ``"synthetic"``, ``"csv"``, ``"yfinance"``,
+        ``"baostock"``, or ``"akshare"``.
     **kwargs
         Source-specific keyword arguments.
     """
@@ -70,4 +78,11 @@ def make_panel(source: str = "synthetic", **kwargs: Any) -> Panel:
         if tickers is None or start is None or end is None:
             raise TypeError("make_panel(source='baostock', ...) requires `tickers`, `start`, and `end` kwargs")
         return load_baostock_panel(tickers, start, end, **kwargs)
+    if source == "akshare":
+        tickers = kwargs.pop("tickers", None)
+        start = kwargs.pop("start", None)
+        end = kwargs.pop("end", None)
+        if tickers is None or start is None or end is None:
+            raise TypeError("make_panel(source='akshare', ...) requires `tickers`, `start`, and `end` kwargs")
+        return load_akshare_panel(tickers, start, end, **kwargs)
     raise ValueError(f"unknown panel source: {source!r}")
