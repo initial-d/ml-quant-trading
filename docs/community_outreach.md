@@ -93,6 +93,10 @@ when the thread context makes the project genuinely useful.
 | awesome-systematic-trading PR #72 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
 | Awesome-pytorch-list PR #177 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
 | awesome-ai-in-finance PR #193 | Low-pressure follow-up posted | Mentioned v0.2.1 validation entrypoint release and offered wording/category changes |
+| finverify-llm issue #53 | Technical reply posted | Async yfinance offload with bounded concurrency, timeout, stale-cache, and regression test guidance |
+| mars-research-assistant issue #103 | Technical reply posted | Explicit data-source selection, OHLCV quality gates, partial-bar rejection, and chart provenance |
+| noctis issue #142 | Technical reply posted | Reporting-only metrics boundary, PSR/DSR inputs, benchmark roster freeze, and null metric handling |
+| QuantConnect Lean issue #9638 | Technical reply posted | Option-spread grouping invariants, order-route equivalence, and cash-insolvency assertion |
 
 ## Short Post
 
