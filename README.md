@@ -95,12 +95,14 @@ If you build on this work, please consider citing the paper and opening issues o
 
 | Source | Market | Access | Notes |
 |--------|--------|--------|-------|
+| [AkShare](https://akshare.akfamily.xyz/) | A-shares | Public, no API key | Zero-auth loader backed by public upstream interfaces that may change or rate-limit |
 | [Baostock](http://baostock.com) | A-shares | Free registration | Supported A-share loader; requires account |
 | [yfinance](https://pypi.org/project/yfinance/) | US equities / ETFs | Public, rate-limited | Used for public-data validation and cross-market examples |
 | Synthetic | N/A | Zero-config | Deterministic GBM panel for smoke testing the pipeline |
 
-The repository does not redistribute market data. Baostock and yfinance data
-are downloaded on-demand by the loader scripts. Synthetic data is generated
+The repository does not redistribute market data. AkShare, Baostock, and
+yfinance data are downloaded on-demand by the loader scripts. Public upstream
+interfaces can change or rate-limit requests. Synthetic data is generated
 deterministically from a fixed seed.
 
 ## Quick Start
@@ -262,7 +264,7 @@ stock_019  stock_020  stock_021  stock_022
 
 ### Data Sources
 
-You can directly fetch stock data from Yahoo Finance or Baostock (for A-shares).
+You can directly fetch stock data from Yahoo Finance, Baostock, or AkShare.
 
 **yfinance:**
 ```python
@@ -288,6 +290,22 @@ panel = make_panel(
 )
 ```
 
+**AkShare (A-shares, no API key):**
+```python
+from mlquant.data import make_panel
+
+panel = make_panel(
+    source="akshare",
+    tickers=["600519", "000001"],
+    start="2020-01-01",
+    end="2023-12-31",
+    adjust="qfq",
+)
+```
+
+AkShare uses public upstream interfaces, so availability, schemas, and rate
+limits can change independently of this project.
+
 ### Usage
 
 ```python
@@ -307,7 +325,7 @@ factors, mask, names = compute_legacy_set(panel, names=("best_001", "add_015", "
 ```mermaid
 flowchart LR
     subgraph Data["1. Data"]
-        A[Raw OHLCV] --> B[loaders<br/>synthetic / yfinance / baostock]
+        A[Raw OHLCV] --> B[loaders<br/>synthetic / yfinance / baostock / akshare]
     end
     subgraph Features["2. Features"]
         B --> C[tensor_factors<br/>GPU masked primitives]

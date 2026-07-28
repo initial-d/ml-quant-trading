@@ -4,15 +4,21 @@ The package treats market data as a pair of ``[date, stock]`` torch
 tensors plus a boolean mask telling us which cells are tradable. All
 downstream code (factors, training, portfolio) operates on this layout.
 
-Two data sources are wired up out of the box:
+Five data sources are wired up out of the box:
 
 * ``"synthetic"`` — :func:`make_synthetic_panel`, deterministic GBM panel
   for tests, demos and CI.
 * ``"csv"`` — :func:`load_ochlv_csv`, generic tab-separated Wind / Tushare
   dump with optional ``LIMIT_UP`` / ``LIMIT_DOWN`` / ``LAST_CLOSE`` /
   ``S_DQ_AMOUNT`` columns.
+* ``"yfinance"`` — :func:`load_yfinance_panel`, public Yahoo Finance
+  market data.
+* ``"baostock"`` — :func:`load_baostock_panel`, authenticated A-share
+  daily data.
+* ``"akshare"`` — :func:`load_akshare_panel`, zero-auth A-share daily
+  data from public upstream interfaces.
 
-Both return the same :class:`Panel`, so consumers should never branch
+All return the same :class:`Panel`, so consumers should never branch
 on the source.
 """
 from __future__ import annotations
@@ -40,13 +46,13 @@ __all__ = [
 
 
 def make_panel(source: str = "synthetic", **kwargs: Any) -> Panel:
-    """Unified factory: ``make_panel("synthetic", ...)`` or ``make_panel("csv", path=...)``.
+    """Build a panel from synthetic, CSV, yfinance, Baostock, or AkShare data.
 
     Parameters
     ----------
     source : str
-        Either ``"synthetic"`` (forwarded to :class:`SyntheticConfig`) or
-        ``"csv"`` (forwarded to :func:`load_ochlv_csv`).
+        One of ``"synthetic"``, ``"csv"``, ``"yfinance"``,
+        ``"baostock"``, or ``"akshare"``.
     **kwargs
         Source-specific keyword arguments.
     """

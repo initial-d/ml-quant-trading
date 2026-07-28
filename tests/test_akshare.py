@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 import torch
 
+from mlquant.data import make_panel
 from mlquant.data.akshare_loader import load_akshare_panel
 
 
@@ -63,3 +64,23 @@ def test_load_akshare_panel_mock():
 def test_load_akshare_panel_empty_tickers():
     with pytest.raises(ValueError, match="Tickers list cannot be empty"):
         load_akshare_panel([], "2023-01-01", "2023-01-04")
+
+
+def test_make_panel_dispatches_to_akshare():
+    expected_panel = mock.sentinel.panel
+    with mock.patch("mlquant.data.load_akshare_panel", return_value=expected_panel) as loader:
+        panel = make_panel(
+            source="akshare",
+            tickers=["600519", "000001"],
+            start="2023-01-01",
+            end="2023-01-04",
+            adjust="hfq",
+        )
+
+    assert panel is expected_panel
+    loader.assert_called_once_with(
+        ["600519", "000001"],
+        "2023-01-01",
+        "2023-01-04",
+        adjust="hfq",
+    )
