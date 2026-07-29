@@ -252,6 +252,13 @@ This benchmark is stronger than the tiny public-data IC note because it includes
 a larger universe, walk-forward prediction, portfolio construction, turnover,
 drawdown, costs, uncertainty intervals, and baseline comparisons.
 
+When interpreting a factor strategy, always read net return together with
+`gross_ann_return`, `turnover`, and `cost_drag`. A strategy can have a positive
+gross return but still fail after costs if it trades too aggressively. That is
+especially important for naive factor blends such as `alpha101_mean`: a negative
+net result may be a turnover-control and portfolio-construction problem rather
+than evidence that the factor family has no research value.
+
 It still should not be read as proof of deployable alpha:
 
 - yfinance data is convenient but not institutional-grade research data.

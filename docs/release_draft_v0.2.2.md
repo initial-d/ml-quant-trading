@@ -49,6 +49,13 @@ At 7 bps effective cost:
 | momentum_20 | 0.3228 | 1.0256 | 0.3133 | 0.1622 | 2.9321 |
 | alpha101_mean | -0.0728 | -0.2481 | 0.4538 | 0.5345 | 0.7479 |
 
+The negative `alpha101_mean` net result is a cost-and-turnover lesson, not a
+blanket statement against factor research. Its gross annual return is positive
+(`0.1195`), but high turnover (`0.5345`) creates a large 7 bps cost drag
+(`0.7244`) and turns the net annual return negative. In other words, this run
+shows that naive factor averaging needs turnover control, neutralization, and
+portfolio construction before it can be interpreted as a serious alpha model.
+
 ## Caveats
 
 - The `csi-300` preset uses the current constituent list available from public

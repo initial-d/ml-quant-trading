@@ -93,6 +93,12 @@ The only warning was expected for this current-constituent universe:
   costs, but its result is visibly cost-sensitive.
 - `alpha101_mean` is positive before costs and negative after 7 bps, which is a
   useful negative control for high-turnover factor blends.
+- The `alpha101_mean` result should not be read as "quant factors do not work."
+  Its gross annual return is positive (`0.1195`), but turnover is much higher
+  (`0.5345`) and the 7 bps cost drag is large (`0.7244`), turning the net annual
+  return negative (`-0.0728`). The failure mode is naive factor aggregation plus
+  high turnover under transaction costs, not evidence that factor research is
+  intrinsically useless.
 - Equal weight is stable across the cost grid because turnover is very low.
 - The run supports the public validation path: AkShare can provide a zero-auth
   A-share benchmark surface large enough for CSI 300-scale experiments.
