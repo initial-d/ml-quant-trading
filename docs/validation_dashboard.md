@@ -22,6 +22,9 @@ trading scoreboard.
 
 ![Daily 213-factor validation cost sensitivity](assets/validation-cost-sensitivity.svg)
 
+This chart is a cost stress test, not a time-series equity curve. The downward
+slope shows how final equity changes as the assumed transaction cost increases.
+
 | Strategy | Annual return | Sharpe | Max drawdown | Turnover | Cost drag | Final equity |
 |---|---:|---:|---:|---:|---:|---:|
 | `equal_weight_daily` | 17.75% | 0.882 | 25.76% | 0.0010 | 0.13% | 1.8744 |

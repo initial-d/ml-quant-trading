@@ -48,6 +48,10 @@ Latest maintained public-data snapshot: [AkShare CSI 300 Daily 213-Factor Valida
 
 ![Daily 213-factor validation cost sensitivity](docs/assets/validation-cost-sensitivity.svg)
 
+This is a cost stress test, not a time-series equity curve: the x-axis increases
+the assumed transaction cost, so high-turnover strategies are expected to slope
+down faster.
+
 | Run | Universe | Frequency | Factor set | Main result at 7 bps effective cost |
 |---|---|---:|---:|---|
 | Daily 213-factor public approximation | Current CSI 300, 2021-01-04 to 2024-12-31 | Daily | 213 | Buffered factor portfolio: 22.20% ann. return, 0.919 Sharpe, 2.1616 final equity |
