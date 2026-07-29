@@ -17,6 +17,8 @@ research claim or convert the project into a trading recommendation.
 - Documented the AkShare CSI 300 command in `docs/public_data_validation.md`.
 - Added the tracked report
   `docs/validation_akshare_csi300_20260729.md`.
+- Added a daily 213-factor AkShare CSI 300 public-data approximation in
+  `docs/validation_akshare_csi300_full_pipeline_20260729.md`.
 
 ### Validation Notes
 
@@ -27,6 +29,9 @@ research claim or convert the project into a trading recommendation.
 - The resolved CSI 300 universe is not historical point-in-time membership; it
   is a public-data reproducibility benchmark, not a full paper reproduction or
   deployable alpha claim.
+- In the daily 213-factor public run, the buffered factor portfolio outperformed
+  equal weight after 7 bps effective costs, while the naive daily factor
+  portfolio showed how excessive turnover can consume gross factor edge.
 
 ## 0.2.1 - Validation Entrypoints and Outreach Follow-through
 

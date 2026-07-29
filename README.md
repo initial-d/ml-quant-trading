@@ -39,6 +39,7 @@ demos, CI, tests, and benchmark tooling.
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
 | Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
+| Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
 | Contribute results | [Benchmark discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) | A place to share benchmark and reproduction reports |
 
 This repository is validation-first: simple baselines, transaction costs,
@@ -199,6 +200,7 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
 - [`docs/public_data_validation.md`](docs/public_data_validation.md) documents larger public-data walk-forward validation runs.
 - [`docs/validation_akshare_csi300_20260729.md`](docs/validation_akshare_csi300_20260729.md) records the AkShare CSI 300 public A-share validation run for `v0.2.2`.
+- [`docs/validation_akshare_csi300_full_pipeline_20260729.md`](docs/validation_akshare_csi300_full_pipeline_20260729.md) records the daily 213-factor AkShare CSI 300 public-data approximation.
 - [`docs/validation_digest_20260727.md`](docs/validation_digest_20260727.md) summarizes the current public validation and discovery surface for `v0.2.1`.
 - [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.

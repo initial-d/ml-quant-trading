@@ -97,7 +97,8 @@ def audit_report(
         findings.append(_finding("warning", "panel.stocks_with_no_data", f"tickers with no data: {no_data}"))
 
     strategy_names = {str(row.get("strategy", "")) for row in results if isinstance(row, dict)}
-    if require_equal_weight and "equal_weight" not in strategy_names:
+    has_equal_weight = any(name == "equal_weight" or name.startswith("equal_weight_") for name in strategy_names)
+    if require_equal_weight and not has_equal_weight:
         findings.append(_finding("warning", "baseline", "missing equal_weight baseline"))
 
     for index, row in enumerate(results):

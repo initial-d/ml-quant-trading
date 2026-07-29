@@ -104,6 +104,30 @@ available when the command is run, then backfilled over the requested date
 range. Treat the result as a public-data validation diagnostic, not as a full
 paper reproduction or deployable alpha claim.
 
+For a paper-style public-data approximation with the full 213-factor library and
+daily evaluation, use the full-pipeline script:
+
+```bash
+python scripts/akshare_csi300_full_pipeline.py \
+  --factor-set all \
+  --preset csi-300 \
+  --max-tickers 300 \
+  --start 2021-01-01 \
+  --end 2025-01-01 \
+  --rebalance-step 1 \
+  --cost-grid-bps 0,7,15,30
+```
+
+The maintained report is
+[`validation_akshare_csi300_full_pipeline_20260729.md`](validation_akshare_csi300_full_pipeline_20260729.md).
+It shows why daily public-data runs need a portfolio layer: the naive daily
+213-factor portfolio has strong gross return but high turnover, while the
+buffered daily factor rule preserves enough of the factor edge to beat equal
+weight after costs.
+The main comparison intentionally stays daily; weekly rebalancing is useful as a
+sensitivity check, but it can make high-turnover factor selection look cleaner
+than it really is.
+
 You can also pass your own comma-separated ticker list:
 
 ```bash

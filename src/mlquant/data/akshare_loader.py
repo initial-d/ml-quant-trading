@@ -59,8 +59,10 @@ def load_akshare_panel(
     data_columns = ["date", "open", "high", "low", "close", "volume", "amount"]
 
     all_data = []
-    for ticker in unique_tickers:
+    for idx, ticker in enumerate(unique_tickers, start=1):
         try:
+            if idx == 1 or idx % 25 == 0 or idx == len(unique_tickers):
+                print(f"AkShare download progress: {idx}/{len(unique_tickers)} ({ticker})", flush=True)
             ticker_df = akshare.stock_zh_a_hist(
                 symbol=ticker,
                 period="daily",
