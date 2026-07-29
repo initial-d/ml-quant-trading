@@ -42,13 +42,31 @@ demos, CI, tests, and benchmark tooling.
 | Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
 | Contribute results | [Benchmark discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) | A place to share benchmark and reproduction reports |
 
+## Validation Dashboard
+
+Latest maintained public-data snapshot: [AkShare CSI 300 Daily 213-Factor Validation](docs/validation_dashboard.md).
+
+| Run | Universe | Frequency | Factor set | Main result at 7 bps effective cost |
+|---|---|---:|---:|---|
+| Daily 213-factor public approximation | Current CSI 300, 2021-01-04 to 2024-12-31 | Daily | 213 | Buffered factor portfolio: 22.20% ann. return, 0.919 Sharpe, 2.1616 final equity |
+| Equal-weight baseline | Same panel | Daily | n/a | 17.75% ann. return, 0.882 Sharpe, 1.8744 final equity |
+| Naive daily factor selection | Same panel | Daily | 213 | Positive gross edge, but high turnover reduces net performance |
+
+The dashboard is intentionally cost-aware: daily factor selection is evaluated
+with turnover and transaction costs, not just gross returns. The run is a
+public-data approximation, not an exact paper reproduction or investment claim.
+
+Acknowledgement: the AkShare zero-auth A-share data path was added through
+contributor work from [@redamancy231-create](https://github.com/redamancy231-create)
+in [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42).
+
 This repository is validation-first: simple baselines, transaction costs,
 public-data failure modes, and negative results are documented alongside the
 research pipeline.
 
 **Current calls for contributors**
 
-- Try the [`v0.2.2` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2).
+- Try the [`v0.2.3` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).

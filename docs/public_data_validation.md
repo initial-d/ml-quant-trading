@@ -120,6 +120,8 @@ python scripts/akshare_csi300_full_pipeline.py \
 
 The maintained report is
 [`validation_akshare_csi300_full_pipeline_20260729.md`](validation_akshare_csi300_full_pipeline_20260729.md).
+The homepage-facing snapshot is tracked in
+[`validation_dashboard.md`](validation_dashboard.md).
 It shows why daily public-data runs need a portfolio layer: the naive daily
 213-factor portfolio has strong gross return but high turnover, while the
 buffered daily factor rule preserves enough of the factor edge to beat equal

@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.2.3 - Daily 213-Factor Validation Dashboard
+
+This patch release promotes the daily 213-factor AkShare CSI 300 validation into
+a first-class dashboard entry. It keeps the project validation-first: the result
+is a public-data approximation with transaction costs, not a deployable trading
+claim or exact paper reproduction.
+
+### Highlights
+
+- Added a README Validation Dashboard so the latest maintained public-data
+  snapshot is visible from the project homepage.
+- Added `docs/validation_dashboard.md` as the stable dashboard entry point for
+  daily 213-factor validation results and caveats.
+- Added `scripts/akshare_csi300_full_pipeline.py` for the daily full-factor
+  AkShare CSI 300 validation path.
+- Documented the full 213-factor daily report at
+  `docs/validation_akshare_csi300_full_pipeline_20260729.md`.
+- Added contributor acknowledgement for
+  [@redamancy231-create](https://github.com/redamancy231-create), whose AkShare
+  loader PR made the zero-auth A-share validation path possible.
+- Updated the package version to `0.2.3`.
+
+### Validation Notes
+
+- The main comparison stays daily. Weekly rebalancing can be useful as a
+  sensitivity check, but it can also hide the turnover problem this validation
+  is meant to measure.
+- At 7 bps effective cost, `factor_mean_buffered_daily` outperformed
+  `equal_weight_daily` on annual return, Sharpe, and final equity.
+- The naive daily 213-factor portfolio retained gross evidence but lost much of
+  the edge to turnover and cost drag, which is documented as part of the result.
+- The run uses current CSI 300 membership resolved from public endpoints, not
+  historical point-in-time membership.
+
 ## 0.2.2 - AkShare Public A-Share Validation
 
 This patch release adds a zero-auth A-share public-data validation path through
