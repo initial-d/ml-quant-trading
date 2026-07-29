@@ -97,6 +97,9 @@ when the thread context makes the project genuinely useful.
 | mars-research-assistant issue #103 | Technical reply posted | Explicit data-source selection, OHLCV quality gates, partial-bar rejection, and chart provenance |
 | noctis issue #142 | Technical reply posted | Reporting-only metrics boundary, PSR/DSR inputs, benchmark roster freeze, and null metric handling |
 | QuantConnect Lean issue #9638 | Technical reply posted | Option-spread grouping invariants, order-route equivalence, and cash-insolvency assertion |
+| tradingTplus issue #99 | Technical reply posted | Daily/intraday feature-flow separation, target-timeframe warm-up, NULL semantics, and legacy-column consumer mapping |
+| coinbase_futures_bot issue #569 | Technical reply posted | Funding proxy provenance, sign/rank validation, walk-forward calibration, and timestamp leak controls |
+| adaq issue #12 | Technical reply posted | Indicator Plan hashing, slot availability masks, gap segment ids, non-finite fail-closed checks, and external-factor provenance |
 
 ## Short Post
 
