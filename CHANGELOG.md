@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Dashboard
+
+- Added a cost-sensitivity line chart to the README and validation dashboard.
+- The full AkShare CSI 300 pipeline now exports `equity_curves.csv` for future
+  daily equity-curve visualizations.
+
 ## 0.2.3 - Daily 213-Factor Validation Dashboard
 
 This patch release promotes the daily 213-factor AkShare CSI 300 validation into

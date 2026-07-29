@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import csv
+
 import numpy as np
 
 from scripts.akshare_csi300_full_pipeline import (
@@ -9,6 +11,7 @@ from scripts.akshare_csi300_full_pipeline import (
     _rebalanced_equal_weight,
     _rebalanced_top_quantile_weights,
     _rolling_ic_weighted_scores,
+    _write_equity_curves,
 )
 
 
@@ -145,3 +148,39 @@ def test_rolling_ic_weighted_scores_do_not_use_future_targets():
     )
 
     assert np.allclose(scores[:60], changed_scores[:60], equal_nan=True)
+
+
+def test_write_equity_curves_exports_daily_series(tmp_path):
+    returns = np.array(
+        [
+            [0.00, 0.00],
+            [0.10, 0.00],
+            [0.00, 0.10],
+        ],
+        dtype=np.float32,
+    )
+    strategies = {
+        "equal_weight_daily": np.array(
+            [
+                [0.5, 0.5],
+                [0.5, 0.5],
+                [0.5, 0.5],
+            ],
+            dtype=np.float32,
+        )
+    }
+    path = tmp_path / "equity_curves.csv"
+
+    _write_equity_curves(
+        path,
+        ["2021-01-01", "2021-01-04", "2021-01-05"],
+        strategies,
+        returns,
+        effective_costs_bps=0.0,
+    )
+
+    rows = list(csv.DictReader(path.open()))
+    assert rows[0]["date"] == "2021-01-01"
+    assert rows[1]["date"] == "2021-01-04"
+    assert float(rows[-1]["equal_weight_daily_equity"]) > 1.10
+    assert "equal_weight_daily_return" in rows[0]

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+<title id="title">AkShare CSI 300 daily 213-factor cost sensitivity</title>
+<desc id="desc">Final equity for equal weight, naive daily factor, and buffered daily factor portfolios across transaction cost assumptions.</desc>
+<rect width="920" height="520" fill="#ffffff"/>
+<text x="74" y="28" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1f2933">Daily 213-factor validation: cost sensitivity</text>
+<text x="74" y="50" font-family="Arial, sans-serif" font-size="12" fill="#52606d">Current CSI 300, 2021-2024, final equity by effective transaction cost</text>
+<line x1="74" y1="414.7" x2="884" y2="414.7" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="418.7" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">0.8</text>
+<line x1="74" y1="348.0" x2="884" y2="348.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="352.0" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">1.2</text>
+<line x1="74" y1="281.3" x2="884" y2="281.3" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="285.3" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">1.6</text>
+<line x1="74" y1="214.7" x2="884" y2="214.7" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="218.7" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">2.0</text>
+<line x1="74" y1="148.0" x2="884" y2="148.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="152.0" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">2.4</text>
+<line x1="74" y1="81.3" x2="884" y2="81.3" stroke="#e5e7eb" stroke-width="1"/>
+<text x="62" y="85.3" text-anchor="end" font-family="Arial, sans-serif" font-size="12" fill="#52606d">2.8</text>
+<line x1="74" y1="448" x2="884" y2="448" stroke="#9aa5b1"/>
+<line x1="74" y1="48" x2="74" y2="448" stroke="#9aa5b1"/>
+<line x1="74.0" y1="448" x2="74.0" y2="453" stroke="#9aa5b1"/>
+<text x="74.0" y="472" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#52606d">0 bps</text>
+<line x1="263.0" y1="448" x2="263.0" y2="453" stroke="#9aa5b1"/>
+<text x="263.0" y="472" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#52606d">7 bps</text>
+<line x1="479.0" y1="448" x2="479.0" y2="453" stroke="#9aa5b1"/>
+<text x="479.0" y="472" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#52606d">15 bps</text>
+<line x1="884.0" y1="448" x2="884.0" y2="453" stroke="#9aa5b1"/>
+<text x="884.0" y="472" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#52606d">30 bps</text>
+<text x="460.0" y="502" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#323f4b">Effective transaction cost</text>
+<text transform="translate(20 260.0) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#323f4b">Final equity</text>
+<polyline points="74.0,235.2 263.0,235.6 479.0,236.1 884.0,236.9" fill="none" stroke="#4c78a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="74.0" cy="235.2" r="4.5" fill="#ffffff" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="263.0" cy="235.6" r="4.5" fill="#ffffff" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="479.0" cy="236.1" r="4.5" fill="#ffffff" stroke="#4c78a8" stroke-width="2"/>
+<circle cx="884.0" cy="236.9" r="4.5" fill="#ffffff" stroke="#4c78a8" stroke-width="2"/>
+<polyline points="74.0,69.3 263.0,255.0 479.0,380.9 884.0,489.7" fill="none" stroke="#d95f02" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="74.0" cy="69.3" r="4.5" fill="#ffffff" stroke="#d95f02" stroke-width="2"/>
+<circle cx="263.0" cy="255.0" r="4.5" fill="#ffffff" stroke="#d95f02" stroke-width="2"/>
+<circle cx="479.0" cy="380.9" r="4.5" fill="#ffffff" stroke="#d95f02" stroke-width="2"/>
+<circle cx="884.0" cy="489.7" r="4.5" fill="#ffffff" stroke="#d95f02" stroke-width="2"/>
+<polyline points="74.0,112.7 263.0,187.7 479.0,257.8 884.0,354.5" fill="none" stroke="#0f7b63" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="74.0" cy="112.7" r="4.5" fill="#ffffff" stroke="#0f7b63" stroke-width="2"/>
+<circle cx="263.0" cy="187.7" r="4.5" fill="#ffffff" stroke="#0f7b63" stroke-width="2"/>
+<circle cx="479.0" cy="257.8" r="4.5" fill="#ffffff" stroke="#0f7b63" stroke-width="2"/>
+<circle cx="884.0" cy="354.5" r="4.5" fill="#ffffff" stroke="#0f7b63" stroke-width="2"/>
+<line x1="590" y1="88" x2="618" y2="88" stroke="#4c78a8" stroke-width="3" stroke-linecap="round"/>
+<circle cx="604" cy="88" r="4" fill="#ffffff" stroke="#4c78a8" stroke-width="2"/>
+<text x="628" y="92" font-family="Arial, sans-serif" font-size="13" fill="#323f4b">Equal weight</text>
+<line x1="590" y1="112" x2="618" y2="112" stroke="#d95f02" stroke-width="3" stroke-linecap="round"/>
+<circle cx="604" cy="112" r="4" fill="#ffffff" stroke="#d95f02" stroke-width="2"/>
+<text x="628" y="116" font-family="Arial, sans-serif" font-size="13" fill="#323f4b">Naive daily factor</text>
+<line x1="590" y1="136" x2="618" y2="136" stroke="#0f7b63" stroke-width="3" stroke-linecap="round"/>
+<circle cx="604" cy="136" r="4" fill="#ffffff" stroke="#0f7b63" stroke-width="2"/>
+<text x="628" y="140" font-family="Arial, sans-serif" font-size="13" fill="#323f4b">Buffered daily factor</text>
+<rect x="275.0" y="141.7" width="210" height="44" rx="6" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="285.0" y="159.7" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#0f766e">7 bps: buffered factor wins</text>
+<text x="285.0" y="175.7" font-family="Arial, sans-serif" font-size="12" fill="#0f766e">2.1616 vs 1.8744 final equity</text>
+<text x="884" y="502" text-anchor="end" font-family="Arial, sans-serif" font-size="11" fill="#7b8794">Public-data approximation; not investment advice.</text>
+</svg>

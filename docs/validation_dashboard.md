@@ -20,6 +20,8 @@ trading scoreboard.
 
 ## Headline Results
 
+![Daily 213-factor validation cost sensitivity](assets/validation-cost-sensitivity.svg)
+
 | Strategy | Annual return | Sharpe | Max drawdown | Turnover | Cost drag | Final equity |
 |---|---:|---:|---:|---:|---:|---:|
 | `equal_weight_daily` | 17.75% | 0.882 | 25.76% | 0.0010 | 0.13% | 1.8744 |

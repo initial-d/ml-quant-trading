@@ -452,6 +452,33 @@ def _write_csv(path: Path, rows: Sequence[dict[str, float | int | str]]) -> None
         writer.writerows(rows)
 
 
+def _write_equity_curves(
+    path: Path,
+    dates: Sequence[object],
+    strategies: dict[str, np.ndarray],
+    returns: np.ndarray,
+    *,
+    effective_costs_bps: float,
+) -> None:
+    results = {
+        name: run_backtest(weights, returns, costs_bps=effective_costs_bps)
+        for name, weights in strategies.items()
+    }
+    columns = ["date"]
+    for name in strategies:
+        columns.extend([f"{name}_equity", f"{name}_return"])
+
+    with path.open("w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        for t, date in enumerate(dates):
+            row: dict[str, float | str] = {"date": str(date)}
+            for name, result in results.items():
+                row[f"{name}_equity"] = float(result.cumulative_equity[t])
+                row[f"{name}_return"] = float(result.portfolio_returns[t])
+            writer.writerow(row)
+
+
 def _full_pipeline_metadata(
     cfg: FullPipelineConfig,
     panel,
@@ -495,10 +522,19 @@ def _write_outputs(
     factor_names: Sequence[str],
     rows: Sequence[dict[str, float | int | str]],
     sensitivity_rows: Sequence[dict[str, float | int | str]],
+    strategies: dict[str, np.ndarray],
+    returns: np.ndarray,
 ) -> None:
     cfg.output_dir.mkdir(parents=True, exist_ok=True)
     metadata = _full_pipeline_metadata(cfg, panel, factor_names)
     _write_csv(cfg.output_dir / "summary.csv", rows)
+    _write_equity_curves(
+        cfg.output_dir / "equity_curves.csv",
+        panel.dates,
+        strategies,
+        returns,
+        effective_costs_bps=cfg.costs_bps + cfg.slippage_bps,
+    )
     with (cfg.output_dir / "metadata.json").open("w") as f:
         json.dump(_json_safe(metadata), f, indent=2, sort_keys=True)
     with (cfg.output_dir / "summary.json").open("w") as f:
@@ -659,7 +695,7 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
 
     rows, sensitivity_rows = _strategy_rows(strategies, returns, cfg)
     click.echo("stage: writing reports")
-    _write_outputs(cfg, panel, factor_names, rows, sensitivity_rows)
+    _write_outputs(cfg, panel, factor_names, rows, sensitivity_rows, strategies, returns)
     return rows
 
 
