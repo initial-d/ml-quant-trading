@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Sequence, Union
 
 import numpy as np
@@ -16,6 +17,8 @@ def load_akshare_panel(
     device: Union[str, torch.device] = "cpu",
     adjust: str = "qfq",
     proxy_vwap: bool = True,
+    retries: int = 3,
+    retry_sleep: float = 0.75,
 ) -> Panel:
     """Download A-share daily data from akshare and return a Panel.
 
@@ -33,6 +36,10 @@ def load_akshare_panel(
         Price adjustment mode: "qfq", "hfq", or an empty string.
     proxy_vwap : bool
         If True, estimate VWAP as (Open + Close + High + Low) / 4.
+    retries : int
+        Number of attempts for each ticker before reporting a fetch failure.
+    retry_sleep : float
+        Base seconds to wait between retry attempts.
     """
     import akshare
 
@@ -60,16 +67,28 @@ def load_akshare_panel(
 
     all_data = []
     for idx, ticker in enumerate(unique_tickers, start=1):
+        if idx == 1 or idx % 25 == 0 or idx == len(unique_tickers):
+            print(f"AkShare download progress: {idx}/{len(unique_tickers)} ({ticker})", flush=True)
+        ticker_df = None
+        last_error: Exception | None = None
+        for attempt in range(1, max(1, retries) + 1):
+            try:
+                ticker_df = akshare.stock_zh_a_hist(
+                    symbol=ticker,
+                    period="daily",
+                    start_date=start.replace("-", ""),
+                    end_date=end.replace("-", ""),
+                    adjust=adjust,
+                )
+                break
+            except Exception as e:
+                last_error = e
+                if attempt < max(1, retries):
+                    time.sleep(retry_sleep * attempt)
+
         try:
-            if idx == 1 or idx % 25 == 0 or idx == len(unique_tickers):
-                print(f"AkShare download progress: {idx}/{len(unique_tickers)} ({ticker})", flush=True)
-            ticker_df = akshare.stock_zh_a_hist(
-                symbol=ticker,
-                period="daily",
-                start_date=start.replace("-", ""),
-                end_date=end.replace("-", ""),
-                adjust=adjust,
-            )
+            if ticker_df is None and last_error is not None:
+                raise last_error
             if ticker_df is None or ticker_df.empty:
                 continue
 
