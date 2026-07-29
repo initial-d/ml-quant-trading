@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.2.2 - AkShare Public A-Share Validation
+
+This patch release adds a zero-auth A-share public-data validation path through
+AkShare and records the first CSI 300-scale public run. It does not change the
+research claim or convert the project into a trading recommendation.
+
+### Highlights
+
+- Added AkShare as a CLI-accessible source for `scripts/public_data_validation.py`.
+- Added dynamic `csi-300` / `hs300` presets that resolve current CSI 300
+  constituents from AkShare/CSI public endpoints at runtime.
+- Added AkShare ticker normalization for common A-share code formats such as
+  `600519`, `sh.600000`, `000001.SZ`, and `SZ300750`.
+- Added source-limitation metadata to generated validation reports.
+- Documented the AkShare CSI 300 command in `docs/public_data_validation.md`.
+- Added the tracked report
+  `docs/validation_akshare_csi300_20260729.md`.
+
+### Validation Notes
+
+- The CSI 300 report used 300 current constituents, 969 returned trading dates,
+  and a 96.25% tradable-cell ratio over 2021-01-04 to 2024-12-31.
+- The generated report audit passed with one expected warning: two current
+  constituents had no data over the requested window.
+- The resolved CSI 300 universe is not historical point-in-time membership; it
+  is a public-data reproducibility benchmark, not a full paper reproduction or
+  deployable alpha claim.
+
 ## 0.2.1 - Validation Entrypoints and Outreach Follow-through
 
 This patch release improves the public reproduction funnel after the `v0.2.0`

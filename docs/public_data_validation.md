@@ -73,6 +73,37 @@ python scripts/public_data_validation.py \
   --max-tickers 150
 ```
 
+For a zero-auth A-share public-data run through AkShare, use the CSI 300
+dynamic preset:
+
+```bash
+python scripts/public_data_validation.py \
+  --source akshare \
+  --preset csi-300 \
+  --max-tickers 300 \
+  --start 2021-01-01 \
+  --end 2025-01-01 \
+  --models equal_weight,momentum_20,alpha101_mean \
+  --epochs 1 \
+  --batch-size 4096 \
+  --hidden 32 \
+  --cost-grid-bps 0,7,15,30 \
+  --bootstrap-samples 100 \
+  --bootstrap-block-size 20
+```
+
+`csi-300` and `hs300` are aliases. The script resolves the current CSI 300
+constituents from AkShare/CSI public endpoints at runtime, normalizes them to
+six-digit A-share codes, and records the resolved ticker list in
+`metadata.json`. This is useful for public reproducibility because it requires
+no Baostock login and no proprietary data dump.
+
+Important limitation: this is **not** historical point-in-time index membership.
+The resolved universe is the currently published CSI 300 constituent list
+available when the command is run, then backfilled over the requested date
+range. Treat the result as a public-data validation diagnostic, not as a full
+paper reproduction or deployable alpha claim.
+
 You can also pass your own comma-separated ticker list:
 
 ```bash
@@ -224,6 +255,8 @@ drawdown, costs, uncertainty intervals, and baseline comparisons.
 It still should not be read as proof of deployable alpha:
 
 - yfinance data is convenient but not institutional-grade research data.
+- AkShare is a useful zero-auth A-share source, but public endpoints can change,
+  throttle, or revise records.
 - Current presets are survivorship-biased because membership is fixed today.
 - Slippage is modeled as a simple basis-point charge, not a market-impact model.
 - The ML baselines are intentionally small and should be treated as reference

@@ -38,6 +38,7 @@ demos, CI, tests, and benchmark tooling.
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
+| Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
 | Contribute results | [Benchmark discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) | A place to share benchmark and reproduction reports |
 
 This repository is validation-first: simple baselines, transaction costs,
@@ -46,7 +47,7 @@ research pipeline.
 
 **Current calls for contributors**
 
-- Try the [`v0.2.1` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1).
+- Try the [`v0.2.2` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
@@ -197,11 +198,13 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/benchmark_board.md`](docs/benchmark_board.md) tracks community benchmark reports.
 - [`docs/public_data_mini_reproduction.md`](docs/public_data_mini_reproduction.md) records a small yfinance factor IC reproduction.
 - [`docs/public_data_validation.md`](docs/public_data_validation.md) documents larger public-data walk-forward validation runs.
+- [`docs/validation_akshare_csi300_20260729.md`](docs/validation_akshare_csi300_20260729.md) records the AkShare CSI 300 public A-share validation run for `v0.2.2`.
 - [`docs/validation_digest_20260727.md`](docs/validation_digest_20260727.md) summarizes the current public validation and discovery surface for `v0.2.1`.
 - [`docs/community.md`](docs/community.md) explains contribution lanes and maintainer response rules.
 - [`docs/release_draft_v0.1.0.md`](docs/release_draft_v0.1.0.md) is a copy-ready first release draft.
 - [`docs/release_draft_v0.2.0.md`](docs/release_draft_v0.2.0.md) is the public validation and contributor-workflow release draft.
 - [`docs/release_draft_v0.2.1.md`](docs/release_draft_v0.2.1.md) is the validation entrypoint and outreach follow-through release draft.
+- [`docs/release_draft_v0.2.2.md`](docs/release_draft_v0.2.2.md) is the AkShare public A-share validation release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [`docs/community_outreach.md`](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
@@ -209,6 +212,7 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`v0.1.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0) is the first public research baseline release.
 - [`v0.2.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0) is the public validation and contributor-workflow release.
 - [`v0.2.1`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1) is the validation entrypoint and outreach follow-through release.
+- [`v0.2.2`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2) is the AkShare public A-share validation release.
 - [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
 
 ---

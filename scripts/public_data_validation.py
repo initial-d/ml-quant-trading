@@ -9,6 +9,7 @@ Examples
 --------
     python scripts/public_data_validation.py --source synthetic --models equal_weight,momentum_20
     python scripts/public_data_validation.py --source yfinance --preset us-large-100 --max-tickers 100
+    python scripts/public_data_validation.py --source akshare --preset csi-300 --max-tickers 300
 """
 from __future__ import annotations
 
@@ -17,6 +18,7 @@ import json
 import math
 import platform
 import random
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -73,9 +75,12 @@ PRESETS = {
     "etf-50": ETF_50,
     "mixed-150": US_LARGE_100 + ETF_50,
     "cn-large-25": CN_LARGE_25,
+    "csi-300": (),
+    "hs300": (),
 }
 
 DEFAULT_MODELS = ("equal_weight", "momentum_20", "alpha101_mean", "mlp_alpha101", "transformer_alpha101")
+CSI_300_PRESETS = {"csi-300", "hs300"}
 
 
 @dataclass(frozen=True)
@@ -139,11 +144,87 @@ def _parse_cost_grid(value: str) -> tuple[float, ...]:
     return tuple(dict.fromkeys(costs))
 
 
-def _select_tickers(preset: str, tickers: str, max_tickers: int) -> tuple[str, ...]:
+def _normalize_akshare_tickers(tickers: Sequence[str]) -> tuple[str, ...]:
+    normalized = []
+    invalid = []
+    for raw in tickers:
+        ticker = str(raw).strip().upper()
+        if not ticker:
+            continue
+        parts = re.split(r"[.\s:_-]+", ticker)
+        code = next((part for part in parts if re.fullmatch(r"\d{6}", part)), "")
+        if not code and re.fullmatch(r"(SH|SZ)\d{6}", ticker):
+            code = ticker[2:]
+        if not code and re.fullmatch(r"\d{6}(SH|SZ)", ticker):
+            code = ticker[:6]
+        if code:
+            normalized.append(code)
+        else:
+            invalid.append(str(raw))
+    if invalid:
+        raise ValueError(
+            "AkShare validation requires six-digit A-share codes such as "
+            f"'600519' or '000001'; got {invalid[:5]}"
+        )
+    return tuple(dict.fromkeys(normalized))
+
+
+def _codes_from_frame(frame: object) -> tuple[str, ...]:
+    if not hasattr(frame, "columns"):
+        return ()
+    best_codes: tuple[str, ...] = ()
+    for column in frame.columns:
+        column_codes = []
+        for value in frame[column].tolist():
+            try:
+                column_codes.extend(_normalize_akshare_tickers((str(value),)))
+            except ValueError:
+                continue
+        candidates = tuple(dict.fromkeys(column_codes))
+        if len(candidates) > len(best_codes):
+            best_codes = candidates
+    return best_codes
+
+
+def _load_akshare_csi300_tickers() -> tuple[str, ...]:
+    """Resolve the current CSI 300 constituents through AkShare public endpoints."""
+    import akshare
+
+    attempts = (
+        ("index_stock_cons_csindex", {"symbol": "000300"}),
+        ("index_stock_cons_weight_csindex", {"symbol": "000300"}),
+        ("index_stock_cons", {"symbol": "000300"}),
+    )
+    errors = []
+    for function_name, kwargs in attempts:
+        try:
+            frame = getattr(akshare, function_name)(**kwargs)
+            codes = _codes_from_frame(frame)
+            if codes:
+                return codes
+            errors.append(f"{function_name}: no six-digit ticker column found")
+        except Exception as exc:  # pragma: no cover - public endpoint dependent
+            errors.append(f"{function_name}: {type(exc).__name__}: {exc}")
+    raise RuntimeError("Could not resolve CSI 300 constituents from AkShare: " + "; ".join(errors))
+
+
+def _select_tickers(
+    preset: str,
+    tickers: str,
+    max_tickers: int,
+    *,
+    source: str | None = None,
+) -> tuple[str, ...]:
     if tickers:
         selected = tuple(t.strip().upper() for t in tickers.split(",") if t.strip())
+    elif preset in CSI_300_PRESETS:
+        if source not in (None, "akshare"):
+            raise click.BadParameter("the csi-300/hs300 preset requires --source akshare")
+        selected = _load_akshare_csi300_tickers()
     else:
         selected = PRESETS[preset]
+    if source == "akshare":
+        selected = _normalize_akshare_tickers(selected)
     return selected[:max_tickers]
 
 
@@ -165,7 +246,7 @@ def _normalize_baostock_tickers(tickers: Sequence[str]) -> tuple[str, ...]:
 
 
 def load_validation_panel(cfg: ValidationConfig) -> Panel:
-    """Load a public-data, Baostock A-share, or deterministic synthetic panel."""
+    """Load a public-data, A-share, or deterministic synthetic panel."""
     if cfg.source == "synthetic":
         return make_synthetic_panel(
             SyntheticConfig(
@@ -179,6 +260,15 @@ def load_validation_panel(cfg: ValidationConfig) -> Panel:
         tickers = _normalize_baostock_tickers(cfg.tickers)
         return make_panel(
             source="baostock",
+            tickers=tickers,
+            start=cfg.start,
+            end=cfg.end,
+            device=cfg.device,
+        )
+    if cfg.source == "akshare":
+        tickers = _normalize_akshare_tickers(cfg.tickers)
+        return make_panel(
+            source="akshare",
             tickers=tickers,
             start=cfg.start,
             end=cfg.end,
@@ -432,6 +522,17 @@ def _panel_coverage(panel: Panel) -> dict[str, object]:
 
 
 def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
+    notes = []
+    if cfg.source == "akshare":
+        notes.append(
+            "AkShare is a zero-auth public-data source; upstream endpoints may change, throttle, "
+            "or revise historical records."
+        )
+    if cfg.preset in CSI_300_PRESETS:
+        notes.append(
+            "The CSI 300/HS300 universe is resolved from the current AkShare/CSI index "
+            "constituent endpoint at runtime; it is not historical point-in-time index membership."
+        )
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "command": " ".join(cfg.command),
@@ -465,6 +566,7 @@ def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
         "cuda_version": torch.version.cuda or "unavailable",
         "cuda_device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none",
         "panel": _panel_coverage(panel),
+        "limitations": notes,
     }
 
 
@@ -647,8 +749,7 @@ def _submission_body(metadata: dict[str, object], rows: Sequence[dict[str, float
     panel = metadata["panel"]
     assert isinstance(panel, dict)
     command = metadata.get("command") or "python scripts/public_data_validation.py ..."
-    return "\n".join(
-        [
+    lines = [
             "## Public-data validation report",
             "",
             "### Command",
@@ -676,6 +777,14 @@ def _submission_body(metadata: dict[str, object], rows: Sequence[dict[str, float
             f"- Stocks with no data: {panel['stocks_with_no_data']}",
             f"- Partial-data stock count: {panel['stocks_with_partial_data_count']}",
             "",
+    ]
+    limitations = metadata.get("limitations") or []
+    if limitations:
+        lines.extend(["### Source Limitations", ""])
+        lines.extend(f"- {note}" for note in limitations)
+        lines.append("")
+    lines.extend(
+        [
             "### Results",
             "",
             _markdown_table(rows),
@@ -686,6 +795,7 @@ def _submission_body(metadata: dict[str, object], rows: Sequence[dict[str, float
             "- Please mention any data-provider warnings, failed tickers, rate limits, or local changes.",
         ]
     )
+    return "\n".join(lines)
 
 
 def _write_csv(path: Path, rows: Sequence[dict[str, float | int | str]]) -> None:
@@ -738,6 +848,9 @@ def _write_outputs(
         f.write(f"| Tradable ratio | {metadata['panel']['tradable_ratio']:.4f} |\n")
         f.write(f"| Stocks with no data | {metadata['panel']['stocks_with_no_data']} |\n")
         f.write(f"| Costs + slippage | {cfg.costs_bps:.2f} + {cfg.slippage_bps:.2f} bps |\n")
+        limitations = metadata.get("limitations") or []
+        if limitations:
+            f.write(f"| Source limitations | {'<br>'.join(str(note) for note in limitations)} |\n")
         if cfg.bootstrap_samples:
             f.write(f"| Bootstrap samples / block size | {cfg.bootstrap_samples} / {cfg.bootstrap_block_size} days |\n")
         f.write(f"| Walk-forward train/test/step | {cfg.train_window}/{cfg.test_window}/{cfg.step} days |\n")
@@ -763,7 +876,7 @@ def _write_outputs(
 
 
 @click.command()
-@click.option("--source", type=click.Choice(["yfinance", "synthetic", "baostock"]), default="yfinance", show_default=True)
+@click.option("--source", type=click.Choice(["yfinance", "synthetic", "baostock", "akshare"]), default="yfinance", show_default=True)
 @click.option("--preset", type=click.Choice(sorted(PRESETS)), default="us-large-100", show_default=True)
 @click.option("--tickers", default="", help="Comma-separated tickers. Overrides --preset.")
 @click.option("--start", default="2021-01-01", show_default=True)
@@ -818,7 +931,7 @@ def main(
     cfg = ValidationConfig(
         source=source,
         preset=preset,
-        tickers=_select_tickers(preset, tickers, max_tickers),
+        tickers=_select_tickers(preset, tickers, max_tickers, source=source),
         start=start,
         end=end,
         max_tickers=max_tickers,
