@@ -2,39 +2,41 @@
 
 Use this calendar to turn real project work into useful public updates.
 
-## Week 1: Public Baseline
+## Week 1: Cost-Aware CSI 300 Validation
 
-Theme: "Run the whole factor-to-backtest pipeline in one command."
+Theme: "Gross factor edge is not net performance."
 
-- Publish `v0.1.0`.
-- Share the launch post from `docs/promotion_kit.md`.
-- Ask for benchmark results.
-- Convert first questions into FAQ updates.
+- Publish the Chinese technical article with the cost-sensitivity chart.
+- Post one community-specific version, then leave time to answer comments.
+- Use the zero-account Colab as the only call to action.
+- Record Colab opens, new stars, and completed reproduction reports separately.
 
-## Week 2: Benchmark Week
+## Week 2: Independent Hardware Evidence
 
 Theme: "How fast is masked tensor factor computation on your machine?"
 
-- Share `make benchmark`.
-- Ask users to submit CPU/GPU results.
+- Publish the exact `make benchmark` command and maintainer CPU baseline.
+- Ask specifically for one CUDA and one Linux CPU result.
 - Update `docs/benchmark_board.md`.
-- Thank contributors in a comment or release note.
+- Add each verified external result to the README community evidence table.
 
-## Week 3: Public-Data Week
+## Week 3: Cross-Market Reproduction
 
 Theme: "Reproducing factor IC workflows without proprietary data."
 
-- Highlight `notebooks/public_factor_ic.ipynb`.
-- Ask for a second public-data case study.
-- Collect caveats and data-source issues.
+- Re-run the ETF-20 or ten-stock yfinance factor-IC case.
+- Publish the factor table even if results are weak or negative.
+- Ask for one different public universe, with date range and failures recorded.
+- Convert provider rate limits into documented evidence rather than hiding them.
 
-## Week 4: Factor Library Week
+## Week 4: One Factor Family Under a Microscope
 
 Theme: "213 factor dimensions in a mask-aware PyTorch engine."
 
-- Explain one factor family.
-- Ask users which factor families they want documented next.
-- Open or refresh a `good first issue` for factor docs.
+- Explain one factor family with tensor shapes, masks, and warm-up behavior.
+- Add a shuffled-label or sign-flip sanity check.
+- Publish both successful and failed variants.
+- Open one tightly scoped contribution issue based on reader questions.
 
 ## Reusable Post Hooks
 
@@ -51,3 +53,12 @@ Theme: "213 factor dimensions in a mask-aware PyTorch engine."
 - Public-data reproduction reports.
 - First-time contributors.
 - README quick-start failures.
+- Zero-account Colab opens and completed runs.
+- Visitor → Colab and clone → star conversion, where observable.
+
+## Publishing Cadence
+
+- Publish at most two substantive community posts per week.
+- Separate platform posts by at least 48 hours and rewrite the opening for each audience.
+- Spend the day after each post answering comments and turning repeated questions into docs.
+- Do not treat views as success unless they lead to a run, report, issue, or contributor.

@@ -40,6 +40,19 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 这些结果是公开数据上的研究近似，不是论文的精确复现，不代表样本外收益，也不构成投资建议。
 
+## 社区验证与贡献
+
+| 外部贡献 | 内容 |
+|---|---|
+| [PR #18](https://github.com/initial-d/ml-quant-trading/pull/18) | ETF 跨资产公开数据复现 |
+| [PR #34](https://github.com/initial-d/ml-quant-trading/pull/34) | Windows/Baostock 25 只 A 股验证 |
+| [PR #35](https://github.com/initial-d/ml-quant-trading/pull/35) | 中性化与 Baostock 稳健性修复 |
+| [PR #36](https://github.com/initial-d/ml-quant-trading/pull/36) | 全因子族英文手册 |
+| [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42) | 支撑 CSI 300 验证的零账号 AkShare 加载器 |
+
+这些结果链接到原始 PR，便于检查环境、命令、限制和评审过程。你也可以
+[打开零账号 Colab，运行并提交生成的报告](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)。
+
 ## 研究与教学用途声明
 
 > **仅用于研究和教学。** 本项目不构成金融或投资建议，也不是可直接用于实盘交易的生产系统。回测结果不代表真实交易表现，并会受到数据质量、交易成本、滑点及建模假设等因素影响。所有结果都应视为研究验证，而非已经证实的样本外收益或可部署 alpha。已知限制请参阅 [Reality Check](docs/reality_check.md)。
@@ -114,6 +127,8 @@ python scripts/public_data_validation.py \
 - [英文 README](README.md)
 - [CSI 300 公开验证看板](docs/validation_dashboard.md)
 - [AkShare CSI 300 日频 213 因子报告](docs/validation_akshare_csi300_full_pipeline_20260729.md)
+- [中文技术长文：213 因子与含成本验证](docs/article_zh_213_factor_csi300.md)
+- [知乎、掘金、V2EX、聚宽、米筐定制发布稿](docs/community_posts_zh.md)
 - [Reality Check and Validation Status](docs/reality_check.md)
 - [Public-Data Validation](docs/public_data_validation.md)
 - [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md)

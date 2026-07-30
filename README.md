@@ -68,6 +68,20 @@ Acknowledgement: the AkShare zero-auth A-share data path was added through
 contributor work from [@redamancy231-create](https://github.com/redamancy231-create)
 in [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42).
 
+## Community Evidence
+
+| External contribution | What it added |
+|---|---|
+| [PR #18](https://github.com/initial-d/ml-quant-trading/pull/18) | ETF cross-asset public-data reproduction |
+| [PR #34](https://github.com/initial-d/ml-quant-trading/pull/34) | Windows/Baostock A-share validation on 25 stocks |
+| [PR #35](https://github.com/initial-d/ml-quant-trading/pull/35) | Neutralization and Baostock robustness fixes |
+| [PR #36](https://github.com/initial-d/ml-quant-trading/pull/36) | English handbook for all factor families |
+| [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42) | Zero-account AkShare loader enabling CSI 300 validation |
+
+Independent results are linked to their pull requests so the environment,
+commands, limitations, and review history remain inspectable. Want to add
+another machine or universe? [Run the zero-account Colab and submit the generated report](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb).
+
 This repository is validation-first: simple baselines, transaction costs,
 public-data failure modes, and negative results are documented alongside the
 research pipeline.
@@ -244,6 +258,10 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`docs/release_draft_v0.2.1.md`](docs/release_draft_v0.2.1.md) is the validation entrypoint and outreach follow-through release draft.
 - [`docs/release_draft_v0.2.2.md`](docs/release_draft_v0.2.2.md) is the AkShare public A-share validation release draft.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
+- [`docs/article_zh_213_factor_csi300.md`](docs/article_zh_213_factor_csi300.md) is the
+  long-form Chinese technical launch article.
+- [`docs/community_posts_zh.md`](docs/community_posts_zh.md) adapts the article for
+  Zhihu, Juejin, V2EX, JoinQuant, and Ricequant.
 - [`docs/community_outreach.md`](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [`docs/content_calendar.md`](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
 - [`docs/visibility_status.md`](docs/visibility_status.md) tracks live launch links, contributor calls, and next outreach steps.
