@@ -13,6 +13,9 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
 - v0.2.1 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1>
+- v0.2.2 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2>
+- v0.2.3 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3>
+- Validation dashboard: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md>
 - Colab Baostock demo: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb>
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Follow-up validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>
@@ -39,6 +42,25 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Benchmark and reproduction reports: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 
 ## Traffic Snapshot
+
+Recorded on 2026-07-30 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-07-28):
+
+- Views: 1,303 total, 240 unique visitors.
+- Clones: 621 total, 307 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 57 stars, 28 forks, 4 watchers.
+- Top referrers: GitHub, Google, Bing, arXiv, Zhihu, Baidu, ChatGPT,
+  DuckDuckGo, Doubao, and the project site.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, issue #22, discussion #13, and contributor PRs.
+
+Operating takeaways:
+
+- Clone interest remains unusually strong relative to stars, suggesting some
+  visitors are testing or archiving the project rather than only bookmarking it.
+- Chinese-language onboarding and the factor handbook remain real discovery
+  surfaces.
+- Search, arXiv, and GitHub internal discovery are all contributing traffic.
 
 Recorded on 2026-07-27 from GitHub's rolling 14-day traffic window:
 
