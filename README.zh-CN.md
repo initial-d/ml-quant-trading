@@ -2,15 +2,43 @@
 
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
-> 本文为中文摘要，完整内容请参阅 [English README](README.md)。
-
 > **机器学习增强的多因子量化交易**——采用偏差修正的横截面投资组合优化方法。
 >
-> [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp; Yimin Du，2025
+> [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp;
+> [Hugging Face Papers](https://huggingface.co/papers/2507.07107) &nbsp;|&nbsp; Yimin Du，2025
+
+[![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
+[![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
+[![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+[![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+![ml-quant-trading 项目预览](docs/assets/readme-preview.png)
+
+[**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+· [**查看公开验证结果**](docs/validation_dashboard.md)
+· [**阅读论文**](https://arxiv.org/abs/2507.07107)
+· [**参与讨论**](https://github.com/initial-d/ml-quant-trading/discussions/13)
 
 ## 项目概述
 
 `ml-quant-trading` 是一个简洁、便于 fork 的端到端 A 股量化研究系统。仓库集成了张量因子引擎、213 维因子库、偏差修正、ML baseline、Markowitz 投资组合优化、向量化回测、synthetic 与公开数据演示，以及 CI、测试与 benchmark 工具，适合复现和扩展多因子量化研究。
+
+## 快速入口
+
+| 你的目标 | 从这里开始 | 能得到什么 |
+|---|---|---|
+| 先看项目能否跑通 | `mlquant demo` | 30–90 秒、无需行情数据的端到端冒烟测试 |
+| 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb) | 浏览器内运行示例 |
+| 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
+| 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
+| 贡献复现或跑分 | [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13) | 分享 CPU/GPU benchmark 和公开数据报告 |
+
+## 当前公开验证
+
+最新维护结果采用 AkShare 的当前沪深 300 公开数据，在日频 213 因子近似流程中显式计入换手和交易成本。缓冲因子组合在 7 bps 有效成本假设下得到 22.20% 年化收益、0.919 Sharpe；同区间等权基线为 17.75% 和 0.882。完整口径、成本敏感性图和复现命令见[验证看板](docs/validation_dashboard.md)。
+
+这些结果是公开数据上的研究近似，不是论文的精确复现，不代表样本外收益，也不构成投资建议。
 
 ## 研究与教学用途声明
 
@@ -37,11 +65,12 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 | 数据源 | 市场 | 访问方式 | 说明 |
 |--------|------|----------|------|
+| [AkShare](https://akshare.akfamily.xyz/) | A 股 | 公开、无需 API Key | 零鉴权加载器；上游接口可能变化或限流 |
 | [Baostock](http://baostock.com) | A 股 | 免费注册 | 项目支持的 A 股数据加载器，需要账号 |
 | [yfinance](https://pypi.org/project/yfinance/) | 美股 / ETF | 公开访问，有速率限制 | 用于公开数据验证和跨市场示例 |
 | Synthetic | 不适用 | 零配置 | 使用固定 seed 确定性生成的 GBM panel，用于 pipeline 冒烟测试 |
 
-本仓库不重新分发市场数据。Baostock 与 yfinance 数据由加载脚本按需下载；Synthetic 数据则根据固定 seed 确定性生成。
+本仓库不重新分发市场数据。AkShare、Baostock 与 yfinance 数据由加载脚本按需下载；Synthetic 数据则根据固定 seed 确定性生成。
 
 ## 快速开始
 
@@ -50,8 +79,8 @@ git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
 pip install -e .[dev]        # 如需 CUDA，请添加 ,gpu；如需 MOSEK solver，请添加 ,mosek
 
-# 30 秒冒烟测试（Synthetic：200 只股票 × 500 天）
-make paper CONFIG=configs/small.yaml
+# 一条命令跑通（Synthetic 数据，无需 API Key）
+mlquant demo
 ```
 
 ### 公开数据验证（可选）
@@ -67,9 +96,20 @@ python scripts/public_data_validation.py \
 
 运行方式和输出说明请参阅 [Public-Data Validation](docs/public_data_validation.md)。这些结果仅用于验证诊断，不是交易建议。
 
+### 为什么值得 Star 或 Fork？
+
+- 你需要一套能运行的 ML 多因子研究参考实现，而不是只有截图的策略介绍。
+- 你希望直接复用带 mask 的 PyTorch 因子引擎、213 维因子库和 A 股涨跌停/停牌处理。
+- 你想在公开数据、交易成本和基线对照下复现或挑战论文结论。
+- 你正在寻找一个可扩展的数据 → 因子 → 模型 → 组合 → 回测工程模板。
+
+如果这个仓库帮你节省了搭建研究管线的时间，欢迎点 Star、引用论文，或提交一份 benchmark / 复现报告。真实反馈比单纯的数字更有价值。
+
 ## 关键文档
 
 - [英文 README](README.md)
+- [CSI 300 公开验证看板](docs/validation_dashboard.md)
+- [AkShare CSI 300 日频 213 因子报告](docs/validation_akshare_csi300_full_pipeline_20260729.md)
 - [Reality Check and Validation Status](docs/reality_check.md)
 - [Public-Data Validation](docs/public_data_validation.md)
 - [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md)

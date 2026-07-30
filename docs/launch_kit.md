@@ -24,7 +24,8 @@ The project is designed for reproducible research. It includes synthetic-data wo
 
 ## Suggested Community Post
 
-I open-sourced `ml-quant-trading`, a research-grade ML framework for multi-factor quantitative trading.
+I open-sourced `ml-quant-trading`, an end-to-end PyTorch research stack for
+multi-factor quantitative trading.
 
 It includes:
 
@@ -36,10 +37,56 @@ It includes:
 - vectorized backtesting with reproducibility docs
 - synthetic-data and public-data entry points
 
-The goal is not to sell a strategy, but to make the research pipeline inspectable and reproducible. Feedback on the API, examples, assumptions, and docs would be very welcome.
+The latest public-data case study runs a daily 213-factor approximation on the
+current CSI 300 universe and reports transaction-cost sensitivity, turnover,
+baselines, and reproducible commands. At a 7 bps effective cost assumption, the
+buffered factor portfolio reached a 0.919 Sharpe versus 0.882 for equal weight.
+This is a research approximation—not an exact paper reproduction or an
+investment claim.
+
+The goal is to make the whole research pipeline inspectable and reproducible.
+I would especially value independent benchmark runs, public-data reproductions,
+and critiques of the assumptions.
 
 Repository: https://github.com/initial-d/ml-quant-trading
 Paper: https://arxiv.org/abs/2507.07107
+Validation dashboard: https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md
+
+## 中文发布文案
+
+我开源了 `ml-quant-trading`：一套面向多因子量化研究的端到端 PyTorch 工程。
+
+它包含 213 维因子库、带 mask 的张量因子算子、A 股涨跌停/停牌偏差修正、
+MLP / Transformer、Markowitz 组合优化、向量化回测，以及无需私有行情的
+Synthetic、AkShare、Baostock 和 yfinance 入口。
+
+最新公开案例在当前沪深 300 成分股上运行日频 213 因子近似流程，同时报告
+换手率、交易成本敏感性、等权基线和复现命令。在 7 bps 有效成本假设下，
+缓冲因子组合 Sharpe 为 0.919，等权基线为 0.882。它是研究近似，不是论文
+精确复现，更不是收益承诺。
+
+现在最希望收到的不是“策略能买吗”，而是独立机器 benchmark、公开数据复现，
+以及对数据和回测假设的批评。如果你也在做因子研究，欢迎来跑一遍。
+
+仓库：https://github.com/initial-d/ml-quant-trading
+
+## Short Social Post
+
+Open-sourced an end-to-end PyTorch stack for multi-factor quant research:
+213 factors, A-share market-state masks, ML models, portfolio optimization,
+cost-aware backtesting, and public-data reproductions.
+
+The interesting part is the reproducibility surface—not a return screenshot.
+Looking for independent benchmarks and assumption reviews:
+https://github.com/initial-d/ml-quant-trading
+
+## 中文短帖
+
+开源了一套端到端 PyTorch 多因子量化研究框架：213 维因子、A 股涨跌停/停牌
+处理、ML 模型、组合优化、成本敏感回测和公开数据复现。
+
+重点不是收益截图，而是整条研究链路可检查、可运行、可质疑。欢迎提交独立跑分
+和复现结果：https://github.com/initial-d/ml-quant-trading
 
 ## Suggested Technical Post Outline
 
@@ -68,7 +115,7 @@ Title: Building a reproducible ML factor research pipeline for A-shares
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
 python -m pip install -e .[dev]
-make paper CONFIG=configs/small.yaml
+mlquant demo
 ```
 
 ## Communities to Share With

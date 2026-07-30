@@ -7,6 +7,8 @@
 > [Hugging Face Papers](https://huggingface.co/papers/2507.07107) &nbsp;|&nbsp; Yimin Du, 2025
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
+[![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/initial-d/ml-quant-trading?style=flat&logo=github&label=Forks)](https://github.com/initial-d/ml-quant-trading/forks)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
 [![Project site](https://img.shields.io/badge/project-site-0f7b63.svg)](https://initial-d.github.io/ml-quant-trading/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
@@ -19,6 +21,11 @@
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
 ![ml-quant-trading social preview](docs/assets/readme-preview.png)
+
+[**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+· [**See validated results**](docs/validation_dashboard.md)
+· [**Read the paper**](https://arxiv.org/abs/2507.07107)
+· [**Join the discussion**](https://github.com/initial-d/ml-quant-trading/discussions/13)
 
 ---
 
@@ -34,7 +41,7 @@ demos, CI, tests, and benchmark tooling.
 
 | If you want to... | Start here | What you get |
 |---|---|---|
-| See the project run | `make paper CONFIG=configs/small.yaml` | A 30-90 second synthetic end-to-end smoke test |
+| See the project run | `mlquant demo` | A 30-90 second synthetic end-to-end smoke test |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
@@ -137,8 +144,8 @@ git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
 pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
 
-# 30-second smoke test (synthetic 200 stocks × 500 days)
-make paper CONFIG=configs/small.yaml
+# One-command smoke test (synthetic data; no API key required)
+mlquant demo
 ```
 
 ### Google Colab Quick Start
@@ -204,7 +211,8 @@ For VS Code or GitHub Codespaces, use the included Dev Container:
 
 It installs Python 3.11 and the project with `pip install -e .[dev]`.
 
-### Launch and Community Assets
+<details>
+<summary><b>Maintainer, launch, and community resources</b></summary>
 
 - [`CHANGELOG.md`](CHANGELOG.md) summarizes the public baseline release.
 - [`docs/launch_playbook.md`](docs/launch_playbook.md) contains the launch checklist,
@@ -235,6 +243,8 @@ It installs Python 3.11 and the project with `pip install -e .[dev]`.
 - [`v0.2.1`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1) is the validation entrypoint and outreach follow-through release.
 - [`v0.2.2`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2) is the AkShare public A-share validation release.
 - [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
+
+</details>
 
 ---
 

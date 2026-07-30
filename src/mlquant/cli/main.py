@@ -41,6 +41,32 @@ def cli() -> None:
     """ml-quant-trading command-line interface."""
 
 
+@cli.command("demo")
+@click.option(
+    "--config",
+    "config_path",
+    default="configs/small.yaml",
+    show_default=True,
+    type=click.Path(exists=True),
+)
+@click.pass_context
+def cmd_demo(ctx: click.Context, config_path: str) -> None:
+    """Run the complete synthetic factor-to-backtest pipeline."""
+    stages = (
+        ("1/5 Generate deterministic synthetic data", cmd_gen_data),
+        ("2/5 Compute the 213-factor tensor", cmd_features),
+        ("3/5 Train the baseline model", cmd_train),
+        ("4/5 Build portfolio weights", cmd_portfolio),
+        ("5/5 Run the cost-aware backtest", cmd_backtest),
+    )
+    click.echo("mlquant demo — data → factors → model → portfolio → backtest\n")
+    for label, command in stages:
+        click.echo(f"[{label}]")
+        ctx.invoke(command, config_path=config_path)
+        click.echo()
+    click.echo("Demo complete. Inspect the backtest summary above and artifacts/ for outputs.")
+
+
 @cli.command("gen-data")
 @click.option("--config", "config_path", required=True, type=click.Path(exists=True))
 def cmd_gen_data(config_path: str) -> None:

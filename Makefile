@@ -8,7 +8,7 @@ RUFF    ?= $(PY) -m ruff
 CONFIG  ?= configs/small.yaml
 
 .PHONY: help install install-dev lint format test cov benchmark public-validation aggregate-validation audit-validation \
-        gen-data features train portfolio backtest \
+        demo gen-data features train portfolio backtest \
         paper clean clean-all
 
 help:
@@ -23,6 +23,7 @@ help:
 	@echo "  public-validation  run public-data validation benchmark"
 	@echo "  aggregate-validation  aggregate public-data validation reports"
 	@echo "  audit-validation  audit a public-data validation report"
+	@echo "  demo          run the complete synthetic pipeline"
 	@echo "  gen-data      synthesise GBM-based OCHLV panel  (CONFIG=$(CONFIG))"
 	@echo "  features      compute factor matrix"
 	@echo "  train         train ML model"
@@ -61,6 +62,9 @@ aggregate-validation:
 audit-validation:
 	$(PY) scripts/audit_validation_report.py artifacts/public_data_validation/summary.json
 
+demo:
+	$(PY) -m mlquant.cli.main demo --config $(CONFIG)
+
 gen-data:
 	$(PY) -m mlquant.cli.main gen-data --config $(CONFIG)
 
@@ -76,7 +80,7 @@ portfolio:
 backtest:
 	$(PY) -m mlquant.cli.main backtest --config $(CONFIG)
 
-paper: gen-data features train portfolio backtest
+paper: demo
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist *.egg-info
