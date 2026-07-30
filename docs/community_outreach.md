@@ -38,6 +38,9 @@ when the thread context makes the project genuinely useful.
 
 | Lead | Status | Good angle |
 |---|---|---|
+| ganluCoding/etf_t-0_hk_stock issue #1 | Technical reply posted | T+0 ETF grid break-even ledger, conservative OHLC execution tiers, and paper-execution validation |
+| minihellboy/factorminer issue #31 | Technical reply posted | Proof-carrying alpha claim lifecycle, evidence-budget feedback resolution, and kernel-owned promotion states |
+| Hamrez95/Quantara issue #5 | Technical reply posted | Promotion-basis object, rejected-strategy memory, and parameter-selection stability checks |
 | ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
 | FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
 | mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
