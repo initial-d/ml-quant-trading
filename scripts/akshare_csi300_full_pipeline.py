@@ -87,6 +87,7 @@ class FullPipelineConfig:
     optimizer_risk_aversion: float
     rebalance_step: int
     factor_ic_window: int
+    min_tradable_ratio: float
     bootstrap_samples: int
     bootstrap_block_size: int
     output_dir: Path
@@ -508,6 +509,7 @@ def _full_pipeline_metadata(
         "optimizer_weight_cap": cfg.optimizer_weight_cap,
         "optimizer_risk_aversion": cfg.optimizer_risk_aversion,
         "rebalance_step": cfg.rebalance_step,
+        "min_tradable_ratio": cfg.min_tradable_ratio,
     }
     metadata["limitations"].append(
         "This full-pipeline run uses cross-sectional score neutralization only; "
@@ -591,6 +593,13 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
     panel = load_validation_panel(validation_cfg)
     panel.assert_consistent()
     click.echo(f"stage: panel loaded ({panel.n_dates} dates x {panel.n_stocks} stocks)")
+    tradable_ratio = float(_to_numpy(panel.mask).astype(bool).mean())
+    if tradable_ratio < cfg.min_tradable_ratio:
+        raise click.ClickException(
+            f"AkShare panel tradable ratio {tradable_ratio:.4f} is below "
+            f"--min-tradable-ratio {cfg.min_tradable_ratio:.4f}; "
+            "refusing to generate a validation report from low-coverage data."
+        )
 
     returns = _to_numpy(panel.returns)
     target = _forward_returns(panel)
@@ -724,6 +733,7 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
 @click.option("--optimizer-risk-aversion", default=1.0, show_default=True, type=float)
 @click.option("--rebalance-step", default=1, show_default=True, type=click.IntRange(1, 252), help="1 means daily rebalancing; larger values are sensitivity checks.")
 @click.option("--factor-ic-window", default=252, show_default=True, type=click.IntRange(20, 756))
+@click.option("--min-tradable-ratio", default=0.90, show_default=True, type=click.FloatRange(0.0, 1.0))
 @click.option("--bootstrap-samples", default=100, show_default=True, type=click.IntRange(0, 10000))
 @click.option("--bootstrap-block-size", default=20, show_default=True, type=click.IntRange(1, 252))
 @click.option(
@@ -757,6 +767,7 @@ def main(
     optimizer_risk_aversion: float,
     rebalance_step: int,
     factor_ic_window: int,
+    min_tradable_ratio: float,
     bootstrap_samples: int,
     bootstrap_block_size: int,
     output_dir: Path,
@@ -791,6 +802,7 @@ def main(
         optimizer_risk_aversion=optimizer_risk_aversion,
         rebalance_step=rebalance_step,
         factor_ic_window=factor_ic_window,
+        min_tradable_ratio=min_tradable_ratio,
         bootstrap_samples=bootstrap_samples,
         bootstrap_block_size=bootstrap_block_size,
         output_dir=output_dir,

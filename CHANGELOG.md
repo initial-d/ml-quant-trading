@@ -9,6 +9,8 @@
   daily equity-curve visualizations.
 - AkShare ticker downloads now retry transient request failures before marking a
   ticker as unavailable.
+- The full AkShare CSI 300 pipeline now refuses to publish validation outputs
+  when the panel tradable ratio falls below `--min-tradable-ratio`.
 
 ## 0.2.3 - Daily 213-Factor Validation Dashboard
 

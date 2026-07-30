@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from typing import Sequence, Union
+from typing import Optional, Sequence, Union
 
 import numpy as np
 import pandas as pd
@@ -70,7 +70,7 @@ def load_akshare_panel(
         if idx == 1 or idx % 25 == 0 or idx == len(unique_tickers):
             print(f"AkShare download progress: {idx}/{len(unique_tickers)} ({ticker})", flush=True)
         ticker_df = None
-        last_error: Exception | None = None
+        last_error: Optional[Exception] = None
         for attempt in range(1, max(1, retries) + 1):
             try:
                 ticker_df = akshare.stock_zh_a_hist(
