@@ -83,6 +83,10 @@ pip install -e .[dev]        # 如需 CUDA，请添加 ,gpu；如需 MOSEK solve
 mlquant demo
 ```
 
+命令会显示每个运行阶段，并在 `artifacts/small/` 中生成便于分享的
+`summary.md` 与 `summary.json`，同时保留模型和回测产物。该 Demo 是确定性的
+工程冒烟测试，不是收益展示。
+
 ### 公开数据验证（可选）
 
 轻量示例请打开 [`notebooks/public_factor_ic.ipynb`](notebooks/public_factor_ic.ipynb)。如需运行规模更大的 yfinance walk-forward 验证：

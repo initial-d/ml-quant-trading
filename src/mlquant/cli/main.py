@@ -6,6 +6,8 @@ without recomputing upstream work.
 """
 from __future__ import annotations
 
+import json
+import math
 import pickle
 from pathlib import Path
 
@@ -31,6 +33,63 @@ def _artifacts_dir(cfg) -> Path:
     p = Path(cfg.get("artifacts_dir", "artifacts"))
     p.mkdir(parents=True, exist_ok=True)
     return p
+
+
+def _write_backtest_summary(
+    output_dir: Path,
+    metrics: dict,
+    *,
+    config_path: str,
+    costs_bps: float,
+) -> tuple[Path, Path]:
+    """Write portable JSON and Markdown summaries for sharing and review."""
+    clean_metrics = {
+        key: value if not isinstance(value, float) or math.isfinite(value) else None
+        for key, value in metrics.items()
+    }
+    payload = {
+        "project": "ml-quant-trading",
+        "workflow": "synthetic factor-to-backtest demo",
+        "config": config_path,
+        "costs_bps": float(costs_bps),
+        "metrics": clean_metrics,
+        "disclaimer": (
+            "Synthetic research output only; not investment advice or evidence of live performance."
+        ),
+    }
+    json_path = output_dir / "summary.json"
+    json_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+    rows = []
+    for key, value in clean_metrics.items():
+        if value is None:
+            display = "n/a"
+        elif isinstance(value, float):
+            display = f"{value:.6f}"
+        else:
+            display = str(value)
+        rows.append(f"| `{key}` | {display} |")
+
+    markdown = "\n".join(
+        [
+            "# mlquant demo result",
+            "",
+            f"- Config: `{config_path}`",
+            f"- Transaction cost assumption: `{costs_bps:g} bps`",
+            "- Workflow: synthetic data → 213 factors → MLP → Markowitz → backtest",
+            "",
+            "| Metric | Value |",
+            "|---|---:|",
+            *rows,
+            "",
+            "> Synthetic research output only. This is not investment advice or evidence of",
+            "> live or out-of-sample trading performance.",
+            "",
+        ]
+    )
+    markdown_path = output_dir / "summary.md"
+    markdown_path.write_text(markdown)
+    return markdown_path, json_path
 
 
 # ---------------------------------------------------------------------------
@@ -190,10 +249,17 @@ def cmd_backtest(config_path: str) -> None:
     rets[1:] = close[1:] / np.clip(close[:-1], 1e-9, None) - 1.0
 
     weights = weight_blob["weights"].numpy()
-    res = run_backtest(weights, rets, costs_bps=cfg.get("costs_bps", 5.0))
+    costs_bps = cfg.get("costs_bps", 5.0)
+    res = run_backtest(weights, rets, costs_bps=costs_bps)
     out = art / "backtest.pkl"
     with open(out, "wb") as fh:
         pickle.dump(res, fh)
+    markdown_path, json_path = _write_backtest_summary(
+        art,
+        res.metrics,
+        config_path=config_path,
+        costs_bps=costs_bps,
+    )
 
     click.echo("\nBacktest summary")
     click.echo("-" * 40)
@@ -202,6 +268,7 @@ def cmd_backtest(config_path: str) -> None:
             click.echo(f"  {k:<12s}  {v:>10.4f}")
         else:
             click.echo(f"  {k:<12s}  {v:>10}")
+    click.echo(f"\nShareable reports: {markdown_path}  {json_path}")
 
 
 def main() -> None:

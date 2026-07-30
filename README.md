@@ -148,6 +148,11 @@ pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
 mlquant demo
 ```
 
+The command prints a stage-by-stage run and writes shareable
+`artifacts/small/summary.md` and `summary.json` reports alongside the model and
+backtest artifacts. The demo is a deterministic engineering smoke test, not a
+performance claim.
+
 ### Google Colab Quick Start
 
 You can run an end-to-end demo of this project instantly in Google Colab without installing anything locally:
