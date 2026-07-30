@@ -45,12 +45,7 @@ demos, CI, tests, and benchmark tooling.
 ## Validation Dashboard
 
 Latest maintained public-data snapshot: [AkShare CSI 300 Daily 213-Factor Validation](docs/validation_dashboard.md).
-
-![Daily 213-factor validation cost sensitivity](docs/assets/validation-cost-sensitivity.svg)
-
-This is a cost stress test, not a time-series equity curve: the x-axis increases
-the assumed transaction cost, so high-turnover strategies are expected to slope
-down faster.
+The detailed dashboard includes cost-sensitivity charts, caveats, and reproduction commands.
 
 | Run | Universe | Frequency | Factor set | Main result at 7 bps effective cost |
 |---|---|---:|---:|---|
