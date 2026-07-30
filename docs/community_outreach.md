@@ -47,6 +47,9 @@ when the thread context makes the project genuinely useful.
 | Hamrez95/Quantara issue #52 | Technical reply posted | Strategy-specific promotion gates, regime mismatch diagnostics, playbook coverage, and cost-stress validation |
 | SiinXu/stock-pulse-ai issue #210 | Technical reply posted | Portfolio stress scenario provenance, deterministic impact modeling, rebalance audit, and T+1/liquidity edge cases |
 | Undermybelt/ict-engine-release issue #272 | Technical reply posted | PIT observation-outcome evidence bundle with ledger, split manifest, metrics, fill policy, and replay command |
+| RussellFeinstein/WoW-Economy-Forecaster issue #100 | Technical reply posted | Purge/embargo target-availability invariant, split manifest metadata, and horizon-specific leakage tests |
+| vinwiegman/quant issue #1 | Technical reply posted | Walk-forward prediction artifact schema, fold invariants, and cost-aware benchmark reporting |
+| Stellar-devs-dashboard issue #33 | Technical reply posted | Auditable first-slice portfolio optimizer, post-solve diagnostics, and safer baseline acceptance criteria |
 | ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
 | FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
 | mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
