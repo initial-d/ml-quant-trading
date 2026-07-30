@@ -38,6 +38,9 @@ when the thread context makes the project genuinely useful.
 
 | Lead | Status | Good angle |
 |---|---|---|
+| Jettlin927/Quantitative_trading issue #57 | Technical reply posted | A-share value-quality low-turnover review seams, PIT financial visibility tests, and capacity fail-closed priority |
+| tonywxx/adaq issue #29 | Technical reply posted | Research workspace evidence-completeness gate and identity-matching acceptance artifacts |
+| magilliam27/MCI-GRU issue #123 | Technical reply posted | PIT-aware graph selection fixture and separate consumed-edge vs selection-budget invariants |
 | ganluCoding/etf_t-0_hk_stock issue #1 | Technical reply posted | T+0 ETF grid break-even ledger, conservative OHLC execution tiers, and paper-execution validation |
 | minihellboy/factorminer issue #31 | Technical reply posted | Proof-carrying alpha claim lifecycle, evidence-budget feedback resolution, and kernel-owned promotion states |
 | Hamrez95/Quantara issue #5 | Technical reply posted | Promotion-basis object, rejected-strategy memory, and parameter-selection stability checks |
