@@ -16,6 +16,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - v0.2.2 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2>
 - v0.2.3 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3>
 - Validation dashboard: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md>
+- Zero-account Colab quickstart: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb>
 - Colab Baostock demo: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb>
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Follow-up validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>

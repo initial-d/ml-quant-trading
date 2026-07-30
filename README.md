@@ -22,7 +22,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 ![ml-quant-trading social preview](docs/assets/readme-preview.png)
 
-[**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+[**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**See validated results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 · [**Join the discussion**](https://github.com/initial-d/ml-quant-trading/discussions/13)
@@ -155,9 +155,13 @@ performance claim.
 
 ### Google Colab Quick Start
 
-You can run an end-to-end demo of this project instantly in Google Colab without installing anything locally:
+Run the deterministic end-to-end pipeline in Google Colab without a market-data
+account or local setup:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
+
+The account-based [Baostock A-share notebook](demo_baostock.ipynb) remains
+available for users who want that data route.
 
 ### Public-Data Factor IC Demo
 

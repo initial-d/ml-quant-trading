@@ -18,7 +18,7 @@ This page is the fastest path from discovering the repository to running somethi
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
 python -m pip install -e .[dev]
-make paper CONFIG=configs/small.yaml
+mlquant demo
 ```
 
 Expected local runtime:

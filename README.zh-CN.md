@@ -15,7 +15,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 ![ml-quant-trading 项目预览](docs/assets/readme-preview.png)
 
-[**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb)
+[**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**查看公开验证结果**](docs/validation_dashboard.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**参与讨论**](https://github.com/initial-d/ml-quant-trading/discussions/13)
@@ -29,7 +29,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | 你的目标 | 从这里开始 | 能得到什么 |
 |---|---|---|
 | 先看项目能否跑通 | `mlquant demo` | 30–90 秒、无需行情数据的端到端冒烟测试 |
-| 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb) | 浏览器内运行示例 |
+| 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb) | 无需账号或行情 API 的浏览器内完整 Demo |
 | 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
 | 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
 | 贡献复现或跑分 | [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13) | 分享 CPU/GPU benchmark 和公开数据报告 |
