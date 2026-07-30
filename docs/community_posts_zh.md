@@ -1,7 +1,8 @@
 # 中文社区定制发布稿
 
-每篇只保留一个行动入口：零账号 Colab。发布前应再次检查对应社区的自荐规则，
-并在发布后回复技术问题。不要在同一天把完全相同的正文群发到所有平台。
+每篇保留两个清晰入口：GitHub 用于查看源码、Star、Fork 和 Issue，零账号 Colab
+用于立即体验。发布前应再次检查对应社区的自荐规则，并在发布后回复技术问题。
+不要在同一天把完全相同的正文群发到所有平台。
 
 统一配图：[`assets/validation-cost-sensitivity.png`](assets/validation-cost-sensitivity.png)。
 图中横轴是交易成本而非时间，发布时不要称为净值曲线。
@@ -23,6 +24,8 @@ PyTorch 多因子研究框架开源后，用 AkShare 当前沪深 300 数据做�
 全文。结尾仅保留：
 
 > 想检查工程是否能在你的环境跑通：
+> [查看 GitHub 源码与完整文档](https://github.com/initial-d/ml-quant-trading)
+>
 > [打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 
 ## 掘金
@@ -48,7 +51,10 @@ PyTorch 多因子研究框架开源后，用 AkShare 当前沪深 300 数据做�
 项目同时保留了 IC 加权失败、部分优化组合落后基线，以及 MLP 路径尚未形成有效
 组合等负面结果。
 
-想从代码路径而不是收益截图开始：
+源码与完整文档：
+[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)
+
+想从可运行的代码路径而不是收益截图开始：
 [打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 
 ## V2EX
@@ -68,7 +74,10 @@ PyTorch 算子、A 股涨跌停/停牌处理、MLP/Transformer、Markowitz 和�
 
 我更想收集安装失败、CPU/GPU 时间和不同环境结果，不想讨论“能不能跟单”。
 
-入口只有一个：
+源码、文档与 Issue：
+[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)
+
+立即体验：
 [零账号 Colab，跑完可直接生成提交报告](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 
 ## 聚宽
@@ -93,6 +102,9 @@ PyTorch 算子、A 股涨跌停/停牌处理、MLP/Transformer、Markowitz 和�
 边界也很明确：使用当前成分股而非历史时点成分股；没有行业、规模、流动性和真实
 执行元数据；结果不是论文精确复现。
 
+源码、文档与完整验证报告：
+[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)
+
 如果愿意帮忙验证代码路径：
 [打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 
@@ -112,6 +124,10 @@ PyTorch 算子、A 股涨跌停/停牌处理、MLP/Transformer、Markowitz 和�
 同区间换手下降约 61%，7 bps 下净年化为 22.20%。在 15 和 30 bps 压力下结果
 继续下降，因此报告展示的是成本压力曲线，而不是一条容易误解的净值营销图。
 
-研究限制包括当前成分股偏差、公共数据修订以及缺少生产执行约束。欢迎复现后用
-自己的成本和股票池挑战结果：
+研究限制包括当前成分股偏差、公共数据修订以及缺少生产执行约束。
+
+源码与完整文档：
+[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)
+
+欢迎复现后用自己的成本和股票池挑战结果：
 [打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)

@@ -4,6 +4,9 @@
 > 论文：Machine Learning Enhanced Multi-Factor Quantitative Trading  
 > 本文所有结果仅用于研究与工程验证，不构成投资建议。
 
+**GitHub 源码与完整文档：**
+<https://github.com/initial-d/ml-quant-trading>
+
 ![沪深 300 日频 213 因子成本压力测试](assets/validation-cost-sensitivity.png)
 
 很多量化项目最吸引人的部分是一条漂亮的收益曲线，但真正决定研究能否复现的，
@@ -112,6 +115,10 @@ mlquant demo
 - 对时间可见性、交易成本和组合约束的质疑；
 - 首次安装失败或文档不清楚的具体报告。
 
-唯一行动入口：
+项目源码、文档、Issue 与复现记录：
+
+**[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)**
+
+无需本地安装即可体验：
 
 **[打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)**
