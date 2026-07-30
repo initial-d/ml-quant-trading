@@ -38,6 +38,9 @@ when the thread context makes the project genuinely useful.
 
 | Lead | Status | Good angle |
 |---|---|---|
+| ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
+| FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
+| mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
 | Qlib discussion #2284 | Open discussion about A-share factor labs and AI research reports | Share validation-first design notes and mention the repo as a narrower PyTorch/A-share reference, not as a Qlib replacement |
 | awesome-quant-ai PR #43 | Merged directly by maintainer | Keep relationship warm; future follow-up should be about concrete benchmarks or an arena-style demo, not another listing request |
 | awesome-math-and-trading issue #3 | Open resource suggestion | Wait for maintainer activity before following up; keep the ask about fit and category placement |
