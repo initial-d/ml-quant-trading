@@ -44,6 +44,26 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
+Recorded on 2026-07-31 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-07-29):
+
+- Views: 1,374 total, 251 unique visitors.
+- Clones: 658 total, 314 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 60 stars, 29 forks, 4 watchers.
+- Top referrers: GitHub, Google, Bing, arXiv, Doubao, Zhihu, Baidu,
+  ChatGPT, DuckDuckGo, and the project site.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, issue #22, discussion #13, and contributor PRs.
+
+Operating takeaways:
+
+- The project is still growing after the initial launch spike: stars and forks
+  both increased while clone traffic stayed strong.
+- Chinese-language onboarding remains a meaningful entry point, now supported by
+  a dedicated Chinese validation article and community post drafts.
+- Search and paper surfaces are contributing stable discovery, not only one-off
+  GitHub Community traffic.
+
 Recorded on 2026-07-30 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-07-28):
 

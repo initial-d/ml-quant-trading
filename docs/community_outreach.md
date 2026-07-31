@@ -50,6 +50,9 @@ when the thread context makes the project genuinely useful.
 | RussellFeinstein/WoW-Economy-Forecaster issue #100 | Technical reply posted | Purge/embargo target-availability invariant, split manifest metadata, and horizon-specific leakage tests |
 | vinwiegman/quant issue #1 | Technical reply posted | Walk-forward prediction artifact schema, fold invariants, and cost-aware benchmark reporting |
 | Stellar-devs-dashboard issue #33 | Technical reply posted | Auditable first-slice portfolio optimizer, post-solve diagnostics, and safer baseline acceptance criteria |
+| alex-place/lantern-os issue #3001 | Technical reply posted | Thin overnight alpha cost ledger, auction slippage breakdown, and net-of-cost promotion gate |
+| RussellFeinstein/WoW-Economy-Forecaster issue #16 | Technical reply posted | Fold-quality table, usable-fold gate, skipped-fold reason codes, and target-horizon metadata |
+| jjakimoto/research-issues issue #319 | Technical reply posted | A-share model-swap reproduction checklist and validation-first framing for vanishing model advantage |
 | ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
 | FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
 | mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
