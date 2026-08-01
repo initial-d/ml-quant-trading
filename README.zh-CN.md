@@ -18,7 +18,11 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 [**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**查看公开验证结果**](docs/validation_dashboard.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
-· [**参与讨论**](https://github.com/initial-d/ml-quant-trading/discussions/13)
+· [**参加 8 月复现挑战**](https://github.com/initial-d/ml-quant-trading/discussions/43)
+
+> **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
+> 运行环境和 commit SHA 发布到 [Discussion #43](https://github.com/initial-d/ml-quant-trading/discussions/43)。
+> 成功和失败结果都欢迎；符合可验证性要求的报告会署名加入下方社区验证区。
 
 ## 项目概述
 
@@ -32,7 +36,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb) | 无需账号或行情 API 的浏览器内完整 Demo |
 | 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
 | 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
-| 贡献复现或跑分 | [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13) | 分享 CPU/GPU benchmark 和公开数据报告 |
+| 贡献一次运行结果 | [8 月复现挑战](https://github.com/initial-d/ml-quant-trading/discussions/43) | 跑 Colab、提交自动报告并获得 README 署名 |
 
 ## 当前公开验证
 
@@ -52,6 +56,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 这些结果链接到原始 PR，便于检查环境、命令、限制和评审过程。你也可以
 [打开零账号 Colab，运行并提交生成的报告](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)。
+本月结果统一提交到 [2026 年 8 月复现挑战](https://github.com/initial-d/ml-quant-trading/discussions/43)。
 
 ## 研究与教学用途声明
 

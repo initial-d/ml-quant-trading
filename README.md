@@ -25,7 +25,13 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**See validated results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
-· [**Join the discussion**](https://github.com/initial-d/ml-quant-trading/discussions/13)
+· [**Join the August reproduction challenge**](https://github.com/initial-d/ml-quant-trading/discussions/43)
+
+> **August 2026 reproduction challenge:** run the zero-account Colab once and
+> post its generated report, environment, and commit SHA in
+> [Discussion #43](https://github.com/initial-d/ml-quant-trading/discussions/43).
+> Successful and failed runs are both useful. Verifiable reports will be credited
+> in the Community Evidence section.
 
 ---
 
@@ -47,7 +53,7 @@ demos, CI, tests, and benchmark tooling.
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
 | Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
 | Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
-| Contribute results | [Benchmark discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) | A place to share benchmark and reproduction reports |
+| Contribute one run | [August reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43) | Run Colab, post the generated report, and receive README credit |
 
 ## Validation Dashboard
 
@@ -88,6 +94,7 @@ research pipeline.
 
 **Current calls for contributors**
 
+- Join the [August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43): one Colab run, one generated report, success or failure.
 - Try the [`v0.2.3` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
