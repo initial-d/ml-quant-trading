@@ -1,0 +1,87 @@
+name: Colab reproduction report
+description: Share a successful or failed zero-account Colab or local demo run.
+title: "[reproduction] "
+labels: ["reproducibility", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for running the project. Successful and failed runs are equally
+        useful. Complete this form from the same session when possible; accepted
+        reports may be credited in the README Community Evidence section.
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Did the zero-account Colab or local `mlquant demo` finish?
+      options:
+        - Successful run
+        - Failed run
+        - Successful with warnings
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      description: Paste the commit printed by the notebook, or run `git rev-parse --short HEAD` locally.
+      placeholder: 2bc2897
+    validations:
+      required: true
+
+  - type: dropdown
+    id: entrypoint
+    attributes:
+      label: Entrypoint
+      options:
+        - Google Colab quickstart
+        - Local `mlquant demo`
+        - Other documented reproduction
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the runtime, Python and PyTorch versions, plus CPU/GPU details shown by the notebook or local environment.
+      placeholder: |
+        Runtime: Google Colab / local OS
+        Python:
+        PyTorch:
+        CPU:
+        GPU:
+        CUDA available:
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: Generated report or failure output
+      description: Paste `artifacts/small/summary.md`. For failures, paste the shortest useful error and the cell or command that failed.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Mention warnings, local changes, retries, or anything that would help another user reproduce your result.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I removed tokens, account identifiers, private paths, and other sensitive information from the pasted output.
+          required: true
+        - label: I kept the actual output and did not alter metrics to make the result look better.
+          required: true
+        - label: I understand that this research software and its backtests are not investment advice.
+          required: true
