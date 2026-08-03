@@ -45,6 +45,7 @@ when the thread context makes the project genuinely useful.
 | minihellboy/factorminer issue #31 | Technical reply posted | Proof-carrying alpha claim lifecycle, evidence-budget feedback resolution, and kernel-owned promotion states |
 | Hamrez95/Quantara issue #5 | Technical reply posted | Promotion-basis object, rejected-strategy memory, and parameter-selection stability checks |
 | Hamrez95/Quantara issue #52 | Technical reply posted | Strategy-specific promotion gates, regime mismatch diagnostics, playbook coverage, and cost-stress validation |
+| Hamrez95/Quantara issue #113 | Follow-up technical reply posted | Per-playbook promotion records for v1.2 champion/challenger evidence across replay, shadow, and canary gates |
 | SiinXu/stock-pulse-ai issue #210 | Technical reply posted | Portfolio stress scenario provenance, deterministic impact modeling, rebalance audit, and T+1/liquidity edge cases |
 | Undermybelt/ict-engine-release issue #272 | Technical reply posted | PIT observation-outcome evidence bundle with ledger, split manifest, metrics, fill policy, and replay command |
 | RussellFeinstein/WoW-Economy-Forecaster issue #100 | Technical reply posted | Purge/embargo target-availability invariant, split manifest metadata, and horizon-specific leakage tests |
@@ -53,6 +54,8 @@ when the thread context makes the project genuinely useful.
 | alex-place/lantern-os issue #3001 | Technical reply posted | Thin overnight alpha cost ledger, auction slippage breakdown, and net-of-cost promotion gate |
 | RussellFeinstein/WoW-Economy-Forecaster issue #16 | Technical reply posted | Fold-quality table, usable-fold gate, skipped-fold reason codes, and target-horizon metadata |
 | jjakimoto/research-issues issue #319 | Technical reply posted | A-share model-swap reproduction checklist and validation-first framing for vanishing model advantage |
+| HKUDS/Vibe-Trading issue #887 | External fix acknowledged | Identity gate and tool-batch barrier landed on main with regression coverage after earlier design discussion |
+| HKUDS/Vibe-Trading issue #886 | External fix acknowledged | Structured evidence ledger and final-answer market-claim consistency landed on main with regression fixture |
 | ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
 | FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
 | mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
@@ -77,7 +80,7 @@ when the thread context makes the project genuinely useful.
 | lookaheadbench issue #1 | Technical reply posted | Structured finance-context leakage, bitemporal artifacts, and replay-safe factor validation |
 | AI-Quant-Research-System issue #1 | Technical reply posted | PIT vendor ingestion contract, synthetic fixtures, and no-redistribution data boundary |
 | Algo-Quant-Backtester issue #5 | Technical reply posted | Evidence ladder for quickstart, baselines, costs, bias checks, and README claims |
-| ernie55ernie/awesome-quant PR #1 | External listing PR opened | Add ml-quant-trading to Research Frameworks source data for an auto-refreshed quant list |
+| ernie55ernie/awesome-quant PR #1 | Merged by maintainer | Added ml-quant-trading to Research Frameworks source data for an auto-refreshed quant list |
 | NASDX issue #44 | Technical reply posted | Missing/suspended-price handling, stale valuation prices, and execution-price separation |
 | NASDX issue #43 | Technical reply posted | Explicit weekly/monthly rebalance calendar semantics and no-lookahead schedule tests |
 | yfinance discussion #2912 | Technical reply posted | EDGAR filing backend provenance, accession IDs, same-day filing collisions, and public-data validation |

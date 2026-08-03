@@ -9,6 +9,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Hugging Face paper page (verified authorship claim): <https://huggingface.co/papers/2507.07107>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - Awesome Quant listing (Factor Analysis): <https://github.com/wilsonfreitas/awesome-quant#factor-analysis>
+- ernie55ernie Awesome Quant listing (Research Frameworks): <https://github.com/ernie55ernie/awesome-quant>
 - Awesome AI Trading Research listing (B1 Factor Investing): <https://github.com/ohselab/awesome-ai-trading-research/blob/main/papers.md#b1-factor-investing-23>
 - v0.1.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0>
 - v0.2.0 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0>
@@ -43,6 +44,27 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Benchmark and reproduction reports: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 
 ## Traffic Snapshot
+
+Recorded on 2026-08-03 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-08-01):
+
+- Views: 1,332 total, 265 unique visitors.
+- Clones: 745 total, 335 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 66 stars, 29 forks, 4 watchers.
+- Top referrers: GitHub, Google, Bing, Zhihu, JoinQuant, Doubao,
+  ChatGPT, arXiv, Baidu, and DuckDuckGo.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, the main tree view, issue #22, and contributor
+  benchmark/reproduction issues.
+
+Operating takeaways:
+
+- Star growth continued through the weekend while unique cloners also increased,
+  suggesting the new reproduction challenge is being tried rather than only viewed.
+- Chinese discovery is now more visible: Zhihu and JoinQuant both appear as
+  referrers, and `README.zh-CN.md` remains the top non-root path.
+- The second awesome-list entry broadens the durable external discovery surface
+  beyond launch-time social posts.
 
 Recorded on 2026-07-31 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-07-29):
