@@ -21,7 +21,7 @@ Before comparing backtest numbers, read the [backtest assumptions and limitation
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 
 # Tiny config: ~30 seconds end-to-end.
 make paper CONFIG=configs/small.yaml

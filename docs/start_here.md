@@ -17,7 +17,7 @@ This page is the fastest path from discovering the repository to running somethi
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 mlquant demo
 ```
 
@@ -98,7 +98,7 @@ Container:
 The container installs Python 3.11 and runs:
 
 ```bash
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 ```
 
 This is the most reproducible path for first-time contributors who do not want to debug
@@ -117,7 +117,8 @@ The fastest useful contributions are:
 Good current entry points:
 
 - [Collect community CPU/GPU benchmark results](https://github.com/initial-d/ml-quant-trading/issues/7)
-- [Share benchmark and public-data reproductions](https://github.com/initial-d/ml-quant-trading/issues/12)
+- [Submit a structured Colab or local reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
+- [Join the August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43)
 - [Pair on a public-data validation or benchmark contribution](https://github.com/initial-d/ml-quant-trading/issues/22)
 
 ## 6. What Not to Expect

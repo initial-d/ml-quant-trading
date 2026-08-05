@@ -163,7 +163,7 @@ deterministically from a fixed seed.
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-pip install -e .[dev]        # add ,gpu for CUDA; add ,mosek for MOSEK solver
+python -m pip install -e '.[dev]'  # add ,gpu for CUDA; add ,mosek for MOSEK solver
 
 # One-command smoke test (synthetic data; no API key required)
 mlquant demo
@@ -239,7 +239,7 @@ For VS Code or GitHub Codespaces, use the included Dev Container:
 .devcontainer/devcontainer.json
 ```
 
-It installs Python 3.11 and the project with `pip install -e .[dev]`.
+It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`.
 
 <details>
 <summary><b>Maintainer, launch, and community resources</b></summary>

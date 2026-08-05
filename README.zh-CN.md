@@ -95,7 +95,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-pip install -e .[dev]        # 如需 CUDA，请添加 ,gpu；如需 MOSEK solver，请添加 ,mosek
+python -m pip install -e '.[dev]'  # 如需 CUDA，请添加 ,gpu；如需 MOSEK solver，请添加 ,mosek
 
 # 一条命令跑通（Synthetic 数据，无需 API Key）
 mlquant demo
