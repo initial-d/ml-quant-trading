@@ -66,6 +66,9 @@ Operating takeaways:
 - The August reproduction challenge needs repeated light-touch reminders because
   issue #7 and issue #22 are still visible in traffic but not yet converting into
   many new public reports.
+- A second August 5 outreach pulse targeted high-relevance A-share, factor,
+  public-evidence, walk-forward, and live-trading safety threads; monitor these
+  for maintainer replies before posting any follow-up.
 
 Recorded on 2026-08-03 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-08-01):

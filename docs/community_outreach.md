@@ -38,6 +38,12 @@ when the thread context makes the project genuinely useful.
 
 | Lead | Status | Good angle |
 |---|---|---|
+| JustinSongXh/quant-trading issue #35 | Technical reply posted | Eastmoney sector-constituent provider state, stale snapshot semantics, and deterministic A-share ranking inputs |
+| Kaoruha/GinkGO issue #6853 | Technical reply posted | Narrow factor-subsystem wiring slice, Alpha158 registry repair, idempotent storage, and stub visibility |
+| minihellboy/factorminer issue #36 | Technical reply posted | Independent public-evidence reproduction report template and negative-reproduction value |
+| liuh886/alpha_engine issue #531 | Technical reply posted | Confidence-gate confusion table, regime-conditioned factor negative control, and cost/turnover attribution |
+| Berryoatzii/Innovestx-bot issue #3 | Technical reply posted | NO-GO to SHADOW replay artifact, deterministic strategy spec, and live-execution evidence gate |
+| Hamrez95/Quantara issue #110 | Technical reply posted | Per-playbook promotion packet across replay, shadow, canary, calibration, latency, and signals/week |
 | Jettlin927/Quantitative_trading issue #57 | Technical reply posted | A-share value-quality low-turnover review seams, PIT financial visibility tests, and capacity fail-closed priority |
 | tonywxx/adaq issue #29 | Technical reply posted | Research workspace evidence-completeness gate and identity-matching acceptance artifacts |
 | magilliam27/MCI-GRU issue #123 | Technical reply posted | PIT-aware graph selection fixture and separate consumed-edge vs selection-budget invariants |
