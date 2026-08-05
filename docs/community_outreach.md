@@ -46,6 +46,7 @@ when the thread context makes the project genuinely useful.
 | Hamrez95/Quantara issue #5 | Technical reply posted | Promotion-basis object, rejected-strategy memory, and parameter-selection stability checks |
 | Hamrez95/Quantara issue #52 | Technical reply posted | Strategy-specific promotion gates, regime mismatch diagnostics, playbook coverage, and cost-stress validation |
 | Hamrez95/Quantara issue #113 | Follow-up technical reply posted | Per-playbook promotion records for v1.2 champion/challenger evidence across replay, shadow, and canary gates |
+| HKUDS/Vibe-Trading issue #969 | Technical reply posted | Evidence-stage strategy discovery registry across Alpha Zoo and SDM with reproducible metrics and stale-evidence refusal |
 | SiinXu/stock-pulse-ai issue #210 | Technical reply posted | Portfolio stress scenario provenance, deterministic impact modeling, rebalance audit, and T+1/liquidity edge cases |
 | Undermybelt/ict-engine-release issue #272 | Technical reply posted | PIT observation-outcome evidence bundle with ledger, split manifest, metrics, fill policy, and replay command |
 | RussellFeinstein/WoW-Economy-Forecaster issue #100 | Technical reply posted | Purge/embargo target-availability invariant, split manifest metadata, and horizon-specific leakage tests |
@@ -54,8 +55,13 @@ when the thread context makes the project genuinely useful.
 | alex-place/lantern-os issue #3001 | Technical reply posted | Thin overnight alpha cost ledger, auction slippage breakdown, and net-of-cost promotion gate |
 | RussellFeinstein/WoW-Economy-Forecaster issue #16 | Technical reply posted | Fold-quality table, usable-fold gate, skipped-fold reason codes, and target-horizon metadata |
 | jjakimoto/research-issues issue #319 | Technical reply posted | A-share model-swap reproduction checklist and validation-first framing for vanishing model advantage |
+| JohnGavin/historical issue #624 | Technical reply posted | Gross/net exposure, cost-unit reporting, realized turnover, and borrow-cost visibility for strategy leaderboards |
+| sunyxi/SeekAlpha issue #52 | Technical reply posted | Strict StrategyPackage handoff contract for PIT universe, split manifests, cost assumptions, gates, and replay artifacts |
+| Luke-Bradford/eBull issue #2282 | Technical reply posted | Research-corpus versus execution-venue boundary, delisting register fields, and symbol/date tradability provenance |
+| liuh886/alpha_engine issue #342 | Technical reply posted | CN130 ranking ledger, neutralized Rank IC, leave-one-out stability, and portfolio-return-as-secondary-evidence framing |
 | HKUDS/Vibe-Trading issue #887 | External fix acknowledged | Identity gate and tool-batch barrier landed on main with regression coverage after earlier design discussion |
 | HKUDS/Vibe-Trading issue #886 | External fix acknowledged | Structured evidence ledger and final-answer market-claim consistency landed on main with regression fixture |
+| ml-quant-trading issue #7 | Maintainer update posted | August reproduction challenge reminder and structured reproduction-report template link |
 | ml-quant-trading discussion #13 | Maintainer update posted for v0.2.3 | Validation dashboard, AkShare coverage gate, and independent `equity_curves.csv` reproduction ask |
 | FinMamba issue #5 | Technical reply posted | Reproduction bundle contract for financial ML paper results: universe, calendar, feature/label hashes, predictions, seeds, and backtest assumptions |
 | mechanic-Q/electric issue #61 | Technical reply posted | Explainable replay evidence snapshot, same-window strategy metrics, and assistant context separation |
