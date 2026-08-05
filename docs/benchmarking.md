@@ -5,7 +5,7 @@ This page explains how to benchmark the tensor factor engine on synthetic data. 
 ## Quick Start
 
 ```bash
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 python scripts/benchmark_tensor_factors.py --device auto
 ```
 

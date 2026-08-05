@@ -10,8 +10,8 @@ easier to trust, and easier to extend.
 - Expand first-run onboarding based on new user feedback.
 - Add more examples for factor IC, attribution, and regime-specific diagnostics.
 - Add independent reproductions with explicit survivorship-bias and point-in-time data controls.
-- Evaluate a lightweight GitHub Project board for contributor tasks.
-- Evaluate automated pull-request review tooling after the first external PRs arrive.
+- Publish the package to PyPI so new users can install a tagged release without cloning.
+- Keep the contributor funnel focused on a small set of current, reviewable issues.
 
 ## Completed Launch Items
 
@@ -53,9 +53,9 @@ easier to trust, and easier to extend.
 
 ## Community Milestones
 
-- First external benchmark result.
-- First public-data reproduction issue.
-- First external PR.
-- First tagged release.
+- [x] First external benchmark result.
+- [x] First public-data reproduction issue.
+- [x] First external PR.
+- [x] First tagged release.
 - First Zenodo archive or DOI-backed software release.
 - First third-party tutorial or blog post.

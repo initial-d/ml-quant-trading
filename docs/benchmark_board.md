@@ -12,7 +12,7 @@ community reports.
 ## How to Submit
 
 ```bash
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 make benchmark
 ```
 

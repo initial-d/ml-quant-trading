@@ -114,7 +114,7 @@ Title: Building a reproducible ML factor research pipeline for A-shares
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-python -m pip install -e .[dev]
+python -m pip install -e '.[dev]'
 mlquant demo
 ```
 

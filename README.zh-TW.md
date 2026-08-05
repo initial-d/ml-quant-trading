@@ -48,7 +48,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-pip install -e .[dev]        # 如需 CUDA，請加入 ,gpu；如需 MOSEK solver，請加入 ,mosek
+python -m pip install -e '.[dev]'  # 如需 CUDA，請加入 ,gpu；如需 MOSEK solver，請加入 ,mosek
 
 # 30 秒冒煙測試（Synthetic：200 檔股票 × 500 天）
 make paper CONFIG=configs/small.yaml
