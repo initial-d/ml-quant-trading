@@ -33,8 +33,19 @@ class BacktestResult:
     gross_returns:     np.ndarray          # [T] gross
     cumulative_equity: np.ndarray          # [T]
     weights:           np.ndarray          # [T, N]
-    cost_drag:         float               # total cost paid (cumulative)
+    cost_drag_cumulative: float            # total cost paid over the whole run
     metrics:           dict                # summary table
+
+    @property
+    def cost_drag(self) -> float:
+        """Deprecated alias for :attr:`cost_drag_cumulative`.
+
+        The name was ambiguous: this figure is cumulative over the backtest,
+        while ``ann_return``, ``gross_ann_return`` and ``ann_vol`` alongside it
+        are annualised. Kept for one release so existing scripts and archived
+        JSON reports keep working. Prefer ``cost_drag_cumulative``.
+        """
+        return self.cost_drag_cumulative
 
     def summary(self) -> dict:
         return self.metrics
@@ -84,6 +95,10 @@ def run_backtest(
         "calmar":     metrics.calmar_ratio(net),
         "max_dd":     metrics.max_drawdown(net),
         "turnover":   metrics.turnover(weights),
+        # Cumulative over the run, unlike its annualised neighbours above.
+        # Both keys carry the same value for one release; `cost_drag` is
+        # deprecated. See docs/public_data_validation.md for the glossary.
+        "cost_drag_cumulative": float(cost.sum()),
         "cost_drag":  float(cost.sum()),
         "n_periods":  int(T),
     }
@@ -98,6 +113,6 @@ def run_backtest(
         gross_returns=gross,
         cumulative_equity=equity,
         weights=weights,
-        cost_drag=float(cost.sum()),
+        cost_drag_cumulative=float(cost.sum()),
         metrics=summary,
     )

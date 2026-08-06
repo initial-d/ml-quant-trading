@@ -1,5 +1,8 @@
 # Reproducing the paper
 
+> **Units note.** `cost_drag` in the tables below is *cumulative over the run*, not annualised — unlike `ann_return`, `gross_ann_return` and `ann_vol` beside it. Divide by the number of years before comparing it with a per-year figure, and do not compare it across reports of different lengths. The field is named `cost_drag_cumulative` in new output; see [the metric glossary](public_data_validation.md#metric-glossary).
+
+
 The paper reports results on a proprietary Wind A-share panel that we
 cannot redistribute. We support two reproduction paths:
 

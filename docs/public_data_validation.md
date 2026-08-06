@@ -272,6 +272,46 @@ These intervals are diagnostics, not formal proof of statistical significance.
 They are most useful for spotting fragile point estimates and for comparing
 community reports that use the same universe and date range.
 
+## Metric Glossary
+
+Every column in the summary table, with its unit and time basis. The distinction
+that matters most is the last column: most figures are **per year**, one is a
+**total over the run**, and comparing across those two without noticing is easy.
+
+| column | unit | basis |
+|---|---|---|
+| `ann_return` | fraction | per year, geometric |
+| `gross_ann_return` | fraction | per year, geometric, before costs |
+| `ann_vol` | fraction | per year |
+| `sharpe`, `gross_sharpe` | ratio | per year |
+| `info_ratio` | ratio | per year, against the benchmark |
+| `alpha_ann` | fraction | per year, against the benchmark |
+| `max_dd` | fraction | worst peak-to-trough over the run |
+| `turnover` | fraction | average per rebalance |
+| `cost_drag_cumulative` | fraction | **total over the whole run**, arithmetic sum |
+| `final_equity` | multiple | total over the run, starting at 1.0 |
+| `effective_costs_bps` | bps per side | input, not a result |
+
+**`cost_drag_cumulative` is not annualised.** It is `sum(daily cost)` across
+every period in the backtest, so a strategy tested over eight years reports
+roughly twice the drag of the same strategy over four — at identical turnover
+and identical fees. Two consequences:
+
+- Do not read it as a rate beside `ann_return`. On a four-year run a
+  `cost_drag_cumulative` of 0.20 is about 5 percentage points a year, not 20.
+- Do not compare it between reports of different lengths. `turnover` and
+  `effective_costs_bps` are the length-independent figures; use those.
+
+It also will not reconcile exactly with `gross_ann_return − ann_return` even
+after dividing by the number of years, because the annualised returns compound
+while the cost sum is arithmetic. The gap is small on long runs and material on
+short ones. No derived "annualised cost drag" is published for that reason: an
+approximate number under an exact-sounding name is worse than an explicit one.
+
+`cost_drag` remains as a deprecated alias of `cost_drag_cumulative` for one
+release so archived reports and existing tooling keep working. New output should
+use the explicit name.
+
 ## Interpreting Results
 
 This benchmark is stronger than the tiny public-data IC note because it includes
@@ -279,8 +319,11 @@ a larger universe, walk-forward prediction, portfolio construction, turnover,
 drawdown, costs, uncertainty intervals, and baseline comparisons.
 
 When interpreting a factor strategy, always read net return together with
-`gross_ann_return`, `turnover`, and `cost_drag`. A strategy can have a positive
-gross return but still fail after costs if it trades too aggressively. That is
+`gross_ann_return` and `turnover` — all three are per-year figures, so they
+compare directly. `cost_drag_cumulative` is a total over the run rather than a
+rate (see the glossary above), so divide it by the number of years before
+holding it beside an annualised return. A strategy can have a positive gross
+return but still fail after costs if it trades too aggressively. That is
 especially important for naive factor blends such as `alpha101_mean`: a negative
 net result may be a turnover-control and portfolio-construction problem rather
 than evidence that the factor family has no research value.
