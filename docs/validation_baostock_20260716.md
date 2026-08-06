@@ -1,5 +1,8 @@
 # Baostock A-Share Public-Data Validation Report
 
+> **Units note.** `cost_drag` in the tables below is *cumulative over the run*, not annualised — unlike `ann_return`, `gross_ann_return` and `ann_vol` beside it. Divide by the number of years before comparing it with a per-year figure, and do not compare it across reports of different lengths. The field is named `cost_drag_cumulative` in new output; see [the metric glossary](public_data_validation.md#metric-glossary).
+
+
 > 2026-07-16 · Windows 11 · PyTorch 2.13.0+cpu · Python 3.12.7
 
 ## Command

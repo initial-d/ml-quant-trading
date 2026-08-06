@@ -106,8 +106,13 @@ def audit_report(
             findings.append(_finding("error", f"results[{index}]", "result row is not an object"))
             continue
         strategy = row.get("strategy") or f"results[{index}]"
-        for field in ("ann_return", "ann_vol", "sharpe", "max_dd", "turnover", "cost_drag", "final_equity"):
-            value = _as_float(row.get(field))
+        for field in ("ann_return", "ann_vol", "sharpe", "max_dd", "turnover", "cost_drag_cumulative", "final_equity"):
+            # `cost_drag` is the pre-rename name; archived reports carry it.
+            value = _as_float(
+                row.get(field)
+                if field != "cost_drag_cumulative"
+                else row.get(field, row.get("cost_drag"))
+            )
             if value is None:
                 findings.append(_finding("warning", f"{strategy}.{field}", f"missing or non-finite {field}"))
         max_dd = _as_float(row.get("max_dd"))

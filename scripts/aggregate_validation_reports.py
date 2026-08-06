@@ -27,7 +27,7 @@ LEADERBOARD_COLUMNS = (
     "sharpe_ci_high",
     "max_dd",
     "turnover",
-    "cost_drag",
+    "cost_drag_cumulative",
     "effective_costs_bps",
     "final_equity",
     "tradable_ratio",
@@ -92,7 +92,10 @@ def _flatten_report(path: Path) -> list[dict[str, Any]]:
             "sharpe_ci_high": result.get("sharpe_ci_high"),
             "max_dd": result.get("max_dd"),
             "turnover": result.get("turnover"),
-            "cost_drag": result.get("cost_drag"),
+            # Accept the legacy key so archived reports still aggregate.
+            "cost_drag_cumulative": result.get(
+                "cost_drag_cumulative", result.get("cost_drag")
+            ),
             "effective_costs_bps": result.get("effective_costs_bps", metadata.get("effective_costs_bps")),
             "final_equity": result.get("final_equity"),
             "tradable_ratio": panel.get("tradable_ratio"),

@@ -704,7 +704,7 @@ def _markdown_table(rows: Sequence[dict[str, float | int | str]]) -> str:
         "sharpe",
         "max_dd",
         "turnover",
-        "cost_drag",
+        "cost_drag_cumulative",
         "gross_ann_return",
         "gross_sharpe",
         "info_ratio",
@@ -731,7 +731,7 @@ def _cost_sensitivity_table(rows: Sequence[dict[str, float | int | str]]) -> str
         "sharpe",
         "max_dd",
         "turnover",
-        "cost_drag",
+        "cost_drag_cumulative",
         "final_equity",
     ]
     if any("sharpe_ci_low" in row for row in rows):
