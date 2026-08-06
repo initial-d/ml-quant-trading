@@ -16,6 +16,9 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - v0.2.1 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1>
 - v0.2.2 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2>
 - v0.2.3 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3>
+- v0.2.4 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.4>
+- Cost-metric technical story: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/backtest_cost_drag_story.md>
+- v0.2.4 metric-clarity discussion: <https://github.com/initial-d/ml-quant-trading/discussions/49>
 - Validation dashboard: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md>
 - Zero-account Colab quickstart: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb>
 - Colab Baostock demo: <https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/demo_baostock.ipynb>
@@ -36,6 +39,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Public-data mini reproduction doc: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_mini_reproduction.md>
 - Public validation digest for v0.2.0: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Public validation digest for v0.2.1: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>
+- External cost-metric review and compatibility fix: <https://github.com/initial-d/ml-quant-trading/pull/47>
 
 ## Current Contributor Funnel
 
