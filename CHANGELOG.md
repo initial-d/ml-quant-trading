@@ -2,7 +2,28 @@
 
 ## Unreleased
 
-### Dashboard
+## 0.2.4 - Metric Clarity and Contributor-Led Review
+
+This patch release turns an external review finding into a clearer reporting
+contract. The backtest engine's cost total was mathematically correct, but its
+old name made it easy to compare a cumulative value with annualized neighbors.
+The release makes the time basis explicit without inventing a misleading
+derived metric.
+
+### Metric clarity
+
+- Renamed the primary output from `cost_drag` to `cost_drag_cumulative`.
+- Kept `cost_drag` as a compatibility alias in metrics and `BacktestResult` for
+  existing scripts and archived reports.
+- Updated summary tables, cost-sensitivity output, report aggregation, and
+  report auditing to write the explicit name and read the legacy one.
+- Added a metric glossary with unit and time basis for every validation column.
+- Added regression tests for duration scaling, fee scaling, and the legacy alias.
+- Added a technical case study crediting
+  [@sergio12S](https://github.com/sergio12S) and
+  [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47).
+
+### Dashboard and onboarding
 
 - Added a cost-sensitivity line chart to the README and validation dashboard.
 - The full AkShare CSI 300 pipeline now exports `equity_curves.csv` for future
@@ -11,6 +32,11 @@
   ticker as unavailable.
 - The full AkShare CSI 300 pipeline now refuses to publish validation outputs
   when the panel tradable ratio falls below `--min-tradable-ratio`.
+- Removed the manual Colab report-copy step so first-time contributors can use
+  the generated artifact directly.
+- Tightened the README first screen around the runnable path, cost-aware
+  evidence, and community contributions.
+- Synchronized the package metadata and `mlquant.__version__` at `0.2.4`.
 
 ## 0.2.3 - Daily 213-Factor Validation Dashboard
 
