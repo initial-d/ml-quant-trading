@@ -1,53 +1,62 @@
 # ml-quant-trading
 
-> **Machine Learning Enhanced Multi-Factor Quantitative Trading**
-> — A Cross-Sectional Portfolio Optimization Approach with Bias Correction
->
-> [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp;
-> [Hugging Face Papers](https://huggingface.co/papers/2507.07107) &nbsp;|&nbsp; Yimin Du, 2025
+**From 213 mask-aware PyTorch factors to cost-aware portfolios and backtests —
+one reproducible research stack.**
+
+Run the whole path on synthetic or public market data: panel construction,
+factor computation, bias correction, ML baselines, portfolio optimization,
+vectorized backtesting, and auditable reports.
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/initial-d/ml-quant-trading?style=flat&logo=github&label=Forks)](https://github.com/initial-d/ml-quant-trading/forks)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
-[![Project site](https://img.shields.io/badge/project-site-0f7b63.svg)](https://initial-d.github.io/ml-quant-trading/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
-[![Hugging Face Papers](https://img.shields.io/badge/Hugging%20Face-Papers-ffcc4d.svg)](https://huggingface.co/papers/2507.07107)
-[![Awesome Quant](https://img.shields.io/badge/Awesome%20Quant-Factor%20Analysis-4c78a8.svg)](https://github.com/wilsonfreitas/awesome-quant#factor-analysis)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![ruff](https://img.shields.io/badge/style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
-![ml-quant-trading social preview](docs/assets/readme-preview.png)
-
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
-· [**See validated results**](docs/validation_dashboard.md)
+· [**Run the 30–90 second demo**](#quick-start)
+· [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
-· [**Submit one reproduction report**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 
-> **August 2026 reproduction challenge:** run the zero-account Colab once and
-> submit its generated report, environment, and commit SHA with the
-> [structured report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml).
-> Successful and failed runs are both useful. Verifiable reports will be credited
-> in the Community Evidence section and summarized in [Discussion #43](https://github.com/initial-d/ml-quant-trading/discussions/43).
+> **New in v0.2.4 — a community review changed how we report trading costs.**
+> External contributor [@sergio12S](https://github.com/sergio12S) showed that
+> `cost_drag` was cumulative over a run while neighboring metrics were annualized.
+> The math was correct; the label made a wrong comparison too easy. Read the
+> [technical story](docs/backtest_cost_drag_story.md) or inspect
+> [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47).
 
 ---
 
-## What is this?
+## Why this repository?
 
-A **clean, fork-friendly, end-to-end** A-share quantitative trading system:
+| You get | Why it matters |
+|---|---|
+| **213 factor dimensions** | Mask-aware PyTorch factors with documented families and tensor primitives |
+| **One end-to-end path** | Data → factors → models → portfolio → cost-aware backtest → report |
+| **Public and synthetic data** | Start without proprietary data or an API key, then move to AkShare, Baostock, or yfinance |
+| **Evidence, including failures** | Costs, turnover, baselines, caveats, and negative results stay visible |
+| **A contribution path** | CI, tests, report templates, Colab, and newcomer-sized research tasks |
 
-**In one clone, you get:** a tensor factor engine, 213 factor dimensions, bias correction,
-ML baselines, Markowitz portfolio optimization, vectorized backtesting, synthetic/public-data
-demos, CI, tests, and benchmark tooling.
+## Quick Start
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'
+mlquant demo
+```
+
+No market-data account is required. The deterministic demo prints each pipeline
+stage and writes a shareable Markdown/JSON report.
 
 ## Fast Path
 
 | If you want to... | Start here | What you get |
 |---|---|---|
-| See the project run | `mlquant demo` | A 30-90 second synthetic end-to-end smoke test |
+| See the project run | [`mlquant demo`](#quick-start) | A 30–90 second synthetic end-to-end smoke test |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
@@ -83,6 +92,7 @@ in [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42).
 | [PR #35](https://github.com/initial-d/ml-quant-trading/pull/35) | Neutralization and Baostock robustness fixes |
 | [PR #36](https://github.com/initial-d/ml-quant-trading/pull/36) | English handbook for all factor families |
 | [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42) | Zero-account AkShare loader enabling CSI 300 validation |
+| [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47) | Clarified cumulative cost-drag units across code, reports, tests, and documentation |
 
 Independent results are linked to their pull requests so the environment,
 commands, limitations, and review history remain inspectable. Want to add
@@ -92,10 +102,16 @@ This repository is validation-first: simple baselines, transaction costs,
 public-data failure modes, and negative results are documented alongside the
 research pipeline.
 
-**Current calls for contributors**
+**One useful contribution takes about ten minutes:** run the
+[zero-account Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb),
+then submit the generated report through the
+[structured form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml).
+Successful and failed runs are both useful and credited.
+
+**Other current calls for contributors**
 
 - Join the [August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43): run Colab once, then use the [structured report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml), whether it succeeds or fails.
-- Try the [`v0.2.3` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3).
+- Try the [`v0.2.4` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.4).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
@@ -131,19 +147,6 @@ research pipeline.
 | `portfolio.markowitz` | Cross-sectional Markowitz (shrunk cov, no-short) |
 | `backtest.engine` | Vectorised backtest → Sharpe / IC / IR / DD |
 
----
-
-## Why Star or Fork This Repository?
-
-- You want a runnable reference implementation for ML-enhanced multi-factor research.
-- You need a factor pipeline that handles masks, limit-up / limit-down events, halts, and cross-sectional operations.
-- You want to reproduce or extend the accompanying paper without rebuilding data, factor, model, portfolio, and backtest modules from scratch.
-- You are looking for a practical template for testing quantitative finance research code.
-
-If you build on this work, please consider citing the paper and opening issues or pull requests for reproducibility notes, new examples, or benchmark results.
-
----
-
 ## Data Sources
 
 | Source | Market | Access | Notes |
@@ -158,7 +161,7 @@ yfinance data are downloaded on-demand by the loader scripts. Public upstream
 interfaces can change or rate-limit requests. Synthetic data is generated
 deterministically from a fixed seed.
 
-## Quick Start
+## Installation and Demos
 
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
