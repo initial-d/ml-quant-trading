@@ -40,6 +40,10 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | **Evidence, including failures** | Costs, turnover, baselines, caveats, and negative results stay visible |
 | **A contribution path** | CI, tests, report templates, Colab, and newcomer-sized research tasks |
 
+Hugging Face publishing is prepared through the
+[synthetic dataset/model export](docs/huggingface_artifacts.md); the export path
+explicitly excludes real and proprietary market data.
+
 ## Quick Start
 
 ```bash
