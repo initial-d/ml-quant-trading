@@ -131,6 +131,7 @@ tags:
 - quantitative-trading
 - reproducibility
 - pytorch
+- arxiv:2507.07107
 configs:
 - config_name: default
   data_files:
@@ -205,6 +206,7 @@ tags:
 - quantitative-trading
 - reproducibility
 - pytorch
+- arxiv:2507.07107
 ---
 
 # ml-quant-trading synthetic MLP smoke-test checkpoint
