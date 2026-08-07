@@ -67,6 +67,8 @@ def test_export_bundle_is_viewer_ready_and_explicitly_synthetic(tmp_path: Path):
     assert "not as a market model" in model_card
     assert "arxiv:2507.07107" in dataset_card
     assert "arxiv:2507.07107" in model_card
+    assert "https://huggingface.co/papers/2507.07107" in dataset_card
+    assert "https://huggingface.co/papers/2507.07107" in model_card
     assert json.loads((model_dir / "config.json").read_text())["in_dim"] == 2
     assert json.loads((model_dir / "feature_names.json").read_text()) == ["f1", "f2"]
 
