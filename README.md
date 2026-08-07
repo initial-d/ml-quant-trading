@@ -40,9 +40,11 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | **Evidence, including failures** | Costs, turnover, baselines, caveats, and negative results stay visible |
 | **A contribution path** | CI, tests, report templates, Colab, and newcomer-sized research tasks |
 
-Hugging Face publishing is prepared through the
-[synthetic dataset/model export](docs/huggingface_artifacts.md); the export path
-explicitly excludes real and proprietary market data.
+Try the live Hugging Face artifacts: the
+[100,000-row synthetic dataset](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic)
+and [213-input MLP checkpoint](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp).
+Both come from the deterministic quick start and explicitly exclude real and
+proprietary market data; see the [artifact guide](docs/huggingface_artifacts.md).
 
 ## Quick Start
 

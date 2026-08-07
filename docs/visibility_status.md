@@ -7,6 +7,8 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Repository: <https://github.com/initial-d/ml-quant-trading>
 - Paper: <https://arxiv.org/abs/2507.07107>
 - Hugging Face paper page (verified authorship claim): <https://huggingface.co/papers/2507.07107>
+- Hugging Face synthetic dataset: <https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic>
+- Hugging Face synthetic MLP checkpoint: <https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp>
 - alphaXiv page: <https://www.alphaxiv.org/abs/2507.07107>
 - Awesome Quant listing (Factor Analysis): <https://github.com/wilsonfreitas/awesome-quant#factor-analysis>
 - ernie55ernie Awesome Quant listing (Research Frameworks): <https://github.com/ernie55ernie/awesome-quant>
@@ -182,7 +184,7 @@ Primary ask:
 - Add more public-data mini reproductions with larger or differently constructed universes.
 - Ask new users to try the Dev Container and report first-run friction.
 - Post the v0.2.1 validation entrypoint release to one relevant community at a time with a customized note.
-- Define a safe Hugging Face demo artifact or model card that uses synthetic or redistributable data only.
+- Invite reproducibility feedback through the live synthetic Hugging Face dataset and model cards.
 - Follow up on open high-relevance awesome-list pull requests after maintainers have had time to review.
 - Follow up on the auto-refreshed Awesome Quant listing PR after maintainer review.
 - Set a GitHub social preview image through repository settings when browser upload access is available.

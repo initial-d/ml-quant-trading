@@ -8,11 +8,13 @@ from the deterministic synthetic quick start.
 
 | Hugging Face repository | Contents | Intended use |
 |---|---|---|
-| `dddyym/ml-quant-trading-synthetic` | Viewer-ready compressed CSV, generator config, checksum manifest, dataset card | Installation, CI, teaching, and pipeline smoke tests |
-| `dddyym/ml-quant-trading-synthetic-mlp` | PyTorch checkpoint, factor order, architecture config, metrics, model card | Checkpoint loading and inference smoke tests |
+| [`dddyym/ml-quant-trading-synthetic`](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic) | Live viewer-ready 100,000-row compressed CSV, generator config, checksum manifest, dataset card | Installation, CI, teaching, and pipeline smoke tests |
+| [`dddyym/ml-quant-trading-synthetic-mlp`](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp) | Live PyTorch checkpoint, 213-factor order, architecture config, metrics, model card | Checkpoint loading and inference smoke tests |
 
-Neither artifact represents real instruments, proprietary data, deployable
-alpha, or evidence of live performance.
+Both public repositories were verified with anonymous downloads; the dataset
+viewer renders its schema and rows, and the checkpoint passes the documented
+loading and inference smoke test. Neither artifact represents real instruments,
+proprietary data, deployable alpha, or evidence of live performance.
 
 ## Build locally
 
@@ -50,7 +52,7 @@ artifacts/huggingface/
 The dataset gzip stream uses a fixed timestamp so the same panel produces the
 same SHA-256 digest. Manifests record the source commit and file checksums.
 
-## Upload after authentication
+## Maintainer upload after authentication
 
 Install and authenticate the Hugging Face CLI locally. Never paste a full token
 into an issue, PR, notebook, or chat transcript.
@@ -77,7 +79,7 @@ hf upload dddyym/ml-quant-trading-synthetic-mlp \
   artifacts/huggingface/ml-quant-trading-synthetic-mlp .
 ```
 
-After upload:
+After a new upload:
 
 1. Confirm the dataset viewer renders rows and column types.
 2. Run the model-card loading snippet in a clean environment.

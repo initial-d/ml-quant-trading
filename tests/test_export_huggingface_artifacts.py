@@ -61,8 +61,12 @@ def test_export_bundle_is_viewer_ready_and_explicitly_synthetic(tmp_path: Path):
     assert len(rows) == 4
     assert rows[-1]["tradable"] == "0"
     assert manifest["dataset_rows"] == 4
-    assert "no real instruments" in (dataset_dir / "README.md").read_text(encoding="utf-8")
-    assert "not as a market model" in (model_dir / "README.md").read_text(encoding="utf-8")
+    dataset_card = (dataset_dir / "README.md").read_text(encoding="utf-8")
+    model_card = (model_dir / "README.md").read_text(encoding="utf-8")
+    assert "no real instruments" in dataset_card
+    assert "not as a market model" in model_card
+    assert "arxiv:2507.07107" in dataset_card
+    assert "arxiv:2507.07107" in model_card
     assert json.loads((model_dir / "config.json").read_text())["in_dim"] == 2
     assert json.loads((model_dir / "feature_names.json").read_text()) == ["f1", "f2"]
 
