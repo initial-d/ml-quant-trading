@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Hugging Face artifacts
+
+- Added a deterministic exporter for a viewer-ready synthetic OHLCV dataset and
+  synthetic MLP smoke-test checkpoint.
+- Added dataset/model cards, checksums, factor-order metadata, and an explicit
+  safety boundary that rejects non-synthetic configs.
+- Documented the authenticated upload and post-upload verification workflow.
+
 ## 0.2.4 - Metric Clarity and Contributor-Led Review
 
 This patch release turns an external review finding into a clearer reporting
