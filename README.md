@@ -10,6 +10,7 @@ vectorized backtesting, and auditable reports.
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
+[![PyPI](https://img.shields.io/pypi/v/mlquant.svg)](https://pypi.org/project/mlquant/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -21,12 +22,11 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 
-> **New in v0.2.4 — a community review changed how we report trading costs.**
-> External contributor [@sergio12S](https://github.com/sergio12S) showed that
-> `cost_drag` was cumulative over a run while neighboring metrics were annualized.
-> The math was correct; the label made a wrong comparison too easy. Read the
-> [technical story](docs/backtest_cost_drag_story.md) or inspect
-> [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47).
+> **New in v0.2.5 — install from PyPI and run from any directory.**
+> `mlquant demo` now ships with its deterministic configuration inside the
+> wheel, preserving the zero-account factor-to-backtest path after a regular
+> package install. The release also includes the live Hugging Face artifacts
+> and the v0.2.4 community-reviewed metric clarification.
 
 ---
 
@@ -49,9 +49,7 @@ proprietary market data; see the [artifact guide](docs/huggingface_artifacts.md)
 ## Quick Start
 
 ```bash
-git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e '.[dev]'
+python -m pip install mlquant
 mlquant demo
 ```
 
@@ -117,7 +115,7 @@ Successful and failed runs are both useful and credited.
 **Other current calls for contributors**
 
 - Join the [August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43): run Colab once, then use the [structured report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml), whether it succeeds or fails.
-- Try the [`v0.2.4` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.4).
+- Try the [`v0.2.5` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.5).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
@@ -170,9 +168,7 @@ deterministically from a fixed seed.
 ## Installation and Demos
 
 ```bash
-git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e '.[dev]'  # add ,gpu for CUDA; add ,mosek for MOSEK solver
+python -m pip install mlquant
 
 # One-command smoke test (synthetic data; no API key required)
 mlquant demo
@@ -182,6 +178,14 @@ The command prints a stage-by-stage run and writes shareable
 `artifacts/small/summary.md` and `summary.json` reports alongside the model and
 backtest artifacts. The demo is a deterministic engineering smoke test, not a
 performance claim.
+
+For development or optional extras, install from a source checkout:
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'  # add ,gpu for CUDA; add ,mosek for MOSEK solver
+```
 
 ### Google Colab Quick Start
 

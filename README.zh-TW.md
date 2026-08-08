@@ -46,13 +46,13 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 ## 快速開始
 
 ```bash
-git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e '.[dev]'  # 如需 CUDA，請加入 ,gpu；如需 MOSEK solver，請加入 ,mosek
+python -m pip install mlquant
 
-# 30 秒冒煙測試（Synthetic：200 檔股票 × 500 天）
-make paper CONFIG=configs/small.yaml
+# Synthetic 冒煙測試，無需行情帳號
+mlquant demo
 ```
+
+如需參與開發或安裝可選依賴，請 clone 原始碼並使用 `pip install -e '.[dev]'`。
 
 ### 公開資料驗證（選用）
 
