@@ -46,7 +46,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 ## 快速開始
 
 ```bash
-python -m pip install mlquant
+python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
 
 # Synthetic 冒煙測試，無需行情帳號
 mlquant demo

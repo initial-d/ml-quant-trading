@@ -10,7 +10,6 @@ vectorized backtesting, and auditable reports.
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
-[![PyPI](https://img.shields.io/pypi/v/mlquant.svg)](https://pypi.org/project/mlquant/)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -22,11 +21,10 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 
-> **New in v0.2.5 — install from PyPI and run from any directory.**
-> `mlquant demo` now ships with its deterministic configuration inside the
-> wheel, preserving the zero-account factor-to-backtest path after a regular
-> package install. The release also includes the live Hugging Face artifacts
-> and the v0.2.4 community-reviewed metric clarification.
+> **New in v0.2.5 — install the release wheel and run from any directory.**
+> The wheel is available directly from GitHub Releases while the `mlquant`
+> project name awaits PyPI approval. `mlquant demo` ships with its deterministic
+> configuration, preserving the zero-account factor-to-backtest path.
 
 ---
 
@@ -49,7 +47,7 @@ proprietary market data; see the [artifact guide](docs/huggingface_artifacts.md)
 ## Quick Start
 
 ```bash
-python -m pip install mlquant
+python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
 mlquant demo
 ```
 
@@ -168,7 +166,7 @@ deterministically from a fixed seed.
 ## Installation and Demos
 
 ```bash
-python -m pip install mlquant
+python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
 
 # One-command smoke test (synthetic data; no API key required)
 mlquant demo

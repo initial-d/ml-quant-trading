@@ -10,7 +10,6 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
 [![Release](https://img.shields.io/github/v/release/initial-d/ml-quant-trading?display_name=tag)](https://github.com/initial-d/ml-quant-trading/releases)
-[![PyPI](https://img.shields.io/pypi/v/mlquant.svg)](https://pypi.org/project/mlquant/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -22,9 +21,9 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 
-> **v0.2.5：项目正式提供 PyPI 安装。**执行 `pip install mlquant` 后，
-> 可以在任意目录运行 `mlquant demo`；确定性配置已随 wheel 打包，不再依赖源码目录。
-> 本版同时包含 Hugging Face 可下载产物，以及 v0.2.4 经社区评审的交易成本口径修正。
+> **v0.2.5：现在可以直接安装 Release wheel。**在 `mlquant` 名称等待 PyPI
+> 审核期间，可从 GitHub Releases 一条命令安装；随后能在任意目录运行
+> `mlquant demo`，确定性配置已随 wheel 打包，不再依赖源码目录。
 
 > **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
 > 运行环境和 commit SHA 填入[结构化报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
@@ -101,7 +100,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 ## 快速开始
 
 ```bash
-python -m pip install mlquant
+python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
 
 # 一条命令跑通（Synthetic 数据，无需 API Key）
 mlquant demo

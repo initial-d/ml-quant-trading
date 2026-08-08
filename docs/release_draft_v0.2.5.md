@@ -1,6 +1,6 @@
 # v0.2.5 - Portable Packaging and Reproducibility Artifacts
 
-`v0.2.5` is the first PyPI release of `mlquant`. It removes a subtle packaging
+`v0.2.5` is the first portable wheel release of `mlquant`. It removes a subtle packaging
 trap: the command-line entry point was installable, but its default demo config
 previously lived only in a repository checkout. The deterministic config now
 ships inside the wheel, so a fresh environment can run the advertised demo from
@@ -8,7 +8,8 @@ any working directory.
 
 ## Highlights
 
-- Install directly with `python -m pip install mlquant`.
+- Install the wheel directly from the GitHub Release while the PyPI project
+  name awaits approval.
 - Run `mlquant demo` from any directory without cloning the repository.
 - Keep explicit `mlquant demo --config PATH` behavior for custom research runs.
 - Include the deterministic small config in the wheel and test it against the

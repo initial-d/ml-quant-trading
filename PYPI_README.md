@@ -11,7 +11,7 @@ backtesting.**
 ## Install and run
 
 ```bash
-python -m pip install mlquant
+python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
 mlquant demo
 ```
 
