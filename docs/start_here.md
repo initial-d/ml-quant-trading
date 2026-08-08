@@ -6,7 +6,7 @@ This page is the fastest path from discovering the repository to running somethi
 
 | If you are... | Start with |
 |---|---|
-| New to the project | Install the v0.2.5 release wheel, then run `mlquant demo` |
+| New to the project | `pip install mlquantx && mlquant demo` |
 | A quant researcher | `notebooks/public_factor_ic.ipynb` |
 | An ML engineer | `make benchmark` |
 | A contributor | Issues labeled `good first issue` |
@@ -15,7 +15,7 @@ This page is the fastest path from discovering the repository to running somethi
 ## 2. Run the Small Pipeline
 
 ```bash
-python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
+python -m pip install mlquantx
 mlquant demo
 ```
 

@@ -5,10 +5,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      tag:
-        description: Git tag to build and publish
+      ref:
+        description: Git ref to build and publish
         required: true
-        default: v0.2.5
+        default: main
         type: string
 
 permissions:
@@ -20,16 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/mlquant
+      url: https://pypi.org/p/mlquantx
     permissions:
       contents: read
       id-token: write
 
     steps:
-      - name: Check out release tag
+      - name: Check out release ref
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.event.release.tag_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
