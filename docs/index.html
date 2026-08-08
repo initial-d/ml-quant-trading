@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ml-quant-trading Research Arena</title>
-  <meta name="description" content="A research arena for PyTorch multi-factor trading experiments, validation reports, public-data reproducibility, and portfolio backtesting.">
-  <meta property="og:title" content="ml-quant-trading Research Arena">
-  <meta property="og:description" content="Compare factor, model, data-source, and cost assumptions through public validation reports and reproducible research workflows.">
+  <title>MLQuant — 213-Factor PyTorch Quantitative Trading Research</title>
+  <meta name="description" content="An open-source 213-factor PyTorch stack for machine-learning quantitative trading, portfolio optimization, cost-aware backtesting, and reproducible public-data validation.">
+  <meta property="og:title" content="MLQuant — 213-Factor PyTorch Quantitative Trading Research">
+  <meta property="og:description" content="Run an inspectable factor-to-backtest pipeline with public validation reports, transaction costs, and reproducible research workflows.">
   <meta property="og:image" content="https://initial-d.github.io/ml-quant-trading/assets/readme-preview.png">
   <meta property="og:type" content="website">
   <style>
@@ -621,8 +621,8 @@
       </p>
       <div class="actions">
         <a class="button" href="https://github.com/initial-d/ml-quant-trading">View repository</a>
-        <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1">v0.2.1 release</a>
-        <a class="button secondary" href="#arena">Open arena board</a>
+        <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.5">Install v0.2.5</a>
+        <a class="button secondary" href="https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb">Run in Colab</a>
       </div>
     </div>
   </section>
@@ -819,10 +819,8 @@
             matches exactly across every BLAS, solver, and PyTorch build.
           </p>
         </div>
-        <pre><code>git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e '.[dev]'
-make paper CONFIG=configs/small.yaml</code></pre>
+        <pre><code>python -m pip install https://github.com/initial-d/ml-quant-trading/releases/download/v0.2.5/mlquant-0.2.5-py3-none-any.whl
+mlquant demo</code></pre>
       </div>
     </section>
 
