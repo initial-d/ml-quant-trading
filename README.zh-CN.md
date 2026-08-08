@@ -17,8 +17,16 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 [**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**查看公开验证结果**](docs/validation_dashboard.md)
+· [**体验数据集与模型**](docs/huggingface_artifacts.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
+
+> **v0.2.4：一次外部评审改变了项目报告交易成本的方式。**
+> 社区贡献者 [@sergio12S](https://github.com/sergio12S) 指出，旧版 `cost_drag`
+> 表示整段回测的累计值，却与年化指标并列展示，容易被误读。计算本身没有错误，
+> 但报告契约不够清晰。新版改为显式字段 `cost_drag_cumulative`，同时保留兼容别名；
+> 完整讨论和验证见 [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47)
+> 与[技术复盘](docs/backtest_cost_drag_story.md)。
 
 > **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
 > 运行环境和 commit SHA 填入[结构化报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
@@ -34,6 +42,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 |---|---|---|
 | 先看项目能否跑通 | `mlquant demo` | 30–90 秒、无需行情数据的端到端冒烟测试 |
 | 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb) | 无需账号或行情 API 的浏览器内完整 Demo |
+| 检查可下载产物 | [Hugging Face 数据集](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic) · [MLP 模型](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp) | 由确定性 Quick Start 导出的 10 万行 synthetic 数据和 213 输入模型；不含真实或专有行情 |
 | 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
 | 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
 | 贡献一次运行结果 | [复现报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml) | 跑 Colab、结构化提交报告并获得 README 署名 |
@@ -53,6 +62,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | [PR #35](https://github.com/initial-d/ml-quant-trading/pull/35) | 中性化与 Baostock 稳健性修复 |
 | [PR #36](https://github.com/initial-d/ml-quant-trading/pull/36) | 全因子族英文手册 |
 | [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42) | 支撑 CSI 300 验证的零账号 AkShare 加载器 |
+| [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47) | 澄清累计交易成本的时间口径，并补充兼容层、测试和文档 |
 
 这些结果链接到原始 PR，便于检查环境、命令、限制和评审过程。你也可以
 [打开零账号 Colab，运行并提交生成的报告](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)。
