@@ -6,7 +6,7 @@ This page is the fastest path from discovering the repository to running somethi
 
 | If you are... | Start with |
 |---|---|
-| New to the project | `make paper CONFIG=configs/small.yaml` |
+| New to the project | `pip install mlquant && mlquant demo` |
 | A quant researcher | `notebooks/public_factor_ic.ipynb` |
 | An ML engineer | `make benchmark` |
 | A contributor | Issues labeled `good first issue` |
@@ -15,9 +15,7 @@ This page is the fastest path from discovering the repository to running somethi
 ## 2. Run the Small Pipeline
 
 ```bash
-git clone https://github.com/initial-d/ml-quant-trading.git
-cd ml-quant-trading
-python -m pip install -e '.[dev]'
+python -m pip install mlquant
 mlquant demo
 ```
 

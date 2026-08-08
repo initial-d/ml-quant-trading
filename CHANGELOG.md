@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 0.2.5 - Portable Packaging and Reproducibility Artifacts
+
+This release makes the zero-account demo portable beyond a source checkout and
+publishes the project as an installable Python distribution. It also packages
+the reproducibility artifacts added after v0.2.4.
+
+### Packaging and first run
+
+- Packaged the deterministic small demo config inside the `mlquant` wheel.
+- Made `mlquant demo` resolve its bundled config when `--config` is omitted, so
+  it can run from any working directory after installation.
+- Preserved explicit `--config PATH` behavior for repository and custom runs.
+- Added regression coverage for isolated-directory execution and configuration
+  synchronization.
+- Modernized package license metadata for current PyPI tooling.
+
 ### Hugging Face artifacts
 
 - Added a deterministic exporter for a viewer-ready synthetic OHLCV dataset and
@@ -9,6 +25,14 @@
 - Added dataset/model cards, checksums, factor-order metadata, and an explicit
   safety boundary that rejects non-synthetic configs.
 - Documented the authenticated upload and post-upload verification workflow.
+
+### Documentation and contributor evidence
+
+- Linked the live Hugging Face dataset and model to the paper metadata.
+- Refreshed the Chinese project landing page with downloadable artifacts,
+  v0.2.4 metric-clarity context, and contributor credit.
+- Kept the public-data and synthetic-artifact boundaries explicit: the packaged
+  demo and Hugging Face artifacts are reproducibility aids, not alpha claims.
 
 ## 0.2.4 - Metric Clarity and Contributor-Led Review
 
