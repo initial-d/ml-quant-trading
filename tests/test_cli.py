@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from click.testing import CliRunner
 
@@ -45,6 +46,34 @@ def test_demo_is_visible_in_cli_help():
 
     assert result.exit_code == 0
     assert "demo" in result.output
+
+
+def test_demo_uses_packaged_config_outside_repository(monkeypatch, tmp_path):
+    calls = []
+
+    for command in (cmd_gen_data, cmd_features, cmd_train, cmd_portfolio, cmd_backtest):
+        name = command.name
+
+        def callback(config_path, stage=name):
+            calls.append((stage, config_path, Path(config_path).read_text()))
+
+        monkeypatch.setattr(command, "callback", callback)
+
+    with CliRunner().isolated_filesystem(temp_dir=tmp_path):
+        result = CliRunner().invoke(cli, ["demo"])
+
+    assert result.exit_code == 0
+    assert len(calls) == 5
+    assert all(Path(path).name == "small.yaml" for _, path, _ in calls)
+    assert all("n_stocks:     200" in content for _, _, content in calls)
+    assert "Using packaged default config" in result.output
+
+
+def test_packaged_demo_config_matches_repository_config():
+    packaged = Path(__file__).parents[1] / "src" / "mlquant" / "configs" / "small.yaml"
+    repository = Path(__file__).parents[1] / "configs" / "small.yaml"
+
+    assert packaged.read_text() == repository.read_text()
 
 
 def test_backtest_summary_is_shareable_and_strict_json(tmp_path):
