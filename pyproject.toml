@@ -65,6 +65,9 @@ Changelog = "https://github.com/initial-d/ml-quant-trading/blob/main/CHANGELOG.m
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"mlquant.configs" = ["*.yaml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts   = "-ra -q --strict-markers"

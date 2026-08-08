@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import math
 import pickle
+from importlib.resources import as_file, files
 from pathlib import Path
 
 import click
@@ -104,13 +105,25 @@ def cli() -> None:
 @click.option(
     "--config",
     "config_path",
-    default="configs/small.yaml",
-    show_default=True,
+    default=None,
+    show_default="packaged small config",
     type=click.Path(exists=True),
 )
 @click.pass_context
-def cmd_demo(ctx: click.Context, config_path: str) -> None:
+def cmd_demo(ctx: click.Context, config_path: str | None) -> None:
     """Run the complete synthetic factor-to-backtest pipeline."""
+    if config_path is not None:
+        _run_demo(ctx, config_path)
+        return
+
+    default_config = files("mlquant.configs").joinpath("small.yaml")
+    with as_file(default_config) as default_path:
+        click.echo("Using packaged default config (override with --config PATH).\n")
+        _run_demo(ctx, str(default_path))
+
+
+def _run_demo(ctx: click.Context, config_path: str) -> None:
+    """Run all demo stages with an explicit, existing config path."""
     stages = (
         ("1/5 Generate deterministic synthetic data", cmd_gen_data),
         ("2/5 Compute the 213-factor tensor", cmd_features),
