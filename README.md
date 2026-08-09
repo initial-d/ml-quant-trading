@@ -19,6 +19,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**Run the 30–90 second demo**](#quick-start)
+· [**Audit six pipeline invariants**](docs/article_en_six_pipeline_invariants.md)
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 
@@ -69,6 +70,7 @@ python -m pip install -e '.[dev]'
 | If you want to... | Start here | What you get |
 |---|---|---|
 | See the project run | [`mlquant demo`](#quick-start) | A 30–90 second synthetic end-to-end smoke test |
+| Audit implementation semantics | [Six Pipeline Invariants](docs/article_en_six_pipeline_invariants.md) | A deterministic check of factors, masks, labels, execution timing, and cost arithmetic |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |

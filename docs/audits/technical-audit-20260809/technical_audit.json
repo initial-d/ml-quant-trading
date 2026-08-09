@@ -1,0 +1,123 @@
+{
+  "audit": "technical_pipeline_invariants",
+  "checks": [
+    {
+      "details": {
+        "all_values_finite": true,
+        "elapsed_ms": 75.433,
+        "factor_count": 213,
+        "joint_valid_cells": 3259,
+        "tensor_shape": [
+          180,
+          40,
+          213
+        ]
+      },
+      "name": "factor_catalog",
+      "passed": true
+    },
+    {
+      "details": {
+        "close_sha_proxy": 195247.60702,
+        "seed": 42,
+        "tradable_cells": 7161
+      },
+      "name": "deterministic_generation",
+      "passed": true
+    },
+    {
+      "details": {
+        "operations": [
+          {
+            "comparable_cells": 6497,
+            "max_abs_drift": 0.0,
+            "operation": "cs_rank",
+            "passed": true
+          },
+          {
+            "comparable_cells": 6440,
+            "max_abs_drift": 0.0,
+            "operation": "ts_mean_20",
+            "passed": true
+          },
+          {
+            "comparable_cells": 666,
+            "max_abs_drift": 0.0,
+            "operation": "ts_rank_20",
+            "passed": true
+          },
+          {
+            "comparable_cells": 6440,
+            "max_abs_drift": 0.0,
+            "operation": "ts_corr_20",
+            "passed": true
+          },
+          {
+            "comparable_cells": 6497,
+            "max_abs_drift": 0.0,
+            "operation": "ewma_0.05",
+            "passed": true
+          }
+        ],
+        "poison_magnitude": 1000000000.0
+      },
+      "name": "mask_isolation",
+      "passed": true
+    },
+    {
+      "details": {
+        "all_values_finite": true,
+        "endpoint_mask_exact": true,
+        "horizon": 1,
+        "last_row_masked": true,
+        "last_row_zero": true
+      },
+      "name": "forward_label_boundary",
+      "passed": true
+    },
+    {
+      "details": {
+        "convention": "weights[t-1] earn returns[t]",
+        "expected_gross": [
+          0.0,
+          0.1,
+          -0.2,
+          0.3
+        ],
+        "observed_gross": [
+          0.0,
+          0.1,
+          -0.2,
+          0.3
+        ]
+      },
+      "name": "lagged_execution_alignment",
+      "passed": true
+    },
+    {
+      "details": {
+        "expected_ratio": 10.0,
+        "observed_ratio": 10.0,
+        "one_bps_cost_drag": 0.0006000000000000001,
+        "ten_bps_cost_drag": 0.006
+      },
+      "name": "transaction_cost_linearity",
+      "passed": true
+    }
+  ],
+  "commit": "575a71c",
+  "config": {
+    "n_dates": 180,
+    "n_stocks": 40,
+    "seed": 42
+  },
+  "environment": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.9.6",
+    "pytorch": "2.8.0"
+  },
+  "passed": true,
+  "project": "ml-quant-trading",
+  "repository": "https://github.com/initial-d/ml-quant-trading",
+  "scope": "Engineering invariants on deterministic synthetic data; not evidence of market alpha, out-of-sample performance, or production readiness."
+}

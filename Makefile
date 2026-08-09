@@ -7,7 +7,7 @@ PYTEST  ?= $(PY) -m pytest
 RUFF    ?= $(PY) -m ruff
 CONFIG  ?= configs/small.yaml
 
-.PHONY: help install install-dev lint format test cov benchmark public-validation aggregate-validation audit-validation \
+.PHONY: help install install-dev lint format test cov benchmark technical-audit public-validation aggregate-validation audit-validation \
         demo gen-data features train portfolio backtest \
         paper clean clean-all
 
@@ -20,6 +20,7 @@ help:
 	@echo "  test          pytest"
 	@echo "  cov           pytest with coverage"
 	@echo "  benchmark     benchmark tensor factor primitives"
+	@echo "  technical-audit  verify factor, mask, label, timing, and cost invariants"
 	@echo "  public-validation  run public-data validation benchmark"
 	@echo "  aggregate-validation  aggregate public-data validation reports"
 	@echo "  audit-validation  audit a public-data validation report"
@@ -52,6 +53,9 @@ cov:
 
 benchmark:
 	$(PY) scripts/benchmark_tensor_factors.py --device auto
+
+technical-audit:
+	$(PY) scripts/technical_pipeline_audit.py
 
 public-validation:
 	$(PY) scripts/public_data_validation.py --source synthetic --models equal_weight,momentum_20,alpha101_mean
