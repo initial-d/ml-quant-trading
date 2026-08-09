@@ -122,7 +122,7 @@ assert np.isclose(ten / one, 10.0)
 
 ## 当前参考结果
 
-提交 `575a71c` 的维护者运行通过了全部检查：
+提交 `300e1ad` 的维护者运行通过了全部检查：
 
 | 工程不变量 | 结果 |
 |---|---:|
@@ -151,4 +151,3 @@ mlquant demo
 
 源码与复现入口：
 [github.com/initial-d/ml-quant-trading](https://github.com/initial-d/ml-quant-trading)。
-

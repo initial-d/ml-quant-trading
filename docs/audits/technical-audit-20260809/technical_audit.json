@@ -4,7 +4,7 @@
     {
       "details": {
         "all_values_finite": true,
-        "elapsed_ms": 75.433,
+        "elapsed_ms": 71.212,
         "factor_count": 213,
         "joint_valid_cells": 3259,
         "tensor_shape": [
@@ -105,7 +105,7 @@
       "passed": true
     }
   ],
-  "commit": "575a71c",
+  "commit": "300e1ad",
   "config": {
     "n_dates": 180,
     "n_stocks": 40,

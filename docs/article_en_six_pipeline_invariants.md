@@ -149,7 +149,7 @@ run from annualized return metrics.
 
 ## Reference result
 
-The maintained run on commit `575a71c` passed all six checks:
+The maintained run on commit `300e1ad` passed all six checks:
 
 | Invariant | Result |
 |---|---:|
@@ -187,4 +187,3 @@ mlquant demo
 
 Source and reproduction reports:
 [github.com/initial-d/ml-quant-trading](https://github.com/initial-d/ml-quant-trading).
-

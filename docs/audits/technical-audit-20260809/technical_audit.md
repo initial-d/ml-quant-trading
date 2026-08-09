@@ -2,7 +2,7 @@
 
 **Overall status: PASS**
 
-- Commit: `575a71c`
+- Commit: `300e1ad`
 - Python: `3.9.6`
 - PyTorch: `2.8.0`
 - Synthetic panel: `180 dates × 40 stocks`
@@ -10,7 +10,7 @@
 
 | Check | Status | Evidence |
 |---|---:|---|
-| `factor_catalog` | PASS | shape `[180, 40, 213]`; 213 factors; finite=True; 75.433 ms |
+| `factor_catalog` | PASS | shape `[180, 40, 213]`; 213 factors; finite=True; 71.212 ms |
 | `deterministic_generation` | PASS | seed `42` reproduced identical panel tensors |
 | `mask_isolation` | PASS | 5 primitives; poisoned masked cells by `1e9`; max valid-cell drift `0` |
 | `forward_label_boundary` | PASS | last row masked and zero; endpoint tradability mask matched exactly |
