@@ -22,10 +22,10 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 
-> **New in v0.2.5 — install from PyPI and run from any directory.**
+> **New in v0.2.6 — PyPI-to-GitHub contributor path.**
 > The distribution is published as `mlquantx`; the Python import package and
-> command remain `mlquant`. `mlquant demo` ships with its deterministic
-> configuration, preserving the zero-account factor-to-backtest path.
+> command remain `mlquant`. The demo now links successful runs back to the
+> source, reproduction form, and next contribution steps.
 
 ---
 
@@ -54,6 +54,15 @@ mlquant demo
 
 No market-data account is required. The deterministic demo prints each pipeline
 stage and writes a shareable Markdown/JSON report.
+
+Ready to modify factors, models, data sources, or backtest assumptions? Switch
+from the packaged demo to a source checkout:
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'
+```
 
 ## Fast Path
 
@@ -114,7 +123,7 @@ Successful and failed runs are both useful and credited.
 **Other current calls for contributors**
 
 - Join the [August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43): run Colab once, then use the [structured report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml), whether it succeeds or fails.
-- Try the [`v0.2.5` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.5).
+- Try the [`v0.2.6` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.6).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).

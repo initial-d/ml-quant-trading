@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## 0.2.6 - PyPI-to-GitHub Contributor Path
+
+This patch turns the packaged demo into a discovery path for the source and
+community without adding friction to the first run.
+
+### Conversion and contributor flow
+
+- Added the repository, reproduction-report form, and a lightweight Star prompt
+  to the successful `mlquant demo` completion message.
+- Embedded source and reproduction links in generated Markdown and JSON reports
+  so shared results remain traceable to the project.
+- Put the source-checkout path beside the PyPI quick start in the English,
+  Simplified Chinese, Traditional Chinese, PyPI, and documentation landing pages.
+- Added dedicated PyPI project links for source code and Discussions.
+
+### Verification
+
+- Added CLI coverage for the post-demo next steps.
+- Added report-schema coverage for repository and reproduction links.
+- Kept the CTA behind successful completion of all five demo stages.
+
 ## 0.2.5 - Portable Packaging and Reproducibility Artifacts
 
 This release makes the zero-account demo portable beyond a source checkout and

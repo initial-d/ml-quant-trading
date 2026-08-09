@@ -52,7 +52,13 @@ python -m pip install mlquantx
 mlquant demo
 ```
 
-如需參與開發或安裝可選依賴，請 clone 原始碼並使用 `pip install -e '.[dev]'`。
+準備修改因子、模型、資料來源或回測假設時，請切換到原始碼模式：
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'
+```
 
 ### 公開資料驗證（選用）
 

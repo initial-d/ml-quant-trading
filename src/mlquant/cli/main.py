@@ -30,6 +30,12 @@ from ..utils.config import load_config
 from ..utils.seed import seed_everything
 
 
+PROJECT_URL = "https://github.com/initial-d/ml-quant-trading"
+REPRODUCTION_REPORT_URL = (
+    f"{PROJECT_URL}/issues/new?template=reproduction_report.yml"
+)
+
+
 def _artifacts_dir(cfg) -> Path:
     p = Path(cfg.get("artifacts_dir", "artifacts"))
     p.mkdir(parents=True, exist_ok=True)
@@ -50,6 +56,8 @@ def _write_backtest_summary(
     }
     payload = {
         "project": "ml-quant-trading",
+        "repository": PROJECT_URL,
+        "reproduction_report": REPRODUCTION_REPORT_URL,
         "workflow": "synthetic factor-to-backtest demo",
         "config": config_path,
         "costs_bps": float(costs_bps),
@@ -78,6 +86,11 @@ def _write_backtest_summary(
             f"- Config: `{config_path}`",
             f"- Transaction cost assumption: `{costs_bps:g} bps`",
             "- Workflow: synthetic data → 213 factors → MLP → Markowitz → backtest",
+            f"- Source: [{PROJECT_URL}]({PROJECT_URL})",
+            (
+                "- Share a reproducible run: "
+                f"[open the report form]({REPRODUCTION_REPORT_URL})"
+            ),
             "",
             "| Metric | Value |",
             "|---|---:|",
@@ -137,6 +150,10 @@ def _run_demo(ctx: click.Context, config_path: str) -> None:
         ctx.invoke(command, config_path=config_path)
         click.echo()
     click.echo("Demo complete. Inspect the backtest summary above and artifacts/ for outputs.")
+    click.echo("\nNext steps")
+    click.echo(f"  Customize or inspect the source: {PROJECT_URL}")
+    click.echo(f"  Share a reproducible run:       {REPRODUCTION_REPORT_URL}")
+    click.echo("  If this saved you setup time, consider starring the repository.")
 
 
 @cli.command("gen-data")

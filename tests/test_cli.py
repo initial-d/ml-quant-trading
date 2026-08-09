@@ -39,6 +39,9 @@ def test_demo_runs_pipeline_stages_in_order(monkeypatch, tmp_path):
     ]
     assert all(path == str(config) for _, path in calls)
     assert "Demo complete" in result.output
+    assert "https://github.com/initial-d/ml-quant-trading" in result.output
+    assert "reproduction_report.yml" in result.output
+    assert "consider starring" in result.output
 
 
 def test_demo_is_visible_in_cli_help():
@@ -88,8 +91,12 @@ def test_backtest_summary_is_shareable_and_strict_json(tmp_path):
     assert payload["metrics"]["sharpe"] == 1.25
     assert payload["metrics"]["sortino"] is None
     assert payload["costs_bps"] == 5.0
+    assert payload["repository"] == "https://github.com/initial-d/ml-quant-trading"
+    assert payload["reproduction_report"].endswith("reproduction_report.yml")
 
     markdown = markdown_path.read_text()
     assert "| `sharpe` | 1.250000 |" in markdown
     assert "| `sortino` | n/a |" in markdown
     assert "not investment advice" in markdown
+    assert "https://github.com/initial-d/ml-quant-trading" in markdown
+    assert "open the report form" in markdown

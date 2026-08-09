@@ -22,9 +22,9 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 
-> **v0.2.5：现在可以直接从 PyPI 安装。**发行包名为 `mlquantx`，Python
-> 导入名和命令仍是 `mlquant`。安装后可在任意目录运行 `mlquant demo`，
-> 确定性配置已随 wheel 打包，不再依赖源码目录。
+> **v0.2.6：打通 PyPI 到 GitHub 的参与路径。**发行包名为 `mlquantx`，
+> Python 导入名和命令仍是 `mlquant`。Demo 成功后会直接给出源码、复现
+> 报告表单和下一步贡献入口。
 
 > **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
 > 运行环境和 commit SHA 填入[结构化报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
@@ -111,13 +111,15 @@ mlquant demo
 `summary.md` 与 `summary.json`，同时保留模型和回测产物。该 Demo 是确定性的
 工程冒烟测试，不是收益展示。
 
-如需参与开发或安装可选依赖，请使用源码模式：
+准备修改因子、模型、数据源或回测假设时，请切换到源码模式：
 
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
 cd ml-quant-trading
-python -m pip install -e '.[dev]'  # 如需 CUDA，请添加 ,gpu；如需 MOSEK solver，请添加 ,mosek
+python -m pip install -e '.[dev]'
 ```
+
+如需 CUDA 或 MOSEK，可在开发依赖中分别添加 `gpu` 或 `mosek` extra。
 
 ### 公开数据验证（可选）
 

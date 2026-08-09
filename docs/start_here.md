@@ -9,7 +9,8 @@ This page is the fastest path from discovering the repository to running somethi
 | New to the project | `pip install mlquantx && mlquant demo` |
 | A quant researcher | `notebooks/public_factor_ic.ipynb` |
 | An ML engineer | `make benchmark` |
-| A contributor | Issues labeled `good first issue` |
+| Ready to customize | Clone the repository and install `-e '.[dev]'` |
+| A contributor | Submit a reproduction report or choose a `good first issue` |
 | A paper reader | `docs/reproducing_paper.md` |
 
 ## 2. Run the Small Pipeline
@@ -59,6 +60,18 @@ Backtest summary
 During the portfolio step, `cvxpy` or `scipy` may print numerical warnings on some
 machines. Treat them as warnings unless the command exits with an error or the final
 `Backtest summary` is missing.
+
+When the packaged demo works and you are ready to change the research pipeline:
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'
+```
+
+The generated `summary.md` and `summary.json` include the repository and
+[reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
+links so successful and failed runs can become useful community evidence.
 
 ## 3. Try a Public-Data Notebook
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlquantx"
-version = "0.2.5"
+version = "0.2.6"
 description = "Reference implementation of ‘ML-Enhanced Multi-Factor Quantitative Trading’ (arXiv:2507.07107)."
 readme = "PYPI_README.md"
 requires-python = ">=3.9"
@@ -57,9 +57,11 @@ mlquant = "mlquant.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/initial-d/ml-quant-trading"
+Source = "https://github.com/initial-d/ml-quant-trading"
 Documentation = "https://initial-d.github.io/ml-quant-trading/"
 Paper    = "https://arxiv.org/abs/2507.07107"
 Issues   = "https://github.com/initial-d/ml-quant-trading/issues"
+Discussions = "https://github.com/initial-d/ml-quant-trading/discussions"
 Changelog = "https://github.com/initial-d/ml-quant-trading/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]

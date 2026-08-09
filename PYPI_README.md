@@ -21,6 +21,22 @@ training, portfolio construction, cost-aware backtesting, and Markdown/JSON
 report generation. The default config ships inside the wheel, so the command
 works outside a repository checkout.
 
+## Customize or contribute
+
+The wheel is the fastest way to try the project. Clone the repository when you
+want to change factors, models, portfolio constraints, data sources, or
+backtest assumptions:
+
+```bash
+git clone https://github.com/initial-d/ml-quant-trading.git
+cd ml-quant-trading
+python -m pip install -e '.[dev]'
+```
+
+If the demo saves you setup time, consider
+[starring the repository](https://github.com/initial-d/ml-quant-trading) or
+[sharing a reproducible run](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml).
+
 ## What is included
 
 - 204 hand-crafted factors plus 9 curated Alpha101-style factors
