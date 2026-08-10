@@ -51,6 +51,20 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
+Recorded on 2026-08-10 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-08-08):
+
+- Views: 1,072 total, 245 unique visitors.
+- Clones: 884 total, 369 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 68 stars, 30 forks, 4 watchers.
+- PyPI `mlquantx` downloads: 112 in the latest day and 195 in the latest week;
+  these counts include automated clients and are not unique-user totals.
+- Hugging Face downloads: 52 for the synthetic dataset and 10 for the MLP model.
+
+The post-release usage signals are growing faster than stars. Track the next
+snapshot for sustained installs, GitHub referrals, and community reports rather
+than interpreting raw download or clone counts as unique adoption.
+
 Recorded on 2026-08-05 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-08-03):
 
