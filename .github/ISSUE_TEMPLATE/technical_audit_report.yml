@@ -1,0 +1,87 @@
+name: Technical audit reproduction
+description: Re-run the six deterministic pipeline invariants on another environment.
+title: "[technical audit] "
+labels: ["reproducibility", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reproductions and discrepancies are equally useful. Run `make technical-audit`
+        from a clean checkout, then report the environment and unedited output below.
+        This audit checks engineering invariants; it does not establish market alpha.
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - All six checks passed
+        - One or more checks failed
+        - Audit could not complete
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      description: Run `git rev-parse HEAD` in the audited checkout.
+      placeholder: 300e1ad...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, architecture, Python, PyTorch, NumPy, CPU, GPU, and CUDA/MPS availability.
+      placeholder: |
+        OS and architecture:
+        Python:
+        PyTorch:
+        NumPy:
+        CPU:
+        GPU:
+        CUDA/MPS available:
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      render: bash
+      value: make technical-audit
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: Audit report
+      description: Paste `artifacts/technical_audit/technical_audit.md`, or the shortest complete failure output if the command did not finish.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: discrepancy
+    attributes:
+      label: Discrepancy or follow-up
+      description: If anything differed from the reference run, identify the check and the smallest reproduction you found.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I ran the audit from the commit reported above and disclosed local code changes, if any.
+          required: true
+        - label: I removed tokens, account identifiers, and private paths from the output.
+          required: true
+        - label: I kept the observed output unchanged, including failures and warnings.
+          required: true
+        - label: I understand that passing this engineering audit is not evidence of investment performance.
+          required: true

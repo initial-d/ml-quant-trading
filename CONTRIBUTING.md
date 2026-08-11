@@ -8,6 +8,7 @@ Thanks for your interest in improving `ml-quant-trading`. The project is intende
 - Add a small synthetic-data example for an existing module.
 - Add tests for edge cases in factor computation, neutralization, bias correction, or backtesting.
 - Add benchmark notes for CPU/GPU factor computation.
+- Re-run the six deterministic pipeline invariants on a different environment.
 - Report reproducibility issues with a minimal config and environment details.
 
 ## Development Setup
@@ -65,6 +66,22 @@ Recommended flow:
 
 Automated review assistance may be used later for repetitive checks, but it
 should not replace clear tests, reproducible examples, or maintainer judgment.
+
+## Technical Audit Reproductions
+
+To check factor-catalogue shape, deterministic generation, mask isolation,
+forward-label boundaries, lagged execution, and transaction-cost arithmetic:
+
+```bash
+python -m pip install -e '.[dev]'
+make technical-audit
+```
+
+Submit a successful or failed run through the
+[technical audit form](https://github.com/initial-d/ml-quant-trading/issues/new?template=technical_audit_report.yml).
+Include the exact commit and environment, and keep discrepancies visible.
+Passing the audit verifies these implementation invariants only; it does not
+establish market alpha or production readiness.
 
 ## Paired Contributions
 

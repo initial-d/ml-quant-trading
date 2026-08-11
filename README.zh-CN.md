@@ -18,6 +18,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 [**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**查看公开验证结果**](docs/validation_dashboard.md)
+· [**审计六项管线不变量**](docs/article_zh_six_pipeline_invariants.md)
 · [**体验数据集与模型**](docs/huggingface_artifacts.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
@@ -40,6 +41,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 |---|---|---|
 | 先看项目能否跑通 | `mlquant demo` | 30–90 秒、无需行情数据的端到端冒烟测试 |
 | 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb) | 无需账号或行情 API 的浏览器内完整 Demo |
+| 审计实现语义 | [六项可复现管线不变量](docs/article_zh_six_pipeline_invariants.md) | 确定性检查因子、mask、标签边界、执行时序与成本计算 |
 | 检查可下载产物 | [Hugging Face 数据集](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic) · [MLP 模型](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp) | 由确定性 Quick Start 导出的 10 万行 synthetic 数据和 213 输入模型；不含真实或专有行情 |
 | 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
 | 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
@@ -149,6 +151,7 @@ python scripts/public_data_validation.py \
 - [CSI 300 公开验证看板](docs/validation_dashboard.md)
 - [AkShare CSI 300 日频 213 因子报告](docs/validation_akshare_csi300_full_pipeline_20260729.md)
 - [中文技术长文：213 因子与含成本验证](docs/article_zh_213_factor_csi300.md)
+- [中文技术长文：可信 Sharpe 之前的六项管线不变量](docs/article_zh_six_pipeline_invariants.md)
 - [知乎、掘金、V2EX、聚宽、米筐定制发布稿](docs/community_posts_zh.md)
 - [Reality Check and Validation Status](docs/reality_check.md)
 - [Public-Data Validation](docs/public_data_validation.md)

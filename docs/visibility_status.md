@@ -19,6 +19,13 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - v0.2.2 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2>
 - v0.2.3 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.3>
 - v0.2.4 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.4>
+- v0.2.5 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.5>
+- v0.2.6 release: <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.6>
+- PyPI distribution: <https://pypi.org/project/mlquantx/>
+- Six-invariant technical audit: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_en_six_pipeline_invariants.md>
+- Six-invariant technical audit (Chinese): <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_six_pipeline_invariants.md>
+- Technical audit discussion: <https://github.com/initial-d/ml-quant-trading/discussions/57>
+- Zhihu technical article: <https://zhuanlan.zhihu.com/p/2069781162151753696>
 - Cost-metric technical story: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/backtest_cost_drag_story.md>
 - v0.2.4 metric-clarity discussion: <https://github.com/initial-d/ml-quant-trading/discussions/49>
 - Validation dashboard: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md>
@@ -27,7 +34,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260720.md>
 - Follow-up validation digest: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_digest_20260727.md>
 - Benchmark and reproduction discussion: <https://github.com/initial-d/ml-quant-trading/discussions/13>
-- Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/12>
+- Benchmark call issue: <https://github.com/initial-d/ml-quant-trading/issues/7>
 - Pairing and public-data validation issue: <https://github.com/initial-d/ml-quant-trading/issues/22>
 - GitHub Community post: <https://github.com/orgs/community/discussions/201001>
 - v0.2.0 community benchmark milestone: <https://github.com/initial-d/ml-quant-trading/milestone/1>
@@ -50,6 +57,31 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Benchmark and reproduction reports: <https://github.com/initial-d/ml-quant-trading/discussions/13>
 
 ## Traffic Snapshot
+
+Recorded on 2026-08-12 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-08-10):
+
+- Views: 1,175 total, 301 unique visitors.
+- Clones: 755 total, 323 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 69 stars, 30 forks, 4 watchers.
+- Top external referrers by visits: Google (99), arXiv (63), ChatGPT (23),
+  JoinQuant (20), Zhihu (17), Doubao (16), Bing (7), the project site (5),
+  and Hugging Face (4). These are visits, not unique-user totals.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, `docs/validation_dashboard.md`, discussion #43,
+  issue #22, and Releases.
+
+Operating takeaways:
+
+- The August 9 technical-content pulse produced the window's highest unique
+  visitor day (65), while August 10 retained 128 total views. This is a useful
+  signal for continuing evidence-led technical publishing rather than generic
+  promotional posts.
+- Search, arXiv, Chinese community links, and AI assistants are all delivering
+  attributable discovery; no single external source dominates acquisition.
+- The next conversion target is an independent technical-audit, benchmark, or
+  public-data report. A dedicated technical-audit issue form now lowers the
+  reporting cost for both successful and failed runs.
 
 Recorded on 2026-08-10 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-08-08):
