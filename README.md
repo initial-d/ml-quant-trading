@@ -33,11 +33,9 @@ shareable Markdown and JSON reports.
 |---:|---:|---:|---:|
 | Mask-aware PyTorch tensors | Synthetic, AkShare, Baostock, yfinance | Deterministic engineering checks | Reproducible across machines |
 
-![CPU tensor-factor benchmark comparing an Intel i7-1255U and Apple M5](docs/assets/tensor-benchmark-cpu.svg)
-
-*Measured on a 750 × 1,000 synthetic panel. These are reproducible engineering
-snapshots—not trading-performance claims. See the [full environments, commands,
-and raw results](docs/benchmark_board.md).*
+See the [benchmark board](docs/benchmark_board.md) for complete environments,
+commands, and raw results. Cross-machine snapshots are reported separately and
+are not presented as controlled hardware rankings.
 
 ---
 
