@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">CPU tensor-factor benchmark</title>
+  <desc id="desc">Mean runtime for six tensor-factor operations on a 750 by 1000 synthetic panel. Lower is better. Results compare an Intel i7-1255U Windows machine and an Apple M5 MacBook Air.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#111c35"/>
+    </linearGradient>
+    <linearGradient id="intel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="apple" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6ee7b7"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="675" rx="24" fill="url(#background)"/>
+  <circle cx="1120" cy="62" r="130" fill="#2563eb" opacity="0.08"/>
+  <circle cx="1040" cy="640" r="190" fill="#10b981" opacity="0.05"/>
+
+  <text x="60" y="70" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="700">Tensor-factor benchmark</text>
+  <text x="60" y="105" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">750 dates × 1,000 stocks · CPU-only · mean of 5 runs · lower is better</text>
+
+  <rect x="60" y="132" width="300" height="54" rx="12" fill="#172554" stroke="#2563eb" stroke-opacity="0.55"/>
+  <circle cx="84" cy="159" r="7" fill="#38bdf8"/>
+  <text x="102" y="155" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="600">Intel i7-1255U · Windows 11</text>
+  <text x="102" y="174" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">Python 3.14 · PyTorch 2.11</text>
+
+  <rect x="378" y="132" width="300" height="54" rx="12" fill="#052e2b" stroke="#10b981" stroke-opacity="0.55"/>
+  <circle cx="402" cy="159" r="7" fill="#6ee7b7"/>
+  <text x="420" y="155" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="600">Apple M5 · macOS</text>
+  <text x="420" y="174" fill="#94a3b8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">Python 3.9 · PyTorch 2.8</text>
+
+  <text x="60" y="231" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600" letter-spacing="1.2">OPERATION</text>
+  <text x="360" y="231" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600" letter-spacing="1.2">MEAN RUNTIME (MS)</text>
+  <line x1="360" y1="244" x2="1060" y2="244" stroke="#334155"/>
+  <line x1="593" y1="244" x2="593" y2="590" stroke="#334155" stroke-dasharray="4 7"/>
+  <line x1="827" y1="244" x2="827" y2="590" stroke="#334155" stroke-dasharray="4 7"/>
+  <line x1="1060" y1="244" x2="1060" y2="590" stroke="#334155" stroke-dasharray="4 7"/>
+  <text x="360" y="610" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">0</text>
+  <text x="581" y="610" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">100</text>
+  <text x="815" y="610" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">200</text>
+  <text x="1048" y="610" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">300</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <text x="60" y="278" fill="#e2e8f0" font-size="16">cs_rank</text>
+    <rect x="360" y="255" width="55" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="272" width="17" height="13" rx="6" fill="url(#apple)"/>
+    <text x="424" y="267" fill="#bae6fd" font-size="12">23.4</text>
+    <text x="386" y="284" fill="#a7f3d0" font-size="12">7.4</text>
+
+    <text x="60" y="338" fill="#e2e8f0" font-size="16">ts_mean · 20d</text>
+    <rect x="360" y="315" width="49" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="332" width="8" height="13" rx="6" fill="url(#apple)"/>
+    <text x="418" y="327" fill="#bae6fd" font-size="12">21.1</text>
+    <text x="377" y="344" fill="#a7f3d0" font-size="12">3.6</text>
+
+    <text x="60" y="398" fill="#e2e8f0" font-size="16">ts_rank · 20d</text>
+    <rect x="360" y="375" width="166" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="392" width="27" height="13" rx="6" fill="url(#apple)"/>
+    <text x="535" y="387" fill="#bae6fd" font-size="12">71.3</text>
+    <text x="396" y="404" fill="#a7f3d0" font-size="12">11.7</text>
+
+    <text x="60" y="458" fill="#e2e8f0" font-size="16">ts_corr · 20d</text>
+    <rect x="360" y="435" width="353" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="452" width="49" height="13" rx="6" fill="url(#apple)"/>
+    <text x="722" y="447" fill="#bae6fd" font-size="12">151.2</text>
+    <text x="418" y="464" fill="#a7f3d0" font-size="12">20.8</text>
+
+    <text x="60" y="518" fill="#e2e8f0" font-size="16">ewma · α 0.05</text>
+    <rect x="360" y="495" width="118" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="512" width="7" height="13" rx="6" fill="url(#apple)"/>
+    <text x="487" y="507" fill="#bae6fd" font-size="12">50.4</text>
+    <text x="376" y="524" fill="#a7f3d0" font-size="12">3.2</text>
+
+    <text x="60" y="578" fill="#e2e8f0" font-size="16">6-factor subset</text>
+    <rect x="360" y="555" width="670" height="13" rx="6" fill="url(#intel)"/>
+    <rect x="360" y="572" width="140" height="13" rx="6" fill="url(#apple)"/>
+    <text x="1039" y="567" fill="#bae6fd" font-size="12">287.0</text>
+    <text x="509" y="584" fill="#a7f3d0" font-size="12">60.0</text>
+  </g>
+
+  <line x1="60" y1="630" x2="1140" y2="630" stroke="#334155"/>
+  <text x="60" y="654" fill="#64748b" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">Synthetic engineering benchmark — not a trading-performance claim. Different software stacks; use as reproducible machine snapshots.</text>
+</svg>

@@ -1,11 +1,7 @@
 # ml-quant-trading
 
-**From 213 mask-aware PyTorch factors to cost-aware portfolios and backtests —
-one reproducible research stack.**
-
-Run the whole path on synthetic or public market data: panel construction,
-factor computation, bias correction, ML baselines, portfolio optimization,
-vectorized backtesting, and auditable reports.
+**A reproducible PyTorch stack for cross-sectional factor research — from 213
+mask-aware factors to cost-aware portfolios, backtests, and auditable reports.**
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/initial-d/ml-quant-trading?style=flat&logo=github&label=Stars)](https://github.com/initial-d/ml-quant-trading/stargazers)
@@ -18,15 +14,30 @@ vectorized backtesting, and auditable reports.
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
-· [**Run the 30–90 second demo**](#quick-start)
-· [**Audit six pipeline invariants**](docs/article_en_six_pipeline_invariants.md)
+· [**Inspect the benchmark**](docs/benchmark_board.md)
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
 
-> **New in v0.2.6 — PyPI-to-GitHub contributor path.**
-> The distribution is published as `mlquantx`; the Python import package and
-> command remain `mlquant`. The demo now links successful runs back to the
-> source, reproduction form, and next contribution steps.
+## Quick Start
+
+```bash
+python -m pip install mlquantx
+mlquant demo
+```
+
+No market-data account or API key is required. In 30–90 seconds, the
+deterministic demo runs data → factors → model → portfolio → backtest and writes
+shareable Markdown and JSON reports.
+
+| 213 factors | 4 data paths | 95 tests | CPU/GPU benchmark |
+|---:|---:|---:|---:|
+| Mask-aware PyTorch tensors | Synthetic, AkShare, Baostock, yfinance | Deterministic engineering checks | Reproducible across machines |
+
+![CPU tensor-factor benchmark comparing an Intel i7-1255U and Apple M5](docs/assets/tensor-benchmark-cpu.svg)
+
+*Measured on a 750 × 1,000 synthetic panel. These are reproducible engineering
+snapshots—not trading-performance claims. See the [full environments, commands,
+and raw results](docs/benchmark_board.md).*
 
 ---
 
@@ -46,18 +57,8 @@ and [213-input MLP checkpoint](https://huggingface.co/dddyym/ml-quant-trading-sy
 Both come from the deterministic quick start and explicitly exclude real and
 proprietary market data; see the [artifact guide](docs/huggingface_artifacts.md).
 
-## Quick Start
-
-```bash
-python -m pip install mlquantx
-mlquant demo
-```
-
-No market-data account is required. The deterministic demo prints each pipeline
-stage and writes a shareable Markdown/JSON report.
-
-Ready to modify factors, models, data sources, or backtest assumptions? Switch
-from the packaged demo to a source checkout:
+Ready to modify factors, models, data sources, or backtest assumptions? Install
+from a source checkout:
 
 ```bash
 git clone https://github.com/initial-d/ml-quant-trading.git
