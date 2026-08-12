@@ -67,7 +67,10 @@ def _write_backtest_summary(
         ),
     }
     json_path = output_dir / "summary.json"
-    json_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    json_path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
     rows = []
     for key, value in clean_metrics.items():
@@ -102,7 +105,7 @@ def _write_backtest_summary(
         ]
     )
     markdown_path = output_dir / "summary.md"
-    markdown_path.write_text(markdown)
+    markdown_path.write_text(markdown, encoding="utf-8")
     return markdown_path, json_path
 
 

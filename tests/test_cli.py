@@ -16,7 +16,7 @@ from mlquant.cli.main import (
 
 def test_demo_runs_pipeline_stages_in_order(monkeypatch, tmp_path):
     config = tmp_path / "small.yaml"
-    config.write_text("seed: 42\n")
+    config.write_text("seed: 42\n", encoding="utf-8")
     calls = []
 
     for command in (cmd_gen_data, cmd_features, cmd_train, cmd_portfolio, cmd_backtest):
@@ -58,7 +58,7 @@ def test_demo_uses_packaged_config_outside_repository(monkeypatch, tmp_path):
         name = command.name
 
         def callback(config_path, stage=name):
-            calls.append((stage, config_path, Path(config_path).read_text()))
+            calls.append((stage, config_path, Path(config_path).read_text(encoding="utf-8")))
 
         monkeypatch.setattr(command, "callback", callback)
 
@@ -76,7 +76,7 @@ def test_packaged_demo_config_matches_repository_config():
     packaged = Path(__file__).parents[1] / "src" / "mlquant" / "configs" / "small.yaml"
     repository = Path(__file__).parents[1] / "configs" / "small.yaml"
 
-    assert packaged.read_text() == repository.read_text()
+    assert packaged.read_text(encoding="utf-8") == repository.read_text(encoding="utf-8")
 
 
 def test_backtest_summary_is_shareable_and_strict_json(tmp_path):
@@ -87,14 +87,17 @@ def test_backtest_summary_is_shareable_and_strict_json(tmp_path):
         costs_bps=5.0,
     )
 
-    payload = json.loads(json_path.read_text(), parse_constant=lambda value: 1 / 0)
+    payload = json.loads(
+        json_path.read_text(encoding="utf-8"),
+        parse_constant=lambda value: 1 / 0,
+    )
     assert payload["metrics"]["sharpe"] == 1.25
     assert payload["metrics"]["sortino"] is None
     assert payload["costs_bps"] == 5.0
     assert payload["repository"] == "https://github.com/initial-d/ml-quant-trading"
     assert payload["reproduction_report"].endswith("reproduction_report.yml")
 
-    markdown = markdown_path.read_text()
+    markdown = markdown_path.read_text(encoding="utf-8")
     assert "| `sharpe` | 1.250000 |" in markdown
     assert "| `sortino` | n/a |" in markdown
     assert "not investment advice" in markdown
