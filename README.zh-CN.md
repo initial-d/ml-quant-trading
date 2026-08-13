@@ -14,6 +14,23 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+## 先跑起来
+
+```bash
+python -m pip install mlquantx
+mlquant demo
+```
+
+无需行情账号或 API Key。30–90 秒内，Demo 会依次运行
+`数据 → 因子 → 模型 → 组合 → 回测`，并在 `artifacts/small/` 生成可分享的
+Markdown/JSON 报告。
+
+| 213 个因子 | 4 条数据路径 | 95 个测试 | 可复现 benchmark |
+|---:|---:|---:|---:|
+| Mask-aware PyTorch 张量 | Synthetic、AkShare、Baostock、yfinance | 确定性工程检查 | [查看完整基准](docs/benchmark_board.md) |
+
+这是一个面向研究和教学的工程参考实现，不是实盘交易系统，也不构成投资建议。
+
 ![ml-quant-trading 项目预览](docs/assets/readme-preview.png)
 
 [**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
@@ -22,10 +39,6 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**体验数据集与模型**](docs/huggingface_artifacts.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
-
-> **v0.2.6：打通 PyPI 到 GitHub 的参与路径。**发行包名为 `mlquantx`，
-> Python 导入名和命令仍是 `mlquant`。Demo 成功后会直接给出源码、复现
-> 报告表单和下一步贡献入口。
 
 > **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
 > 运行环境和 commit SHA 填入[结构化报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
@@ -100,7 +113,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 本仓库不重新分发市场数据。AkShare、Baostock 与 yfinance 数据由加载脚本按需下载；Synthetic 数据则根据固定 seed 确定性生成。
 
-## 快速开始
+## 源码安装与开发
 
 ```bash
 python -m pip install mlquantx
