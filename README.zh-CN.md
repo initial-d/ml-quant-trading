@@ -25,7 +25,7 @@ mlquant demo
 `数据 → 因子 → 模型 → 组合 → 回测`，并在 `artifacts/small/` 生成可分享的
 Markdown/JSON 报告。
 
-| 213 个因子 | 4 条数据路径 | 95 个测试 | 可复现 benchmark |
+| 213 个因子 | 4 条数据路径 | 97 个测试 | 可复现 benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch 张量 | Synthetic、AkShare、Baostock、yfinance | 确定性工程检查 | [查看完整基准](docs/benchmark_board.md) |
 

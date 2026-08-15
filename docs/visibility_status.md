@@ -58,6 +58,31 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
+Recorded on 2026-08-15 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-08-14):
+
+- Views: 1,180 total, 283 unique visitors.
+- Clones: 670 total, 280 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 71 stars, 32 forks, 4 watchers.
+- Top external referrers by visits: Google (101), arXiv (64), ChatGPT (18),
+  Hugging Face (16), Zhihu (16), the project site (7), JoinQuant (6),
+  HF-Mirror (3), and Doubao (2). These are visits, not unique-user totals.
+- High-interest paths beyond the repository root: `README.zh-CN.md`,
+  `docs/factor_handbook.md`, discussion #43, `docs/validation_dashboard.md`,
+  the main tree, recent commits, and contributor PR #45.
+
+Operating takeaways:
+
+- Since the August 12 snapshot, the repository added 2 stars and 2 forks while
+  maintaining a stable long-tail of search, paper, Chinese-language, and
+  Hugging Face discovery.
+- `README.zh-CN.md` remains the strongest non-root entry point, and factor
+  handbook traffic deepened from 19 to 54 visits. Technical reference material
+  is converting attention more reliably than generic launch messaging.
+- The new Windows CPU benchmark creates a second reproducible machine snapshot.
+  The highest-value missing report remains a CUDA run with complete environment
+  metadata, not an unqualified hardware ranking.
+
 Recorded on 2026-08-12 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-08-10):
 

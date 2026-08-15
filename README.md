@@ -29,7 +29,7 @@ No market-data account or API key is required. In 30–90 seconds, the
 deterministic demo runs data → factors → model → portfolio → backtest and writes
 shareable Markdown and JSON reports.
 
-| 213 factors | 4 data paths | 95 tests | CPU/GPU benchmark |
+| 213 factors | 4 data paths | 97 tests | CPU/GPU benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch tensors | Synthetic, AkShare, Baostock, yfinance | Deterministic engineering checks | Reproducible across machines |
 
