@@ -24,7 +24,7 @@ body:
       label: Command
       description: Paste the exact command you ran.
       render: bash
-      placeholder: python scripts/benchmark_tensor_factors.py --device auto --n-dates 1500 --n-stocks 3000
+      placeholder: make benchmark
     validations:
       required: true
 
@@ -32,7 +32,7 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: Include OS, Python, PyTorch, CPU, GPU, CUDA availability, CUDA version, and CUDA device name.
+      description: Paste the complete environment table printed by the script, including protocol and thread counts.
       placeholder: |
         OS:
         Python:
@@ -41,6 +41,9 @@ body:
         GPU:
         CUDA available:
         CUDA version:
+        Protocol:
+        PyTorch threads:
+        PyTorch interop threads:
     validations:
       required: true
 

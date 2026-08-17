@@ -18,6 +18,11 @@ make benchmark
 
 Then open a benchmark issue and paste the printed Markdown table.
 
+`make benchmark` is the canonical protocol v1 CPU run. It fixes the synthetic
+panel at 750 dates x 1000 stocks, the 20-day window, seed 42, 3 warmups, 10
+measured repetitions, and both PyTorch thread pools at one thread. Optional GPU,
+larger-panel, and multi-thread runs should be reported separately.
+
 For larger panels:
 
 ```bash
@@ -26,11 +31,24 @@ python scripts/benchmark_tensor_factors.py \
   --n-dates 1500 \
   --n-stocks 3000 \
   --window 20 \
-  --repeat 5 \
-  --warmup 2
+  --repeat 10 \
+  --warmup 3 \
+  --threads 1 \
+  --interop-threads 1 \
+  --seed 42
 ```
 
-## Results
+## Comparable Protocol v1 Results
+
+No reports yet. Run `make benchmark` and submit the complete output through the
+benchmark issue template.
+
+## Pre-Protocol Machine Snapshots
+
+The following results predate protocol v1. They did not pin PyTorch thread pools
+or software versions and therefore must not be used as a controlled CPU ranking.
+
+![Pre-protocol CPU benchmark snapshots](assets/tensor-benchmark-cpu.svg)
 
 | Contributor | Commit | OS | Python | PyTorch | CUDA | CPU | GPU | Command | Notes |
 |---|---|---|---|---|---|---|---|---|---|
@@ -60,9 +78,8 @@ Environment:
 | cpu | `ewma(close,0.05)` | 50.4 ms | 15.6 ms | - |
 | cpu | `compute_legacy_set(6 factors)` | 287.0 ms | 15.8 ms | - |
 
-The Windows and macOS baselines use different Python and PyTorch versions, so
-they are reproducible machine snapshots rather than a controlled CPU ranking.
-Use the same command and software environment for strict hardware comparisons.
+The Windows and macOS baselines use different Python and PyTorch versions and
+unrecorded default thread settings. They are retained for provenance only.
 
 ### Maintainer CPU Baseline: Apple M5 MacBook Air
 
@@ -90,6 +107,8 @@ Environment:
 ## What Makes a Good Benchmark Report
 
 - The command is copy-pasted exactly.
+- Protocol v1 is present in the environment table.
+- Both PyTorch thread counts are recorded.
 - The commit SHA is included.
 - CPU and GPU names are included.
 - CUDA availability is stated.

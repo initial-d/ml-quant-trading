@@ -6,10 +6,38 @@ This page explains how to benchmark the tensor factor engine on synthetic data. 
 
 ```bash
 python -m pip install -e '.[dev]'
-python scripts/benchmark_tensor_factors.py --device auto
+make benchmark
 ```
 
-`--device auto` always runs CPU and also runs CUDA when PyTorch can see a GPU.
+`make benchmark` runs the canonical **protocol v1** CPU command:
+
+```bash
+python scripts/benchmark_tensor_factors.py \
+  --device cpu \
+  --n-dates 750 \
+  --n-stocks 1000 \
+  --window 20 \
+  --repeat 10 \
+  --warmup 3 \
+  --threads 1 \
+  --interop-threads 1 \
+  --seed 42
+```
+
+Protocol v1 fixes the panel, seed, rolling window, repetitions, and PyTorch
+thread pools. Submit this CPU result before optional variants so reports remain
+comparable across machines.
+
+## Optional GPU Run
+
+Run the same fixed workload on CUDA separately:
+
+```bash
+python scripts/benchmark_tensor_factors.py --device cuda
+```
+
+GPU results belong in their own comparison group. Do not interpret a CPU/GPU or
+multi-thread/single-thread difference as a controlled hardware ranking.
 
 ## Larger Panel
 
@@ -19,8 +47,11 @@ python scripts/benchmark_tensor_factors.py \
   --n-dates 1500 \
   --n-stocks 3000 \
   --window 20 \
-  --repeat 5 \
-  --warmup 2
+  --repeat 10 \
+  --warmup 3 \
+  --threads 1 \
+  --interop-threads 1 \
+  --seed 42
 ```
 
 The script prints a Markdown table with environment details, mean runtime, runtime standard deviation, and peak CUDA memory when available.
@@ -48,7 +79,7 @@ When sharing benchmark results, include:
 - PyTorch version
 - CPU and GPU model
 - CUDA availability, CUDA version, and CUDA device name
-- `n_dates`, `n_stocks`, `window`, `repeat`, and `warmup`
+- protocol version, thread counts, seed, panel size, window, repeat, and warmup
 - whether the run used CPU, CUDA, or both
 
 ## Interpreting Results

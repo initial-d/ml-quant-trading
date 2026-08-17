@@ -1,11 +1,12 @@
 """Benchmark tensor factor primitives on synthetic panel data.
 
 Usage:
-    python scripts/benchmark_tensor_factors.py --device auto
-    python scripts/benchmark_tensor_factors.py --device cpu --n-dates 750 --n-stocks 1000
+    python scripts/benchmark_tensor_factors.py --device cpu
+    python scripts/benchmark_tensor_factors.py --device cuda
 """
 from __future__ import annotations
 
+import os
 import platform
 import statistics
 import time
@@ -19,6 +20,8 @@ import torch
 from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
 from mlquant.features import cs_rank, ewma, ts_corr, ts_mean, ts_rank
 from mlquant.features.legacy_factors import compute_legacy_set
+
+PROTOCOL_VERSION = "v1"
 
 
 @dataclass(frozen=True)
@@ -59,6 +62,19 @@ def _devices(requested: str) -> list[str]:
     return [requested]
 
 
+def _configure_threads(threads: int, interop_threads: int) -> None:
+    """Pin PyTorch thread pools before any benchmark tensor work starts."""
+    if threads <= 0 or interop_threads <= 0:
+        raise ValueError("thread counts must be positive")
+    torch.set_num_threads(threads)
+    torch.set_num_interop_threads(interop_threads)
+
+
+def _cpu_name() -> str:
+    """Return a portable best-effort CPU identifier."""
+    return platform.processor() or platform.machine() or "unknown"
+
+
 def _format_seconds(value: float) -> str:
     if value < 1e-3:
         return f"{value * 1e6:.1f} us"
@@ -83,19 +99,34 @@ def _benchmark_row(device: str, case_name: str, mean_s: float, std_s: float, pea
     )
 
 
-def _print_environment(*, n_dates: int, n_stocks: int, repeat: int, warmup: int) -> None:
+def _print_environment(
+    *,
+    n_dates: int,
+    n_stocks: int,
+    window: int,
+    repeat: int,
+    warmup: int,
+    seed: int,
+) -> None:
     click.echo("# Tensor Factor Benchmark")
     click.echo("")
     click.echo("| Field | Value |")
     click.echo("| --- | --- |")
+    click.echo(_environment_row("Protocol", PROTOCOL_VERSION))
     click.echo(_environment_row("Python", platform.python_version()))
     click.echo(_environment_row("Platform", platform.platform()))
+    click.echo(_environment_row("CPU", _cpu_name()))
+    click.echo(_environment_row("Logical CPUs", os.cpu_count() or "unknown"))
     click.echo(_environment_row("PyTorch", torch.__version__))
+    click.echo(_environment_row("PyTorch threads", torch.get_num_threads()))
+    click.echo(_environment_row("PyTorch interop threads", torch.get_num_interop_threads()))
     click.echo(_environment_row("CUDA available", torch.cuda.is_available()))
     if torch.cuda.is_available():
         click.echo(_environment_row("CUDA device", torch.cuda.get_device_name(0)))
     click.echo(_environment_row("Synthetic panel", f"{n_dates} dates x {n_stocks} stocks"))
+    click.echo(_environment_row("Window", window))
     click.echo(_environment_row("Warmup / repeat", f"{warmup} / {repeat}"))
+    click.echo(_environment_row("Seed", seed))
     click.echo("")
 
 
@@ -104,27 +135,48 @@ def _print_environment(*, n_dates: int, n_stocks: int, repeat: int, warmup: int)
 @click.option("--n-dates", default=750, show_default=True, type=int)
 @click.option("--n-stocks", default=1000, show_default=True, type=int)
 @click.option("--window", default=20, show_default=True, type=int)
-@click.option("--repeat", default=5, show_default=True, type=int)
-@click.option("--warmup", default=2, show_default=True, type=int)
-def main(device: str, n_dates: int, n_stocks: int, window: int, repeat: int, warmup: int) -> None:
+@click.option("--repeat", default=10, show_default=True, type=int)
+@click.option("--warmup", default=3, show_default=True, type=int)
+@click.option("--threads", default=1, show_default=True, type=click.IntRange(min=1))
+@click.option("--interop-threads", default=1, show_default=True, type=click.IntRange(min=1))
+@click.option("--seed", default=42, show_default=True, type=int)
+def main(
+    device: str,
+    n_dates: int,
+    n_stocks: int,
+    window: int,
+    repeat: int,
+    warmup: int,
+    threads: int,
+    interop_threads: int,
+    seed: int,
+) -> None:
     """Run a compact benchmark for core tensor factor operations."""
     if n_dates <= window:
         raise click.BadParameter("--n-dates must be greater than --window")
     if repeat <= 0 or warmup < 0:
         raise click.BadParameter("--repeat must be positive and --warmup cannot be negative")
 
+    _configure_threads(threads, interop_threads)
     selected_devices = _devices(device)
     if not selected_devices:
         return
 
-    _print_environment(n_dates=n_dates, n_stocks=n_stocks, repeat=repeat, warmup=warmup)
+    _print_environment(
+        n_dates=n_dates,
+        n_stocks=n_stocks,
+        window=window,
+        repeat=repeat,
+        warmup=warmup,
+        seed=seed,
+    )
 
     click.echo("| Device | Case | Mean | Std | Peak CUDA memory |")
     click.echo("| --- | --- | ---: | ---: | ---: |")
 
     for dev in selected_devices:
         panel = make_synthetic_panel(
-            SyntheticConfig(n_dates=n_dates, n_stocks=n_stocks, device=dev, seed=42)
+            SyntheticConfig(n_dates=n_dates, n_stocks=n_stocks, device=dev, seed=seed)
         )
         returns = panel.returns
         factor_subset = ("best_001", "best_002", "original_001", "stock_001", "add_015", "old_042")
