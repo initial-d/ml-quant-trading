@@ -40,8 +40,38 @@ python scripts/benchmark_tensor_factors.py \
 
 ## Comparable Protocol v1 Results
 
-No reports yet. Run `make benchmark` and submit the complete output through the
-benchmark issue template.
+| Contributor | Commit | OS | Python | PyTorch | Threads | CPU | GPU | Command | Notes |
+|---|---|---|---|---|---:|---|---|---|---|
+| Maintainer | `2765d19` | Windows 11 10.0.26200 | 3.14.4 | 2.11.0+cpu | 1 / 1 | Intel Core i7-1255U, 10 cores / 12 threads | none | `make benchmark` | CPU-only protocol v1 baseline |
+
+### Maintainer Protocol v1: Intel Core i7-1255U
+
+Environment:
+
+- Commit: `2765d19`
+- Protocol: `v1`
+- Machine: Intel Core i7-1255U, 10 cores / 12 threads
+- OS: Windows 11 10.0.26200
+- Python: 3.14.4
+- PyTorch: 2.11.0+cpu
+- PyTorch threads / interop threads: 1 / 1
+- CUDA available: false
+- Synthetic panel: 750 dates x 1000 stocks
+- Window: 20
+- Warmup / repeat: 3 / 10
+- Seed: 42
+
+| Device | Case | Mean | Std | Peak CUDA memory |
+| --- | --- | ---: | ---: | ---: |
+| cpu | `cs_rank(close)` | 77.4 ms | 2.8 ms | - |
+| cpu | `ts_mean(close,20)` | 23.8 ms | 2.3 ms | - |
+| cpu | `ts_rank(close,20)` | 76.1 ms | 11.1 ms | - |
+| cpu | `ts_corr(close,returns,20)` | 152.3 ms | 9.2 ms | - |
+| cpu | `ewma(close,0.05)` | 16.2 ms | 1.1 ms | - |
+| cpu | `compute_legacy_set(6 factors)` | 551.0 ms | 45.9 ms | - |
+
+This is the first comparable v1 report. Run the same command on another machine
+and submit the complete output through the benchmark issue template.
 
 ## Pre-Protocol Machine Snapshots
 
