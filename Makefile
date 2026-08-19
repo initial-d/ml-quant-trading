@@ -52,7 +52,7 @@ cov:
 	$(PYTEST) --cov=mlquant --cov-report=term-missing
 
 benchmark:
-	$(PY) scripts/benchmark_tensor_factors.py --device cpu --n-dates 750 --n-stocks 1000 --window 20 --repeat 10 --warmup 3 --threads 1 --interop-threads 1 --seed 42
+	$(PY) scripts/benchmark_tensor_factors.py --device cpu --n-dates 750 --n-stocks 1000 --window 20 --repeat 10 --warmup 3 --threads 1 --interop-threads 1 --seed 42 --json-out artifacts/benchmark-v1.json
 
 technical-audit:
 	$(PY) scripts/technical_pipeline_audit.py

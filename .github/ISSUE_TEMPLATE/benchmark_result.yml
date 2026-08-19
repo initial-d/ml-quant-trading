@@ -24,7 +24,7 @@ body:
       label: Command
       description: Paste the exact command you ran.
       render: bash
-      placeholder: make benchmark
+      placeholder: python scripts/benchmark_tensor_factors.py --device cpu --n-dates 750 --n-stocks 1000 --window 20 --repeat 10 --warmup 3 --threads 1 --interop-threads 1 --seed 42 --json-out artifacts/benchmark-v1.json
     validations:
       required: true
 
@@ -53,6 +53,15 @@ body:
       label: Result table
       description: Paste the Markdown table printed by the benchmark script.
       render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: json
+    attributes:
+      label: JSON report
+      description: Attach artifacts/benchmark-v1.json to the issue, or paste it here if attachments are unavailable.
+      render: json
     validations:
       required: true
 

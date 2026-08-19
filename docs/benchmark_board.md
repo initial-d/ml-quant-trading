@@ -13,12 +13,17 @@ community reports.
 
 ```bash
 python -m pip install -e '.[dev]'
-make benchmark
+python scripts/benchmark_tensor_factors.py \
+  --device cpu --n-dates 750 --n-stocks 1000 --window 20 \
+  --repeat 10 --warmup 3 --threads 1 --interop-threads 1 --seed 42 \
+  --json-out artifacts/benchmark-v1.json
 ```
 
-Then open a benchmark issue and paste the printed Markdown table.
+Then open a benchmark issue, paste the printed Markdown table, and attach the
+generated `artifacts/benchmark-v1.json`. `make benchmark` is an equivalent
+shortcut on systems with GNU Make.
 
-`make benchmark` is the canonical protocol v1 CPU run. It fixes the synthetic
+The command above is the canonical protocol v1 CPU run. It fixes the synthetic
 panel at 750 dates x 1000 stocks, the 20-day window, seed 42, 3 warmups, 10
 measured repetitions, and both PyTorch thread pools at one thread. Optional GPU,
 larger-panel, and multi-thread runs should be reported separately.

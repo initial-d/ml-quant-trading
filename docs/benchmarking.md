@@ -6,10 +6,15 @@ This page explains how to benchmark the tensor factor engine on synthetic data. 
 
 ```bash
 python -m pip install -e '.[dev]'
-make benchmark
+python scripts/benchmark_tensor_factors.py \
+  --device cpu --n-dates 750 --n-stocks 1000 --window 20 \
+  --repeat 10 --warmup 3 --threads 1 --interop-threads 1 --seed 42 \
+  --json-out artifacts/benchmark-v1.json
 ```
 
-`make benchmark` runs the canonical **protocol v1** CPU command:
+This is the canonical cross-platform **protocol v1** CPU command. It writes a
+machine-readable report to `artifacts/benchmark-v1.json`. On systems with GNU
+Make, `make benchmark` is an equivalent shortcut.
 
 ```bash
 python scripts/benchmark_tensor_factors.py \
@@ -21,12 +26,13 @@ python scripts/benchmark_tensor_factors.py \
   --warmup 3 \
   --threads 1 \
   --interop-threads 1 \
-  --seed 42
+  --seed 42 \
+  --json-out artifacts/benchmark-v1.json
 ```
 
 Protocol v1 fixes the panel, seed, rolling window, repetitions, and PyTorch
-thread pools. Submit this CPU result before optional variants so reports remain
-comparable across machines.
+thread pools. Submit this CPU result and the generated JSON before optional
+variants so reports remain comparable across machines.
 
 ## Optional GPU Run
 

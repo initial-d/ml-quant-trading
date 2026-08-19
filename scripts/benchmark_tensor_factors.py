@@ -6,12 +6,14 @@ Usage:
 """
 from __future__ import annotations
 
+import json
 import os
 import platform
 import statistics
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import click
@@ -99,7 +101,7 @@ def _benchmark_row(device: str, case_name: str, mean_s: float, std_s: float, pea
     )
 
 
-def _print_environment(
+def _environment_payload(
     *,
     n_dates: int,
     n_stocks: int,
@@ -107,27 +109,57 @@ def _print_environment(
     repeat: int,
     warmup: int,
     seed: int,
-) -> None:
+) -> dict[str, object]:
+    return {
+        "protocol": PROTOCOL_VERSION,
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "cpu": _cpu_name(),
+        "logical_cpus": os.cpu_count(),
+        "pytorch": torch.__version__,
+        "pytorch_threads": torch.get_num_threads(),
+        "pytorch_interop_threads": torch.get_num_interop_threads(),
+        "cuda_available": torch.cuda.is_available(),
+        "cuda_device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        "n_dates": n_dates,
+        "n_stocks": n_stocks,
+        "window": window,
+        "warmup": warmup,
+        "repeat": repeat,
+        "seed": seed,
+    }
+
+
+def _print_environment(environment: dict[str, object]) -> None:
     click.echo("# Tensor Factor Benchmark")
     click.echo("")
     click.echo("| Field | Value |")
     click.echo("| --- | --- |")
-    click.echo(_environment_row("Protocol", PROTOCOL_VERSION))
-    click.echo(_environment_row("Python", platform.python_version()))
-    click.echo(_environment_row("Platform", platform.platform()))
-    click.echo(_environment_row("CPU", _cpu_name()))
-    click.echo(_environment_row("Logical CPUs", os.cpu_count() or "unknown"))
-    click.echo(_environment_row("PyTorch", torch.__version__))
-    click.echo(_environment_row("PyTorch threads", torch.get_num_threads()))
-    click.echo(_environment_row("PyTorch interop threads", torch.get_num_interop_threads()))
-    click.echo(_environment_row("CUDA available", torch.cuda.is_available()))
-    if torch.cuda.is_available():
-        click.echo(_environment_row("CUDA device", torch.cuda.get_device_name(0)))
-    click.echo(_environment_row("Synthetic panel", f"{n_dates} dates x {n_stocks} stocks"))
-    click.echo(_environment_row("Window", window))
-    click.echo(_environment_row("Warmup / repeat", f"{warmup} / {repeat}"))
-    click.echo(_environment_row("Seed", seed))
+    display_rows = (
+        ("Protocol", environment["protocol"]),
+        ("Python", environment["python"]),
+        ("Platform", environment["platform"]),
+        ("CPU", environment["cpu"]),
+        ("Logical CPUs", environment["logical_cpus"] or "unknown"),
+        ("PyTorch", environment["pytorch"]),
+        ("PyTorch threads", environment["pytorch_threads"]),
+        ("PyTorch interop threads", environment["pytorch_interop_threads"]),
+        ("CUDA available", environment["cuda_available"]),
+        ("CUDA device", environment["cuda_device"] or "-"),
+        ("Synthetic panel", f"{environment['n_dates']} dates x {environment['n_stocks']} stocks"),
+        ("Window", environment["window"]),
+        ("Warmup / repeat", f"{environment['warmup']} / {environment['repeat']}"),
+        ("Seed", environment["seed"]),
+    )
+    for field, value in display_rows:
+        click.echo(_environment_row(field, value))
     click.echo("")
+
+
+def _write_json_report(path: Path, environment: dict[str, object], results: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"schema_version": 1, "environment": environment, "results": results}
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 @click.command()
@@ -140,6 +172,7 @@ def _print_environment(
 @click.option("--threads", default=1, show_default=True, type=click.IntRange(min=1))
 @click.option("--interop-threads", default=1, show_default=True, type=click.IntRange(min=1))
 @click.option("--seed", default=42, show_default=True, type=int)
+@click.option("--json-out", type=click.Path(dir_okay=False, path_type=Path), default=None)
 def main(
     device: str,
     n_dates: int,
@@ -150,6 +183,7 @@ def main(
     threads: int,
     interop_threads: int,
     seed: int,
+    json_out: Path | None,
 ) -> None:
     """Run a compact benchmark for core tensor factor operations."""
     if n_dates <= window:
@@ -162,7 +196,7 @@ def main(
     if not selected_devices:
         return
 
-    _print_environment(
+    environment = _environment_payload(
         n_dates=n_dates,
         n_stocks=n_stocks,
         window=window,
@@ -170,9 +204,11 @@ def main(
         warmup=warmup,
         seed=seed,
     )
+    _print_environment(environment)
 
     click.echo("| Device | Case | Mean | Std | Peak CUDA memory |")
     click.echo("| --- | --- | ---: | ---: | ---: |")
+    results: list[dict[str, object]] = []
 
     for dev in selected_devices:
         panel = make_synthetic_panel(
@@ -204,6 +240,19 @@ def main(
             if dev == "cuda":
                 peak_mem = f"{torch.cuda.max_memory_allocated() / 1024**2:.1f} MB"
             click.echo(_benchmark_row(dev, case.name, mean_s, std_s, peak_mem))
+            results.append(
+                {
+                    "device": dev,
+                    "case": case.name,
+                    "mean_seconds": mean_s,
+                    "std_seconds": std_s,
+                    "peak_cuda_memory": peak_mem,
+                }
+            )
+
+    if json_out is not None:
+        _write_json_report(json_out, environment, results)
+        click.echo(f"JSON report: {json_out}")
 
 
 if __name__ == "__main__":  # pragma: no cover
