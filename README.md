@@ -75,7 +75,7 @@ python -m pip install -e '.[dev]'
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
 | Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
 | Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
-| Use DeepSeek Harness or a coding agent | [DeepSeek Harness Recipe](docs/deepseek_harness_recipe.md) · [Agent Reproducibility Guide](docs/agent_reproducibility.md) | Agent-ready benchmark and validation workflows without adding an agent runtime dependency |
+| Use DeepSeek Harness or a coding agent | [DeepSeek Harness Recipe](docs/deepseek_harness_recipe.md) · [optional DSH plugin](https://github.com/initial-d/dsh-plugin-mlquant-benchmark) · [Agent Reproducibility Guide](docs/agent_reproducibility.md) | Agent-ready benchmark and validation workflows without adding an agent runtime dependency |
 | Contribute one run | [Reproduction report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml) | Run Colab, submit the generated report, and receive README credit |
 
 ## Validation Dashboard

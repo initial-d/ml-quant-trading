@@ -5,9 +5,14 @@ This page shows how to use DeepSeek Harness as a reproducibility assistant for
 validation workflows, preserve the evidence bundle, and avoid overstating what
 the result proves.
 
-DeepSeek Harness is not required by this repository, and this repository does
-not ship a DeepSeek plugin. Treat the checkout as an ordinary workspace that an
-agent can read, run, and audit.
+DeepSeek Harness is not required by this repository. Treat the checkout as an
+ordinary workspace that an agent can read, run, and audit.
+
+An optional thin plugin lives at
+[`initial-d/dsh-plugin-mlquant-benchmark`](https://github.com/initial-d/dsh-plugin-mlquant-benchmark).
+It only wraps the benchmark and report-drafting workflow; it does not add a
+trading agent, model-provider configuration, market-data access, or an agent
+runtime dependency to this repository.
 
 ## Why This Fits
 
@@ -41,6 +46,26 @@ Install the development dependencies:
 ```bash
 python -m pip install -e '.[dev]'
 ```
+
+If you want DSH-native tool calls instead of asking the agent to run shell
+commands directly, install the optional plugin from GitHub:
+
+```bash
+pnpm add github:initial-d/dsh-plugin-mlquant-benchmark
+```
+
+Then add it to a Cordis composition:
+
+```yaml
+- id: mlquant-benchmark
+  name: dsh-plugin-mlquant-benchmark
+```
+
+The plugin registers:
+
+- `mlquant_benchmark_v1_cpu`;
+- `mlquant_read_benchmark_json`;
+- `mlquant_draft_github_issue`.
 
 ## Run The Benchmark Protocol
 
@@ -109,16 +134,20 @@ If the run was performed through DeepSeek Harness, use the dedicated
 [DeepSeek Harness benchmark report](https://github.com/initial-d/ml-quant-trading/issues/new?template=deepseek_harness_benchmark.yml)
 so the prompt, transcript, and benchmark artifact stay together.
 
-## When A Plugin Would Make Sense
+See the seed DSH benchmark report in
+[#61](https://github.com/initial-d/ml-quant-trading/issues/61). The plugin
+challenge is tracked in
+[`initial-d/dsh-plugin-mlquant-benchmark#1`](https://github.com/initial-d/dsh-plugin-mlquant-benchmark/issues/1).
 
-A dedicated DeepSeek Harness plugin is premature today. It would become useful
-only if contributors repeatedly use the same agent workflow and need one-click
-commands for:
+## Plugin Boundary
 
-- `mlquant demo`;
+The optional plugin is intentionally small. It is useful when contributors want
+repeatable DSH-native tool calls for:
+
 - protocol v1 CPU benchmark;
 - benchmark JSON validation;
-- benchmark-board update drafts;
-- public-data validation report packaging.
+- issue-body drafting.
 
-Until then, a documented workspace recipe is the cleaner integration point.
+The plugin should not become a trading-decision layer. Public-data validation
+report packaging or benchmark-board update drafts can be added later only if
+repeated reports show that the extra surface is worth maintaining.
