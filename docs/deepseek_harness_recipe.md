@@ -105,6 +105,10 @@ Interpretation: engineering benchmark only; no trading claim
 Post the result through the benchmark issue or reproduction report template
 rather than opening a new benchmark format.
 
+If the run was performed through DeepSeek Harness, use the dedicated
+[DeepSeek Harness benchmark report](https://github.com/initial-d/ml-quant-trading/issues/new?template=deepseek_harness_benchmark.yml)
+so the prompt, transcript, and benchmark artifact stay together.
+
 ## When A Plugin Would Make Sense
 
 A dedicated DeepSeek Harness plugin is premature today. It would become useful
