@@ -51,7 +51,7 @@ If you want DSH-native tool calls instead of asking the agent to run shell
 commands directly, install the optional plugin from GitHub:
 
 ```bash
-pnpm add github:initial-d/dsh-plugin-mlquant-benchmark
+dsh plugin --profile web add github:initial-d/dsh-plugin-mlquant-benchmark
 ```
 
 Then add it to a Cordis composition:
