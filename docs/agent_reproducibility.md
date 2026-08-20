@@ -101,11 +101,13 @@ to headline numbers when needed.
 
 ## DeepSeek Harness Notes
 
-DeepSeek Harness users can treat this repository as an ordinary workspace:
-open the checkout, read `AGENTS.md`, run the commands above, and attach the
-generated artifacts to an issue or pull request. A dedicated plugin is not
-needed for the current workflows. If a plugin is added later, it should be a
-thin wrapper around existing commands such as `mlquant demo` and
+DeepSeek Harness users can follow the dedicated
+[DeepSeek Harness Recipe](deepseek_harness_recipe.md). The short version:
+treat this repository as an ordinary workspace, read `AGENTS.md`, run the
+documented benchmark or validation command, and attach the generated artifacts
+to an issue or pull request. A dedicated plugin is not needed for the current
+workflows. If a plugin is added later, it should be a thin wrapper around
+existing commands such as `mlquant demo` and
 `scripts/benchmark_tensor_factors.py`, not a separate research path.
 
 ## Boundary

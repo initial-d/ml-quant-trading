@@ -9,7 +9,7 @@ This page is the fastest path from discovering the repository to running somethi
 | New to the project | `pip install mlquantx && mlquant demo` |
 | A quant researcher | `notebooks/public_factor_ic.ipynb` |
 | An ML engineer | `make benchmark` |
-| Using a coding agent | [`AGENTS.md`](../AGENTS.md) and [Agent Reproducibility Guide](agent_reproducibility.md) |
+| Using DeepSeek Harness or a coding agent | [DeepSeek Harness Recipe](deepseek_harness_recipe.md), [`AGENTS.md`](../AGENTS.md), and [Agent Reproducibility Guide](agent_reproducibility.md) |
 | Ready to customize | Clone the repository and install `-e '.[dev]'` |
 | A contributor | Submit a reproduction report or choose a `good first issue` |
 | A paper reader | `docs/reproducing_paper.md` |
