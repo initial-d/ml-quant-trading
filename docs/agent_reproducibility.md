@@ -105,10 +105,13 @@ DeepSeek Harness users can follow the dedicated
 [DeepSeek Harness Recipe](deepseek_harness_recipe.md). The short version:
 treat this repository as an ordinary workspace, read `AGENTS.md`, run the
 documented benchmark or validation command, and attach the generated artifacts
-to an issue or pull request. A dedicated plugin is not needed for the current
-workflows. If a plugin is added later, it should be a thin wrapper around
-existing commands such as `mlquant demo` and
-`scripts/benchmark_tensor_factors.py`, not a separate research path.
+to an issue or pull request.
+
+The optional
+[`dsh-plugin-mlquant-benchmark`](https://github.com/initial-d/dsh-plugin-mlquant-benchmark)
+package provides DSH-native tools for the protocol v1 CPU benchmark, benchmark
+JSON validation, and issue-body drafting. It is a thin wrapper around the
+existing benchmark workflow, not a separate research path or trading agent.
 
 ## Boundary
 

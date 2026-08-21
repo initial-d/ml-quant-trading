@@ -10,9 +10,11 @@ ordinary workspace that an agent can read, run, and audit.
 
 An optional thin plugin lives at
 [`initial-d/dsh-plugin-mlquant-benchmark`](https://github.com/initial-d/dsh-plugin-mlquant-benchmark).
-It only wraps the benchmark and report-drafting workflow; it does not add a
-trading agent, model-provider configuration, market-data access, or an agent
-runtime dependency to this repository.
+The first release is
+[`v0.1.0`](https://github.com/initial-d/dsh-plugin-mlquant-benchmark/releases/tag/v0.1.0).
+It only wraps the benchmark, artifact validation, and report-drafting workflow;
+it does not add a trading agent, model-provider configuration, market-data
+access, or an agent runtime dependency to this repository.
 
 ## Why This Fits
 
@@ -65,6 +67,7 @@ The plugin registers:
 
 - `mlquant_benchmark_v1_cpu`;
 - `mlquant_read_benchmark_json`;
+- `mlquant_validate_benchmark_json`;
 - `mlquant_draft_github_issue`.
 
 ## Run The Benchmark Protocol
