@@ -18,6 +18,11 @@ The project is designed for students, researchers, and engineers who want a
 clean starting point for audited experiments rather than a black-box trading
 system.
 
+It can also serve as a fixed
+[quant agent reproducibility target](quant_agent_reproducibility_target.md):
+an agent can run the documented benchmark, preserve artifacts, and draft a
+bounded report without being treated as a live trading system.
+
 ## Non-Goals
 
 This repository is not:

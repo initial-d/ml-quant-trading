@@ -10,6 +10,7 @@ This page is the fastest path from discovering the repository to running somethi
 | A quant researcher | `notebooks/public_factor_ic.ipynb` |
 | An ML engineer | `make benchmark` |
 | Using DeepSeek Harness or a coding agent | [DeepSeek Harness Recipe](deepseek_harness_recipe.md), [`AGENTS.md`](../AGENTS.md), and [Agent Reproducibility Guide](agent_reproducibility.md) |
+| Evaluating a quant agent | [Quant Agent Reproducibility Target](quant_agent_reproducibility_target.md) |
 | Ready to customize | Clone the repository and install `-e '.[dev]'` |
 | A contributor | Submit a reproduction report or choose a `good first issue` |
 | A paper reader | `docs/reproducing_paper.md` |
