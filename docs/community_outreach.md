@@ -74,6 +74,7 @@ when the thread context makes the project genuinely useful.
 | Qlib discussion #2284 | Open discussion about A-share factor labs and AI research reports | Share validation-first design notes and mention the repo as a narrower PyTorch/A-share reference, not as a Qlib replacement |
 | awesome-quant-ai PR #43 | Merged directly by maintainer | Keep relationship warm; future follow-up should be about concrete benchmarks or an arena-style demo, not another listing request |
 | Quant agent reproducibility target | Landing page added | Use as the bridge to TradingAgents-style and AI-hedge-fund-style projects: offer a fixed benchmark/reporting target, not a competing trading agent |
+| Awesome-LLM-Quantitative-Trading-Papers PR #4 | Open listing PR | Positions the repo as a financial benchmark/evaluation target for LLM-based quant agents |
 | ml-quant-trading discussion #62 | DSH benchmark announcement posted | Route DSH/agent users to the plugin, report template, and seed benchmark report |
 | awesome-math-and-trading issue #3 | Open resource suggestion | Wait for maintainer activity before following up; keep the ask about fit and category placement |
 | awesome-fintech PR #50 | Open listing PR | No pressure follow-up only if the maintainer asks for changes or the PR becomes stale |
