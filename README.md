@@ -29,7 +29,7 @@ No market-data account or API key is required. In 30–90 seconds, the
 deterministic demo runs data → factors → model → portfolio → backtest and writes
 shareable Markdown and JSON reports.
 
-| 213 factors | 4 data paths | 97 tests | CPU/GPU benchmark |
+| 213 factors | 4 data paths | 100 tests | CPU/GPU benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch tensors | Synthetic, AkShare, Baostock, yfinance | Deterministic engineering checks | Reproducible across machines |
 
@@ -108,6 +108,8 @@ in [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42).
 | [PR #36](https://github.com/initial-d/ml-quant-trading/pull/36) | English handbook for all factor families |
 | [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42) | Zero-account AkShare loader enabling CSI 300 validation |
 | [PR #47](https://github.com/initial-d/ml-quant-trading/pull/47) | Clarified cumulative cost-drag units across code, reports, tests, and documentation |
+| [Issue #59](https://github.com/initial-d/ml-quant-trading/issues/59) | Community Apple M4 protocol v1 CPU benchmark with raw caveats preserved |
+| [Issue #61](https://github.com/initial-d/ml-quant-trading/issues/61) | DeepSeek Harness seed run validating the benchmark/reporting path |
 
 Independent results are linked to their pull requests so the environment,
 commands, limitations, and review history remain inspectable. Want to add

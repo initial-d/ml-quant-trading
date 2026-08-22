@@ -48,6 +48,7 @@ python scripts/benchmark_tensor_factors.py \
 | Contributor | Commit | OS | Python | PyTorch | Threads | CPU | GPU | Command | Notes |
 |---|---|---|---|---|---:|---|---|---|---|
 | Maintainer | `2765d19` | Windows 11 10.0.26200 | 3.14.4 | 2.11.0+cpu | 1 / 1 | Intel Core i7-1255U, 10 cores / 12 threads | none | `make benchmark` | CPU-only protocol v1 baseline |
+| [@sergio12S](https://github.com/sergio12S) | `2a91c6b` | macOS 26.5.2 arm64 | 3.10.16 | 2.13.0 | 1 / 1 | Apple M4, 10 logical CPUs | none | canonical protocol v1 command in [issue #59](https://github.com/initial-d/ml-quant-trading/issues/59) | Community CPU report; `ts_corr` unstable across repeats |
 
 ### Maintainer Protocol v1: Intel Core i7-1255U
 
@@ -77,6 +78,46 @@ Environment:
 
 This is the first comparable v1 report. Run the same command on another machine
 and submit the complete output through the benchmark issue template.
+
+### Community Protocol v1: Apple M4
+
+Environment and raw results are preserved in [issue #59](https://github.com/initial-d/ml-quant-trading/issues/59).
+This is a community-submitted, CPU-only protocol v1 report from a fresh checkout.
+It is included for reproducibility and hardware context, not as a controlled
+ranking against the maintainer result.
+
+Environment:
+
+- Contributor: [@sergio12S](https://github.com/sergio12S)
+- Commit: `2a91c6b199d3f3608bbebacb36addb37949200b9`
+- Protocol: `v1`
+- Machine: Apple M4, 10 logical CPUs
+- OS: macOS 26.5.2 arm64
+- Python: 3.10.16
+- PyTorch: 2.13.0
+- PyTorch threads / interop threads: 1 / 1
+- CUDA available: false
+- Synthetic panel: 750 dates x 1000 stocks
+- Window: 20
+- Warmup / repeat: 3 / 10
+- Seed: 42
+- Exact command: the canonical protocol v1 command shown above
+
+| Device | Case | Mean | Std | Peak CUDA memory |
+| --- | --- | ---: | ---: | ---: |
+| cpu | `cs_rank(close)` | 24.4 ms | 218.0 us | - |
+| cpu | `ts_mean(close,20)` | 7.1 ms | 499.6 us | - |
+| cpu | `ts_rank(close,20)` | 15.9 ms | 489.3 us | - |
+| cpu | `ts_corr(close,returns,20)` | 36.9 ms | 4.7 ms | - |
+| cpu | `ewma(close,0.05)` | 3.6 ms | 158.5 us | - |
+| cpu | `compute_legacy_set(6 factors)` | 136.3 ms | 6.6 ms | - |
+
+The contributor repeated the command on the same machine: `ts_corr` moved from
+36.9 ms to 43.4 ms and its standard deviation rose from 4.7 ms to 12.1 ms,
+while the other cases stayed within roughly 10%. The report also notes that a
+historical `ts_rank` difference across commits is confounded by benchmark-script
+and runtime changes. Keep both caveats attached to the numbers; do not infer a
+PyTorch or hardware speedup from them.
 
 ## Pre-Protocol Machine Snapshots
 

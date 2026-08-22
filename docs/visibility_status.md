@@ -58,6 +58,30 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
+Recorded on 2026-08-22 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-08-20):
+
+- Views: 1,288 total, 279 unique visitors.
+- Clones: 514 total, 223 unique cloners.
+- Repository stars/forks/watchers at snapshot time: 77 stars, 34 forks, 4 watchers.
+- High-interest technical entry points now include the benchmark board, factor
+  handbook, agent reproducibility guide, quant-agent target, and DeepSeek Harness
+  recipe. Community evidence includes the Apple M4 protocol v1 report in
+  [issue #59](https://github.com/initial-d/ml-quant-trading/issues/59) and the
+  DeepSeek Harness seed report in
+  [issue #61](https://github.com/initial-d/ml-quant-trading/issues/61).
+
+Operating takeaways:
+
+- The project has moved from a launch spike into a technical long tail: the
+  latest window still produced 1,288 views and 514 clones while stars reached
+  77 and forks reached 34.
+- Discovery is increasingly attached to inspectable technical artifacts rather
+  than generic launch copy. The next high-value conversion is an independent
+  CUDA benchmark or additional protocol v1 CPU reports.
+- Clone and download counts are activity signals, not unique adoption or
+  investment evidence; keep reporting environment metadata and limitations.
+
 Recorded on 2026-08-15 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-08-14):
 
