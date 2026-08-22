@@ -29,6 +29,10 @@ No market-data account or API key is required. In 30–90 seconds, the
 deterministic demo runs data → factors → model → portfolio → backtest and writes
 shareable Markdown and JSON reports.
 
+Once it runs, you can [inspect the benchmark](docs/benchmark_board.md) or
+[share a reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml).
+If the baseline is useful, a Star helps other researchers find it.
+
 | 213 factors | 4 data paths | 100 tests | CPU/GPU benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch tensors | Synthetic, AkShare, Baostock, yfinance | Deterministic engineering checks | Reproducible across machines |

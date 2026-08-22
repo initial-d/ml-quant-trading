@@ -75,6 +75,10 @@ The generated `summary.md` and `summary.json` include the repository and
 [reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 links so successful and failed runs can become useful community evidence.
 
+If the run helped your work, a Star helps other researchers find the baseline.
+If you changed or evaluated the pipeline, a fork, issue, or reproduction report
+is more informative.
+
 ## 3. Try a Public-Data Notebook
 
 Before interpreting any result, skim the

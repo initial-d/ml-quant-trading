@@ -25,6 +25,10 @@ mlquant demo
 `数据 → 因子 → 模型 → 组合 → 回测`，并在 `artifacts/small/` 生成可分享的
 Markdown/JSON 报告。
 
+Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
+[提交一次复现报告](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
+如果这个基线对你有用，点个 Star 也能帮助其他研究者找到它。
+
 | 213 个因子 | 4 条数据路径 | 100 个测试 | 可复现 benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch 张量 | Synthetic、AkShare、Baostock、yfinance | 确定性工程检查 | [查看完整基准](docs/benchmark_board.md) |
