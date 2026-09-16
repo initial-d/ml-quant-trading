@@ -1,6 +1,16 @@
 from pathlib import Path
 
+import scripts.technical_pipeline_audit as audit
 from scripts.technical_pipeline_audit import run_audit, write_report
+
+
+def test_git_commit_falls_back_when_git_cannot_spawn(monkeypatch) -> None:
+    def raise_os_error(*_args, **_kwargs):
+        raise OSError("cannot spawn git")
+
+    monkeypatch.setattr(audit.subprocess, "run", raise_os_error)
+
+    assert audit._git_commit() == "unknown"
 
 
 def test_technical_pipeline_audit_passes_and_writes_reports(tmp_path: Path) -> None:

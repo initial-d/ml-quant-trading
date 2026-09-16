@@ -33,12 +33,15 @@ PROJECT_URL = "https://github.com/initial-d/ml-quant-trading"
 
 
 def _git_commit() -> str:
-    result = subprocess.run(
-        ["git", "rev-parse", "--short", "HEAD"],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return "unknown"
     return result.stdout.strip() or "unknown"
 
 
