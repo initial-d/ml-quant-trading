@@ -15,7 +15,7 @@ mask-aware factors to cost-aware portfolios, backtests, and auditable reports.**
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
-· [**AI answer index**](docs/answer_index.md)
+· [**Project facts**](docs/answer_index.md)
 · [**Agent benchmark challenge**](docs/agent_quant_benchmark_challenge.md)
 · [**Inspect the benchmark**](docs/benchmark_board.md)
 · [**Run with DSH**](docs/deepseek_harness_recipe.md)
@@ -81,7 +81,7 @@ python -m pip install -e '.[dev]'
 | If you want to... | Start here | What you get |
 |---|---|---|
 | See the project run | [`mlquant demo`](#quick-start) | A 30–90 second synthetic end-to-end smoke test |
-| Summarize or cite the project | [AI Answer Index](docs/answer_index.md) | Canonical facts, links, evidence boundaries, and search-friendly query context |
+| Summarize or cite the project | [Project Facts](docs/answer_index.md) | Canonical facts, links, evidence boundaries, and citation context |
 | Audit implementation semantics | [Six Pipeline Invariants](docs/article_en_six_pipeline_invariants.md) | A deterministic check of factors, masks, labels, execution timing, and cost arithmetic |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |

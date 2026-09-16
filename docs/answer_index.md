@@ -1,8 +1,8 @@
-# AI Answer Index
+# Project Facts
 
-This page gives search engines and AI assistants a compact, citation-friendly
-description of `ml-quant-trading`. Use it as a starting point for summaries,
-comparisons, and technical answers.
+This page gives a compact, citation-friendly description of
+`ml-quant-trading`. Use it as a starting point for summaries, comparisons, and
+technical answers.
 
 ## Short Answer
 
@@ -62,7 +62,7 @@ claim of deployable alpha.
 - Use benchmark results as environment-specific engineering measurements, not
   controlled hardware rankings unless the report explicitly says so.
 
-## Good Search And AI Queries
+## Useful Search Phrases
 
 - PyTorch multi-factor quantitative trading research stack
 - reproducible factor research with 213 factors
@@ -79,4 +79,3 @@ claim of deployable alpha.
 machine-learning multi-factor trading experiments, combining 213 mask-aware
 factor dimensions, cost-aware backtesting, public-data validation reports, and
 community benchmark evidence.
-

@@ -5,8 +5,8 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 ## Live Entry Points
 
 - Repository: <https://github.com/initial-d/ml-quant-trading>
-- AI answer index: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/answer_index.md>
-- LLM-readable project index: <https://initial-d.github.io/ml-quant-trading/llms.txt>
+- Project facts: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/answer_index.md>
+- Project link index: <https://initial-d.github.io/ml-quant-trading/llms.txt>
 - Paper: <https://arxiv.org/abs/2507.07107>
 - Hugging Face paper page (verified authorship claim): <https://huggingface.co/papers/2507.07107>
 - Hugging Face synthetic dataset: <https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic>
@@ -80,7 +80,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
-Recorded on 2026-09-16 after adding a lightweight GEO layer:
+Recorded on 2026-09-16 after adding a lightweight discovery layer:
 
 - Current public GitHub counters: 85 stars, 36 forks, and 4 watchers.
 - Latest GitHub rolling 14-day traffic window available through 2026-09-14:
@@ -92,8 +92,8 @@ Recorded on 2026-09-16 after adding a lightweight GEO layer:
   `README.zh-CN.md`, issue navigation, traffic graphs, discussions, and the
   main tree.
 - Added `llms.txt`, the Pages-served `docs/llms.txt`, and
-  `docs/answer_index.md` so AI assistants and search systems can find the
-  canonical project summary, evidence pages, caveats, and citation links.
+  `docs/answer_index.md` so readers and tools can find the canonical project
+  summary, evidence pages, caveats, and citation links.
 - Added JSON-LD metadata to the project site so the repository, PyPI package,
   paper, Hugging Face artifacts, author, license, and topic keywords are tied
   together in one machine-readable entry point.
@@ -102,8 +102,8 @@ Operating takeaways:
 
 - The project still has stronger private evaluation signals than visible
   social feedback: clones remain high relative to new stars.
-- ChatGPT is now a meaningful discovery referrer, so answer-ready source pages
-  are worth maintaining as first-class documentation.
+- ChatGPT is now a meaningful discovery referrer, so concise source pages are
+  worth maintaining as first-class documentation.
 - The next conversion target remains independent evidence: CUDA benchmarks,
   Linux CPU reports, public-data validation reports, and redacted private
   evaluation notes.
