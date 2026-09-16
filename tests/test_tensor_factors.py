@@ -110,3 +110,41 @@ def test_ewma_recurrence():
         last = 0.5 * v + 0.5 * last
         expected.append(last)
     np.testing.assert_allclose(out.squeeze().cpu().numpy(), expected, rtol=1e-5)
+
+
+def test_masked_values_do_not_affect_results():
+    x = torch.tensor(
+        [[1.0, 100.0],
+         [2.0, 200.0],
+         [3.0, 300.0],
+         [4.0, 400.0]],
+        dtype=torch.float32,
+    )
+    mask = torch.tensor(
+        [[True, False],
+         [True, True],
+         [True, False],
+         [True, True]],
+        dtype=torch.bool,
+    )
+
+    changed = x.clone()
+    changed[~mask] = -9999.0
+
+    for fn, args in [
+        (ts_sum, (3,)),
+        (ts_mean, (3,)),
+        (ts_std, (3,)),
+        (ts_min, (3,)),
+        (ts_max, (3,)),
+        (ts_corr, (3,)),
+    ]:
+        if fn is ts_corr:
+            out_a, mask_a = fn(x, x * 2, mask, *args)
+            out_b, mask_b = fn(changed, changed * 2, mask, *args)
+        else:
+            out_a, mask_a = fn(x, mask, *args)
+            out_b, mask_b = fn(changed, mask, *args)
+
+        torch.testing.assert_close(out_a, out_b)
+        assert torch.equal(mask_a, mask_b)
