@@ -56,6 +56,7 @@ python scripts/benchmark_tensor_factors.py \
 |---|---|---|---|---|---:|---|---|---|---|
 | Maintainer | `2765d19` | Windows 11 10.0.26200 | 3.14.4 | 2.11.0+cpu | 1 / 1 | Intel Core i7-1255U, 10 cores / 12 threads | none | `make benchmark` | CPU-only protocol v1 baseline |
 | [@sergio12S](https://github.com/sergio12S) | `2a91c6b` | macOS 26.5.2 arm64 | 3.10.16 | 2.13.0 | 1 / 1 | Apple M4, 10 logical CPUs | none | canonical protocol v1 command in [issue #59](https://github.com/initial-d/ml-quant-trading/issues/59) | Community CPU report; `ts_corr` unstable across repeats |
+| [@Angelo9up](https://github.com/Angelo9up) | `f8a48a3` | Windows 10 10.0.26200 | 3.11.4 | 2.14.0+cpu | 1 / 1 | Intel64 Family 6 Model 158 Stepping 11, 4 logical CPUs | none | canonical protocol v1 command in [issue #67](https://github.com/initial-d/ml-quant-trading/issues/67) | Community CPU report from a fresh main checkout |
 | Maintainer via DSH | `960de19` | Windows 11 10.0.26200 | 3.14.4 | 2.11.0+cpu | 1 / 1 | Intel Core i7-1255U, 10 cores / 12 threads | none | DSH-assisted command in [issue #61](https://github.com/initial-d/ml-quant-trading/issues/61) | Agent-assisted seed report; high variance on `ts_corr` and `ts_rank` |
 
 ### Maintainer Protocol v1: Intel Core i7-1255U
@@ -126,6 +127,43 @@ while the other cases stayed within roughly 10%. The report also notes that a
 historical `ts_rank` difference across commits is confounded by benchmark-script
 and runtime changes. Keep both caveats attached to the numbers; do not infer a
 PyTorch or hardware speedup from them.
+
+### Community Protocol v1: Windows Intel64 Family 6 Model 158
+
+Environment and raw results are preserved in [issue #67](https://github.com/initial-d/ml-quant-trading/issues/67).
+This is a community-submitted, CPU-only protocol v1 report from a fresh main
+checkout. It is included for reproducibility and runtime context, not as a
+controlled ranking against other Windows reports.
+
+Environment:
+
+- Contributor: [@Angelo9up](https://github.com/Angelo9up)
+- Commit: `f8a48a32f580a5514b27e0bc2220e5dfb75a3535`
+- Protocol: `v1`
+- Machine: Intel64 Family 6 Model 158 Stepping 11, GenuineIntel, 4 logical CPUs
+- OS: Windows 10 10.0.26200
+- Python: 3.11.4
+- PyTorch: 2.14.0+cpu
+- PyTorch threads / interop threads: 1 / 1
+- CUDA available: false
+- Synthetic panel: 750 dates x 1000 stocks
+- Window: 20
+- Warmup / repeat: 3 / 10
+- Seed: 42
+- Exact command: the canonical protocol v1 command shown above
+
+| Device | Case | Mean | Std | Peak CUDA memory |
+| --- | --- | ---: | ---: | ---: |
+| cpu | `cs_rank(close)` | 115.3 ms | 23.0 ms | - |
+| cpu | `ts_mean(close,20)` | 38.4 ms | 6.1 ms | - |
+| cpu | `ts_rank(close,20)` | 109.1 ms | 11.9 ms | - |
+| cpu | `ts_corr(close,returns,20)` | 150.7 ms | 17.3 ms | - |
+| cpu | `ewma(close,0.05)` | 24.9 ms | 7.2 ms | - |
+| cpu | `compute_legacy_set(6 factors)` | 659.8 ms | 10.8 ms | - |
+
+The report states that PyTorch intra-op and inter-op thread counts were fixed at
+one, no CUDA device was available, and no unusual thermal throttling,
+shared-device load, or memory-limit conditions were observed.
 
 ### DSH Seed Protocol v1: Intel Core i7-1255U
 
