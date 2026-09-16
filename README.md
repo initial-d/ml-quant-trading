@@ -15,6 +15,7 @@ mask-aware factors to cost-aware portfolios, backtests, and auditable reports.**
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
+· [**AI answer index**](docs/answer_index.md)
 · [**Agent benchmark challenge**](docs/agent_quant_benchmark_challenge.md)
 · [**Inspect the benchmark**](docs/benchmark_board.md)
 · [**Run with DSH**](docs/deepseek_harness_recipe.md)
@@ -80,6 +81,7 @@ python -m pip install -e '.[dev]'
 | If you want to... | Start here | What you get |
 |---|---|---|
 | See the project run | [`mlquant demo`](#quick-start) | A 30–90 second synthetic end-to-end smoke test |
+| Summarize or cite the project | [AI Answer Index](docs/answer_index.md) | Canonical facts, links, evidence boundaries, and search-friendly query context |
 | Audit implementation semantics | [Six Pipeline Invariants](docs/article_en_six_pipeline_invariants.md) | A deterministic check of factors, masks, labels, execution timing, and cost arithmetic |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
@@ -124,6 +126,8 @@ in [PR #42](https://github.com/initial-d/ml-quant-trading/pull/42).
 | [Issue #59](https://github.com/initial-d/ml-quant-trading/issues/59) | Community Apple M4 protocol v1 CPU benchmark with raw caveats preserved |
 | [DSH benchmark report #61](https://github.com/initial-d/ml-quant-trading/issues/61) | Seed DeepSeek Harness benchmark report with prompt, environment, artifact, and caveats |
 | [Agent Quant Benchmark Challenge #66](https://github.com/initial-d/ml-quant-trading/discussions/66) | Challenge thread for coding agents, quant agents, DSH runs, and redacted private evaluations |
+| [Issue #67](https://github.com/initial-d/ml-quant-trading/issues/67) | Community Windows CPU protocol v1 benchmark, archived on the benchmark board |
+| [PR #68](https://github.com/initial-d/ml-quant-trading/pull/68) | Masked tensor factor regression coverage from a first-time contributor |
 | [Awesome AI Trading Research review](https://github.com/ohselab/awesome-ai-trading-research/issues/1#issuecomment-5406093265) | Full-text curated-list evaluation: A-tier listing, with reproducibility and cross-market caveats |
 
 Independent results are linked to their pull requests so the environment,
@@ -150,7 +154,7 @@ Successful and failed runs are both useful and credited.
 **Other current calls for contributors**
 
 - Join the [August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43): run Colab once, then use the [structured report form](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml), whether it succeeds or fails.
-- Try the [`v0.2.6` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.6).
+- Try the [`v0.3.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.0).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).

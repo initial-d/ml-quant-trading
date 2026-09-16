@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://initial-d.github.io/ml-quant-trading/sitemap.xml
+
