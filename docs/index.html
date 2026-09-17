@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MLQuant — 213-Factor PyTorch Quantitative Trading Research</title>
-  <meta name="description" content="An open-source 213-factor PyTorch stack for machine-learning quantitative trading, portfolio optimization, cost-aware backtesting, and reproducible public-data validation.">
+  <meta name="description" content="An open-source PyTorch research stack for mask-first factor computation, limit-move contamination checks, portfolio optimization, cost-aware backtesting, and reproducible public-data validation.">
   <link rel="canonical" href="https://initial-d.github.io/ml-quant-trading/">
   <link rel="alternate" type="text/plain" href="llms.txt" title="Project link index">
   <meta property="og:title" content="MLQuant — 213-Factor PyTorch Quantitative Trading Research">
@@ -18,7 +18,7 @@
     "@type": "SoftwareSourceCode",
     "name": "ml-quant-trading",
     "alternateName": "mlquantx",
-    "description": "A reproducible PyTorch research stack for machine-learning multi-factor quantitative trading experiments, with 213 mask-aware factor dimensions, public-data validation, benchmark reports, and cost-aware vectorized backtesting.",
+    "description": "A reproducible PyTorch research stack for mask-first factor computation, non-tradable limit-move contamination checks, machine-learning multi-factor experiments, public-data validation, benchmark reports, and cost-aware vectorized backtesting.",
     "url": "https://initial-d.github.io/ml-quant-trading/",
     "codeRepository": "https://github.com/initial-d/ml-quant-trading",
     "license": "https://github.com/initial-d/ml-quant-trading/blob/main/LICENSE",
@@ -43,6 +43,9 @@
       "PyTorch",
       "quantitative trading research",
       "multi-factor model",
+      "mask-first factor computation",
+      "limit-move contamination",
+      "A-share backtesting",
       "factor investing",
       "cross-sectional portfolio optimization",
       "vectorized backtesting",
@@ -647,6 +650,7 @@
     <nav class="nav" aria-label="Primary">
       <a href="#arena">Arena</a>
       <a href="#validation">Validation</a>
+      <a href="#cite">Cite</a>
       <a href="#start">Start</a>
       <a href="#contribute">Contribute</a>
       <a href="https://github.com/initial-d/ml-quant-trading">GitHub</a>
@@ -665,6 +669,7 @@
       <div class="actions">
         <a class="button" href="https://github.com/initial-d/ml-quant-trading">View repository</a>
         <a class="button secondary" href="https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.0">Install v0.3.0</a>
+        <a class="button secondary" href="citation_conversion.md">Cite the paper</a>
         <a class="button secondary" href="https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb">Run in Colab</a>
       </div>
     </div>
@@ -816,6 +821,30 @@
       </div>
     </section>
 
+    <section id="cite" class="section band">
+      <div class="section-inner split">
+        <div class="text-block">
+          <h2>Citation anchor</h2>
+          <p>
+            The most specific paper contribution is mask-first factor
+            computation: non-tradable limit-move prices should be masked before
+            rolling-window factors so they do not contaminate downstream
+            signals before portfolio filtering.
+          </p>
+          <p>
+            Cite the paper for data-hygiene and reproducibility claims, not as
+            evidence of live trading profitability.
+          </p>
+        </div>
+        <ul class="link-list">
+          <li><a href="citation_conversion.md"><strong>Citation Guide</strong><span>related-work hooks</span></a></li>
+          <li><a href="ssrn_submission_packet.md"><strong>SSRN Packet</strong><span>copy-ready metadata</span></a></li>
+          <li><a href="paper_venue_targets.md"><strong>Venue Targets</strong><span>submission plan</span></a></li>
+          <li><a href="https://arxiv.org/abs/2507.07107"><strong>arXiv Paper</strong><span>canonical paper</span></a></li>
+        </ul>
+      </div>
+    </section>
+
     <section id="validation" class="section band">
       <div class="section-inner">
         <h2>Validation surface</h2>
@@ -909,6 +938,7 @@ python -m pip install -e '.[dev]'</code></pre>
         <ul class="link-list">
           <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/start_here.md"><strong>Start Here</strong><span>quick path</span></a></li>
           <li><a href="answer_index.md"><strong>Project Facts</strong><span>citation context</span></a></li>
+          <li><a href="citation_conversion.md"><strong>Citation Guide</strong><span>paper hook</span></a></li>
           <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/research_card.md"><strong>Research Card</strong><span>scope and non-goals</span></a></li>
           <li><a href="https://github.com/initial-d/ml-quant-trading/blob/main/docs/benchmark_board.md"><strong>Benchmark Board</strong><span>community reports</span></a></li>
           <li><a href="https://github.com/initial-d/ml-quant-trading/discussions/13"><strong>Benchmark Discussion</strong><span>share results</span></a></li>

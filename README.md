@@ -16,6 +16,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 [**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**Project facts**](docs/answer_index.md)
+· [**How to cite**](docs/citation_conversion.md)
 · [**Agent benchmark challenge**](docs/agent_quant_benchmark_challenge.md)
 · [**Inspect the benchmark**](docs/benchmark_board.md)
 · [**Run with DSH**](docs/deepseek_harness_recipe.md)
@@ -52,6 +53,11 @@ See the [benchmark board](docs/benchmark_board.md) for complete environments,
 commands, and raw results. Cross-machine snapshots are reported separately and
 are not presented as controlled hardware rankings.
 
+If you are citing the paper, the most specific contribution is the
+mask-first factor-computation protocol: non-tradable limit-move prices should be
+masked before rolling-window factors so they do not contaminate downstream
+signals. See the [citation conversion guide](docs/citation_conversion.md).
+
 ---
 
 ## Why this repository?
@@ -85,6 +91,7 @@ python -m pip install -e '.[dev]'
 |---|---|---|
 | See the project run | [`mlquant demo`](#quick-start) | A 30–90 second synthetic end-to-end smoke test |
 | Summarize or cite the project | [Project Facts](docs/answer_index.md) | Canonical facts, links, evidence boundaries, and citation context |
+| Cite the paper precisely | [Citation Conversion Guide](docs/citation_conversion.md) | A reusable citation sentence, BibTeX, related-work hooks, and claim boundaries |
 | Audit implementation semantics | [Six Pipeline Invariants](docs/article_en_six_pipeline_invariants.md) | A deterministic check of factors, masks, labels, execution timing, and cost arithmetic |
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
@@ -539,6 +546,10 @@ engineering extensions, and community milestones.
 For announcements, release posts, and benchmark calls, see the
 [`Promotion Kit`](docs/promotion_kit.md). For the maintainer growth loop, see
 [`docs/growth_plan.md`](docs/growth_plan.md).
+For paper-specific positioning, see the
+[`Citation Conversion Guide`](docs/citation_conversion.md),
+[`SSRN Submission Packet`](docs/ssrn_submission_packet.md), and
+[`Paper Venue Targets`](docs/paper_venue_targets.md).
 
 ## Contributing
 
@@ -552,6 +563,10 @@ This repository is for research and engineering experimentation. It is not finan
 
 ## Citation
 
+If you are writing about A-share factor pipelines, cite the paper for its
+mask-first treatment of non-tradable limit-move prices and upstream
+contamination in rolling-window factors.
+
 ```bibtex
 @article{du2025mlquant,
   title  = {Machine Learning Enhanced Multi-Factor Quantitative Trading:
@@ -559,6 +574,7 @@ This repository is for research and engineering experimentation. It is not finan
   author = {Du, Yimin},
   journal= {arXiv preprint arXiv:2507.07107},
   year   = {2025},
+  doi    = {10.48550/arXiv.2507.07107},
   url    = {https://arxiv.org/abs/2507.07107}
 }
 ```
