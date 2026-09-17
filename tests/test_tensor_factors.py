@@ -9,7 +9,7 @@ from mlquant.features.tensor_factors import (
     cs_rank, cs_zscore,
     delay, delta,
     ewma,
-    ts_corr, ts_max, ts_mean, ts_min, ts_std, ts_sum,
+    ts_corr, ts_max, ts_mean, ts_min, ts_rank, ts_std, ts_sum,
 )
 
 
@@ -70,6 +70,18 @@ def test_ts_min_max_match_pandas(random_panel_tensors):
     valid = ~np.isnan(df.rolling(7, min_periods=7).min().to_numpy())
     np.testing.assert_allclose(lo.cpu().numpy()[valid], df.rolling(7, min_periods=7).min().to_numpy()[valid], rtol=1e-4)
     np.testing.assert_allclose(hi.cpu().numpy()[valid], df.rolling(7, min_periods=7).max().to_numpy()[valid], rtol=1e-4)
+
+
+def test_ts_rank_last_element_in_window():
+    x = torch.tensor([[1.0, 3.0], [2.0, 2.0], [4.0, 1.0], [3.0, 5.0]])
+    mask = torch.ones_like(x, dtype=torch.bool)
+    out, out_mask = ts_rank(x, mask, 3)
+
+    expected = torch.tensor([[0.0, 0.0], [0.0, 0.0], [1.0, 1.0 / 3.0], [2.0 / 3.0, 1.0]])
+    expected_mask = torch.tensor([[False, False], [False, False], [True, True], [True, True]])
+
+    torch.testing.assert_close(out, expected)
+    assert torch.equal(out_mask, expected_mask)
 
 
 def test_ts_corr_matches_pandas(random_panel_tensors):
