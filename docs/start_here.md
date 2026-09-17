@@ -14,6 +14,7 @@ This page is the fastest path from discovering the repository to running somethi
 | Ready to customize | Clone the repository and install `-e '.[dev]'` |
 | A contributor | Submit a reproduction report or choose a `good first issue` |
 | A paper reader | `docs/reproducing_paper.md` |
+| Submitting evidence | [Reproducibility Contract](reproducibility_contract.md) |
 
 ## 2. Run the Small Pipeline
 
@@ -135,6 +136,7 @@ Good current entry points:
 
 - [Collect community CPU/GPU benchmark results](https://github.com/initial-d/ml-quant-trading/issues/7)
 - [Submit a structured Colab or local reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
+- [Follow the reproducibility contract](reproducibility_contract.md) when reporting benchmark or validation evidence
 - [Join the August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43)
 - [Pair on a public-data validation or benchmark contribution](https://github.com/initial-d/ml-quant-trading/issues/22)
 

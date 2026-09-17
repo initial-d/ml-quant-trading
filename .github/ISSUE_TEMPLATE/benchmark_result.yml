@@ -8,6 +8,7 @@ body:
       value: |
         Thanks for sharing a benchmark result. These reports help users understand how the
         factor engine behaves across machines, PyTorch versions, and panel sizes.
+        Please follow docs/reproducibility_contract.md so the result remains auditable.
 
   - type: input
     id: commit
@@ -31,8 +32,8 @@ body:
   - type: textarea
     id: environment
     attributes:
-      label: Environment
-      description: Paste the complete environment table printed by the script, including protocol and thread counts.
+      label: Environment and reproducibility state
+      description: Paste the complete environment table printed by the script, including protocol, thread counts, commit cleanliness, dependency state, and any relevant deterministic settings.
       placeholder: |
         OS:
         Python:
@@ -44,6 +45,8 @@ body:
         Protocol:
         PyTorch threads:
         PyTorch interop threads:
+        Working tree: clean / dirty
+        Dependency lock or pip freeze:
     validations:
       required: true
 
@@ -69,6 +72,6 @@ body:
     id: notes
     attributes:
       label: Notes
-      description: Anything unusual about the run, such as thermal throttling, shared GPU, or memory limits.
+      description: Anything unusual about the run, such as thermal throttling, shared GPU, memory limits, repeat-run variance, or tolerance failures.
     validations:
       required: false

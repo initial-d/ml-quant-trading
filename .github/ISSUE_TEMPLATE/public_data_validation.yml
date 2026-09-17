@@ -9,6 +9,8 @@ body:
         Thanks for sharing a public-data validation result. The most useful
         reports include the exact command, generated metadata, and the Markdown
         table from `artifacts/public_data_validation/submission.md`.
+        Please follow docs/reproducibility_contract.md so provider, universe,
+        input fingerprint, and caveats stay attached to the result.
 
   - type: input
     id: commit
@@ -49,14 +51,16 @@ body:
   - type: textarea
     id: coverage
     attributes:
-      label: Data coverage
-      description: Paste the panel coverage block from `submission.md` or summarize the universe, date range, tradable ratio, and failed tickers.
+      label: Data coverage and fingerprint
+      description: Paste the panel coverage block from `submission.md` or summarize the universe, date range, retrieval timestamp, tradable ratio, failed tickers, and normalized input hash if available.
       placeholder: |
         Universe:
         Date range:
+        Retrieval timestamp:
         Dates x stocks:
         Tradable ratio:
         Stocks with no data:
+        Input fingerprint/hash:
     validations:
       required: true
 

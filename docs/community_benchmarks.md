@@ -14,6 +14,11 @@ Good reports help three groups:
 * Paper readers can trace claims back to commands, configs, and
   reproducible environment details.
 
+For public submissions, use the
+[reproducibility contract](reproducibility_contract.md) as the minimum evidence
+standard. It separates engineering reproducibility from research robustness and
+lists the fields needed for later audit.
+
 ## Minimal smoke report
 
 Run the synthetic-data path first. It does not need proprietary data and
@@ -38,6 +43,9 @@ Please include:
 | Key metrics | Sharpe, IC, turnover, max drawdown |
 | Notes | Any solver, CUDA, or dependency changes |
 
+For benchmark protocol v1 reports, also include the generated JSON artifact or
+its checksum, the PyTorch thread settings, and any repeat-run instability.
+
 ## Public-data validation report
 
 If you use public data, link the exact dataset source and keep the
@@ -49,6 +57,12 @@ of the following:
 * bootstrap or confidence intervals for Sharpe / IC;
 * a comparison between synthetic-data and real-data behavior;
 * a failure case where the factor stack does not transfer.
+
+Public-data reports should preserve the provider, retrieval timestamp, resolved
+universe, date range, failed tickers, and a hash or fingerprint of the
+normalized input panel when possible. Provider failures such as rate limits are
+valid reports when they include enough detail for another user to diagnose the
+same failure mode.
 
 ## How to cite the project
 

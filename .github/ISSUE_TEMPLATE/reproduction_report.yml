@@ -9,6 +9,7 @@ body:
         Thanks for running the project. Successful and failed runs are equally
         useful. Complete this form from the same session when possible; accepted
         reports may be credited in the README Community Evidence section.
+        For benchmark or validation evidence, see docs/reproducibility_contract.md.
 
   - type: dropdown
     id: outcome
@@ -70,7 +71,7 @@ body:
     id: notes
     attributes:
       label: Notes
-      description: Mention warnings, local changes, retries, or anything that would help another user reproduce your result.
+      description: Mention warnings, local changes, retries, dependency state, dirty working tree status, or anything that would help another user reproduce your result.
     validations:
       required: false
 

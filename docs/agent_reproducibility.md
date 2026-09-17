@@ -5,6 +5,9 @@ goal is not to build a trading agent; the goal is to make benchmark and
 validation workflows easier to rerun, inspect, and report without blurring the
 line between engineering evidence and investment claims.
 
+For the canonical evidence checklist, see the
+[Reproducibility Contract](reproducibility_contract.md).
+
 The same workflow can be used from Codex, DeepSeek Harness, Claude Code, or any
 agent runtime that can read files, run shell commands, and preserve artifacts.
 No agent runtime is required by the package.
@@ -67,6 +70,10 @@ A useful agent-produced benchmark or validation report should include:
 - generated artifact paths and checksums when available;
 - runtime warnings, failures, skipped rows, or data-quality limitations;
 - a short interpretation that does not exceed what the evidence supports.
+
+Separate engineering reproducibility from research robustness. An agent may
+prove that a command reruns cleanly without proving that a factor survives a new
+market, date range, provider, or cost assumption.
 
 For benchmark results, update or reference `docs/benchmark_board.md`. For
 public-data validation, keep the caveats near the result and link the generated
