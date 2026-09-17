@@ -9,7 +9,7 @@ from mlquant.features.tensor_factors import (
     cs_rank, cs_zscore,
     delay, delta,
     ewma,
-    ts_corr, ts_max, ts_mean, ts_min, ts_rank, ts_std, ts_sum,
+    ts_corr, ts_cov, ts_max, ts_mean, ts_min, ts_rank, ts_std, ts_sum,
 )
 
 
@@ -78,6 +78,19 @@ def test_ts_rank_last_element_in_window():
     out, out_mask = ts_rank(x, mask, 3)
 
     expected = torch.tensor([[0.0, 0.0], [0.0, 0.0], [1.0, 1.0 / 3.0], [2.0 / 3.0, 1.0]])
+    expected_mask = torch.tensor([[False, False], [False, False], [True, True], [True, True]])
+
+    torch.testing.assert_close(out, expected)
+    assert torch.equal(out_mask, expected_mask)
+
+
+def test_ts_cov_window_semantics():
+    x = torch.tensor([[1.0, 2.0], [2.0, 4.0], [3.0, 6.0], [4.0, 8.0]])
+    y = torch.tensor([[2.0, 1.0], [4.0, 2.0], [6.0, 3.0], [8.0, 4.0]])
+    mask = torch.ones_like(x, dtype=torch.bool)
+    out, out_mask = ts_cov(x, y, mask, 3)
+
+    expected = torch.tensor([[0.0, 0.0], [0.0, 0.0], [2.0, 2.0], [2.0, 2.0]])
     expected_mask = torch.tensor([[False, False], [False, False], [True, True], [True, True]])
 
     torch.testing.assert_close(out, expected)
