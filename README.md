@@ -547,9 +547,7 @@ For announcements, release posts, and benchmark calls, see the
 [`Promotion Kit`](docs/promotion_kit.md). For the maintainer growth loop, see
 [`docs/growth_plan.md`](docs/growth_plan.md).
 For paper-specific positioning, see the
-[`Citation Conversion Guide`](docs/citation_conversion.md),
-[`SSRN Submission Packet`](docs/ssrn_submission_packet.md), and
-[`Paper Venue Targets`](docs/paper_venue_targets.md).
+[`Citation Conversion Guide`](docs/citation_conversion.md).
 
 ## Contributing
 

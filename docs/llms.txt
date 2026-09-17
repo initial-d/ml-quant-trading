@@ -17,7 +17,6 @@
 
 - [Start Here](https://initial-d.github.io/ml-quant-trading/start_here.md): fastest path from discovery to a working run
 - [Project Facts](https://initial-d.github.io/ml-quant-trading/answer_index.md): concise facts, citation context, and evidence boundaries
-- [Paper venue targets](https://initial-d.github.io/ml-quant-trading/paper_venue_targets.md): restrained plan for SSRN, arXiv cross-listing, and formal venue submission
 - [Research Card](https://initial-d.github.io/ml-quant-trading/research_card.md): intended use, non-goals, validation ladder, risks, and contributor checklist
 - [Reality Check](https://initial-d.github.io/ml-quant-trading/reality_check.md): limitations before interpreting any backtest as evidence
 - [Benchmark Board](https://initial-d.github.io/ml-quant-trading/benchmark_board.md): community CPU/GPU benchmark results with commands and environments
