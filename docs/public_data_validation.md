@@ -12,10 +12,10 @@ The validation script compares:
 - walk-forward MLP baseline on Alpha101 features
 - walk-forward Transformer baseline on Alpha101 features
 
-It reports annual return, volatility, Sharpe, max drawdown, turnover, cost drag,
-gross return, optional bootstrap uncertainty intervals, and active metrics
-versus equal weight. Transaction costs and slippage are combined into the
-effective cost charged on weight changes.
+It reports annual return, volatility, Sharpe, max drawdown, turnover,
+cumulative cost drag, gross return, optional bootstrap uncertainty intervals,
+and active metrics versus equal weight. Transaction costs and slippage are
+combined into the effective cost charged on weight changes.
 
 ## Quick Synthetic Check
 
@@ -175,7 +175,7 @@ Environment:
 
 Results:
 
-| Strategy | Ann Return | Ann Vol | Sharpe | Max DD | Turnover | Cost Drag | Gross Ann Return | Gross Sharpe | Info Ratio vs EW | Active Ann Return | Final Equity |
+| Strategy | Ann Return | Ann Vol | Sharpe | Max DD | Turnover | Cost Drag Cumulative | Gross Ann Return | Gross Sharpe | Info Ratio vs EW | Active Ann Return | Final Equity |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | equal_weight | 0.1818 | 0.1531 | 1.1681 | 0.1997 | 0.0005 | 0.0007 | 0.1820 | 1.1693 |  |  | 1.9470 |
 | momentum_20 | 0.1072 | 0.1719 | 0.6782 | 0.2781 | 0.1675 | 0.2355 | 0.1745 | 1.0232 | -0.6280 | -0.0650 | 1.5008 |
