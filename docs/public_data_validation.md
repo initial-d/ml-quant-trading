@@ -55,6 +55,30 @@ python scripts/public_data_validation.py \
   --end 2025-01-01
 ```
 
+For the first cross-market smoke test, start with a 5-instrument US ETF basket
+before running a larger universe:
+
+```bash
+python scripts/public_data_validation.py \
+  --source yfinance \
+  --tickers SPY,QQQ,TLT,GLD,AGG \
+  --start 2021-01-01 \
+  --end 2025-01-01 \
+  --models equal_weight,momentum_20,alpha101_mean \
+  --epochs 1 \
+  --batch-size 4096 \
+  --hidden 32 \
+  --cost-grid-bps 0,7,15,30 \
+  --bootstrap-samples 50 \
+  --bootstrap-block-size 20
+```
+
+Treat this as a cross-market plumbing and data-availability check, not as a
+market ranking against the A-share reports. If the run succeeds cleanly, scale
+to `--preset etf-50 --max-tickers 20`, then 50 names only after provider
+stability is clear. If yfinance returns HTTP 429 or empty panels, report the
+blocker instead of submitting an empty validation result.
+
 For an ETF universe:
 
 ```bash
