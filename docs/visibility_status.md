@@ -74,11 +74,40 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Agent Quant Benchmark Challenge reports: <https://github.com/initial-d/ml-quant-trading/discussions/66>
 - DSH benchmark reports: <https://github.com/initial-d/ml-quant-trading/issues/new?template=deepseek_harness_benchmark.yml>
 - Review-driven follow-ups from Awesome AI Trading Research:
-  [cost/slippage stress scenarios](https://github.com/initial-d/ml-quant-trading/issues/63),
-  [bootstrap confidence intervals](https://github.com/initial-d/ml-quant-trading/issues/64),
-  and [cross-market public validation](https://github.com/initial-d/ml-quant-trading/issues/65).
+  [cost/slippage stress scenarios](https://github.com/initial-d/ml-quant-trading/issues/63)
+  and
+  [bootstrap confidence intervals](https://github.com/initial-d/ml-quant-trading/issues/64)
+  are closed; [cross-market public validation](https://github.com/initial-d/ml-quant-trading/issues/65)
+  remains open with a 5-ETF starter target.
 
 ## Traffic Snapshot
+
+Recorded on 2026-09-20 from GitHub's rolling 14-day traffic window
+(latest daily bucket available through 2026-09-18):
+
+- Current public GitHub counters: 87 stars, 36 forks, and 4 watchers.
+- Views: 935 total, 220 unique visitors.
+- Clones: 487 total, 195 unique cloners.
+- Top referrers by visits: GitHub (106), Google (54), ChatGPT (36),
+  JoinQuant (7), Zhihu (6), arXiv (4), Bing (2), Reddit (2), and the project
+  site (1). These are visits, not unique-user totals.
+- High-interest paths beyond the repository root include `README.zh-CN.md`,
+  discussion #66, issue navigation, the factor handbook, the main tree, and
+  traffic/pulse pages.
+- Review-driven follow-ups are converting into closed work: cost/slippage
+  stress scenarios (#63) and bootstrap confidence intervals (#64) are done;
+  cross-market public validation (#65) is now narrowed to a small US ETF smoke
+  target before any larger yfinance universe.
+
+Operating takeaways:
+
+- Total views cooled from the 2026-09-16 snapshot, but unique visitors stayed
+  roughly stable and clones increased, which still points to private evaluation
+  rather than broad social feedback.
+- `README.zh-CN.md` remains the strongest non-root content path; Chinese
+  onboarding is worth preserving alongside the English evidence pages.
+- The next useful conversion remains external evidence: the 5-ETF cross-market
+  smoke run, a CUDA/Linux benchmark, or a redacted private-evaluation note.
 
 Recorded on 2026-09-16 after adding a lightweight discovery layer:
 
