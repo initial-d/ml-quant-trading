@@ -152,6 +152,12 @@ def test_select_tickers_resolves_csi_300_for_akshare():
     assert tickers == ("000001", "600519")
 
 
+def test_select_tickers_supports_cross_market_smoke_preset():
+    tickers = _select_tickers("cross-market-5", "", 10, source="yfinance")
+
+    assert tickers == ("SPY", "QQQ", "TLT", "GLD", "AGG")
+
+
 def test_select_tickers_rejects_csi_300_for_non_akshare_source():
     with pytest.raises(click.BadParameter, match="requires --source akshare"):
         _select_tickers("csi-300", "", 300, source="yfinance")
