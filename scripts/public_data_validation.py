@@ -320,6 +320,8 @@ def _long_only_top_quantile_weights(
 ) -> np.ndarray:
     if scores.shape != valid.shape:
         raise ValueError("scores and valid mask must have the same shape")
+    if not 0.0 < top_quantile <= 1.0:
+        raise ValueError("top_quantile must be in (0, 1]")
     weights = np.zeros_like(scores, dtype=np.float32)
     for t in range(scores.shape[0]):
         ok = valid[t] & np.isfinite(scores[t])
