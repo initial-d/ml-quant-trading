@@ -19,6 +19,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**How to cite**](docs/citation_conversion.md)
 · [**Agent benchmark challenge**](docs/agent_quant_benchmark_challenge.md)
 · [**Inspect the benchmark**](docs/benchmark_board.md)
+· [**Share this project**](docs/share_this_project.md)
 · [**Run with DSH**](docs/deepseek_harness_recipe.md)
 · [**See cost-aware results**](docs/validation_dashboard.md)
 · [**Read the paper**](https://arxiv.org/abs/2507.07107)
@@ -329,6 +330,7 @@ It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`
 - [`docs/release_draft_v0.2.1.md`](docs/release_draft_v0.2.1.md) is the validation entrypoint and outreach follow-through release draft.
 - [`docs/release_draft_v0.2.2.md`](docs/release_draft_v0.2.2.md) is the AkShare public A-share validation release draft.
 - [`docs/release_draft_v0.3.0.md`](docs/release_draft_v0.3.0.md) is the Agent Quant Benchmark Challenge release draft.
+- [`docs/share_this_project.md`](docs/share_this_project.md) gives visitors a short, safe sharing link with copy-ready snippets.
 - [`docs/promotion_kit.md`](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [`docs/article_zh_213_factor_csi300.md`](docs/article_zh_213_factor_csi300.md) is the
   long-form Chinese technical launch article.
