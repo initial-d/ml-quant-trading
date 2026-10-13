@@ -36,6 +36,13 @@ The questions are constrained typed questions such as:
 
 The adapter outputs research portfolio intent. It is not an execution layer.
 
+The current workflow has three pieces:
+
+1. build a decision state from local research artifacts;
+2. answer typed portfolio questions;
+3. optionally evaluate the decisions with realized forward returns that were
+   kept out of the decision step.
+
 ## State Shape
 
 A minimal state looks like:
@@ -97,8 +104,35 @@ A minimal state looks like:
 }
 ```
 
-This state can be generated from existing artifacts later. The preview adapter
-currently expects the state JSON directly.
+The state can be written by hand for tests, but the normal path is to generate
+it from the standard pipeline artifacts.
+
+## Build State From Pipeline Artifacts
+
+After running `mlquant demo` or the equivalent staged CLI pipeline, build a
+decision state from `panel.pt`, `predictions.pt`, `weights.pt`, and optional
+`summary.json`:
+
+```bash
+mlquant systemone build-state \
+  --artifacts-dir artifacts/small \
+  --as-of-index -2 \
+  --output artifacts/systemone/decision_state.json
+```
+
+For offline evaluation only, include the next-period realized return:
+
+```bash
+mlquant systemone build-state \
+  --artifacts-dir artifacts/small \
+  --as-of-index -2 \
+  --include-realized \
+  --output artifacts/systemone/decision_state_eval.json
+```
+
+`--include-realized` adds an `evaluation.forward_return` block. That block must
+not be used at decision time; it exists only so the evaluation harness can score
+already-produced decisions.
 
 ## Questions
 
@@ -150,7 +184,6 @@ over every asset in `universe`.
 ```bash
 mlquant systemone decide \
   --state artifacts/systemone/decision_state.json \
-  --questions configs/systemone/portfolio_questions.json \
   --output artifacts/systemone/portfolio_decision.json
 ```
 
@@ -196,12 +229,44 @@ does not publish calibrated probabilities. A future trained decision model
 should add probability distributions only after label design, held-out
 evaluation, and calibration checks.
 
+## Offline Decision Evaluation
+
+If the state was built with `--include-realized`, evaluate the typed decisions:
+
+```bash
+mlquant systemone evaluate \
+  --state artifacts/systemone/decision_state_eval.json \
+  --decision artifacts/systemone/portfolio_decision.json \
+  --output artifacts/systemone/portfolio_decision_eval.json
+```
+
+The evaluation report includes:
+
+- `action_label_accuracy`: whether `increase`, `hold`, `decrease`, or `exclude`
+  matches a simple hindsight label from the next-period return and tradability;
+- `trade_allowed_state_consistency`: whether `trade_allowed` agrees with the
+  state's tradability, liquidity, and risk checks;
+- `weight_delta_direction_accuracy`: whether proposed weight changes point in
+  the same direction as the realized next-period return;
+- `target_weight_forward_return`: one-period realized return of the target
+  weights from the decision output;
+- `target_minus_current_forward_return`: one-period incremental return versus
+  the previous weights in the state;
+- `one_period_turnover` and `estimated_one_period_cost`: cost diagnostics for
+  the target/current weight change;
+- `hindsight_regret`: same-exposure gap versus the best realized asset among
+  allowed assets.
+
+These are diagnostics for a research decision surface. They are not live
+trading metrics, not a broker simulation, and not evidence of deployable alpha.
+
 ## Release Boundary
 
 Recommended release wording:
 
 > This release adds a preview System-One-compatible portfolio-decision adapter
-> for typed research portfolio intent. It does not add broker execution,
+> for typed research portfolio intent, including a local artifact-to-state
+> builder and offline decision evaluator. It does not add broker execution,
 > account access, live trading services, or calibrated model probabilities.
 
 That boundary keeps the project a reproducible research baseline while making

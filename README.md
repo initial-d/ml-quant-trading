@@ -566,6 +566,11 @@ assumptions. Questions are typed portfolio questions such as:
 Run the adapter:
 
 ```bash
+mlquant systemone build-state \
+  --artifacts-dir artifacts/small \
+  --as-of-index -2 \
+  --output artifacts/systemone/decision_state.json
+
 mlquant systemone decide \
   --state artifacts/systemone/decision_state.json \
   --output artifacts/systemone/portfolio_decision.json
@@ -581,6 +586,19 @@ questions returns typed answers. This repository does not claim official Jev
 integration, Jev certification, externally hosted inference, or calibrated
 probabilities. It also does not create broker orders, connect to accounts, run
 live services, or change the paper's validation claims.
+
+For offline scoring, rebuild the state with `--include-realized` and run:
+
+```bash
+mlquant systemone evaluate \
+  --state artifacts/systemone/decision_state_eval.json \
+  --decision artifacts/systemone/portfolio_decision.json \
+  --output artifacts/systemone/portfolio_decision_eval.json
+```
+
+The evaluator reports action-label accuracy, target-weight forward return,
+turnover, estimated one-period cost, and hindsight regret. Those metrics are
+diagnostics for the typed decision surface; they are not live trading evidence.
 
 ## Project Layout
 

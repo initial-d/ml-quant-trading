@@ -24,9 +24,12 @@ from ..features.bias import limit_move_mask
 from ..models.losses import AdjMSELoss
 from ..models.nets import MLPRegressor
 from ..portfolio.markowitz import MarkowitzConfig, MarkowitzOptimizer
+from ..systemone import build_state_from_artifacts as systemone_build_state_from_artifacts
 from ..systemone import decide as systemone_decide
+from ..systemone import evaluate_decisions as systemone_evaluate_decisions
 from ..systemone import load_questions as load_systemone_questions
 from ..systemone import load_state as load_systemone_state
+from ..systemone import save_json as save_systemone_json
 from ..training.dataset import FactorDataset
 from ..training.trainer import TrainConfig, Trainer
 from ..utils.config import load_config
@@ -312,6 +315,58 @@ def cmd_systemone() -> None:
     """Typed decision adapter for research evidence artifacts."""
 
 
+@cmd_systemone.command("build-state")
+@click.option(
+    "--artifacts-dir",
+    "artifacts_dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    help="Directory containing panel.pt, predictions.pt, weights.pt, and optional summary.json.",
+)
+@click.option(
+    "--as-of-index",
+    default=-2,
+    show_default=True,
+    type=int,
+    help="Date index used to build the state. Negative indices count from the end.",
+)
+@click.option(
+    "--include-realized/--no-include-realized",
+    default=False,
+    show_default=True,
+    help="Include next-period realized returns for offline evaluation only.",
+)
+@click.option(
+    "--costs-bps",
+    default=None,
+    type=float,
+    help="Override effective cost assumption in basis points.",
+)
+@click.option(
+    "--output",
+    "output_path",
+    required=True,
+    type=click.Path(path_type=Path),
+    help="Path for the generated decision_state.json.",
+)
+def cmd_systemone_build_state(
+    artifacts_dir: Path,
+    as_of_index: int,
+    include_realized: bool,
+    costs_bps: float | None,
+    output_path: Path,
+) -> None:
+    """Build a typed portfolio decision state from pipeline artifacts."""
+    payload = systemone_build_state_from_artifacts(
+        artifacts_dir,
+        as_of_index=as_of_index,
+        include_realized=include_realized,
+        costs_bps=costs_bps,
+    )
+    save_systemone_json(payload, output_path)
+    click.echo(f"wrote {output_path}")
+
+
 @cmd_systemone.command("decide")
 @click.option(
     "--state",
@@ -347,13 +402,59 @@ def cmd_systemone_decide(
         else None
     )
     payload = systemone_decide(state, questions=questions, source_path=state_path)
-    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
     if output_path is not None:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(text, encoding="utf-8")
+        save_systemone_json(payload, output_path)
         click.echo(f"wrote {output_path}")
     else:
+        text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
         click.echo(text, nl=False)
+
+
+@cmd_systemone.command("evaluate")
+@click.option(
+    "--state",
+    "state_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Decision state JSON with evaluation.forward_return included.",
+)
+@click.option(
+    "--decision",
+    "decision_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Typed decision JSON produced by `mlquant systemone decide`.",
+)
+@click.option(
+    "--return-threshold",
+    default=0.001,
+    show_default=True,
+    type=float,
+    help="Forward-return threshold used to form hindsight action labels.",
+)
+@click.option(
+    "--output",
+    "output_path",
+    required=True,
+    type=click.Path(path_type=Path),
+    help="Path for the decision evaluation JSON.",
+)
+def cmd_systemone_evaluate(
+    state_path: Path,
+    decision_path: Path,
+    return_threshold: float,
+    output_path: Path,
+) -> None:
+    """Evaluate typed portfolio decisions with realized offline evidence."""
+    state = load_systemone_state(state_path)
+    decision = load_systemone_state(decision_path)
+    payload = systemone_evaluate_decisions(
+        state,
+        decision,
+        return_threshold=return_threshold,
+    )
+    save_systemone_json(payload, output_path)
+    click.echo(f"wrote {output_path}")
 
 
 def main() -> None:

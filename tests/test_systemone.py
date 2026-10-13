@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
 
+import torch
 from click.testing import CliRunner
 
 from mlquant.cli.main import cli
-from mlquant.systemone import decide, load_questions
+from mlquant.systemone import build_state_from_artifacts, decide, evaluate_decisions, load_questions
 
 
 def _portfolio_state():
@@ -79,6 +80,79 @@ def _portfolio_state():
             "claim_boundary": "public_data_validation_not_alpha",
         },
     }
+
+
+def _write_artifacts(root: Path) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    dates = ["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"]
+    stocks = ["AAA", "BBB", "CCC"]
+    close = torch.tensor(
+        [
+            [10.0, 20.0, 30.0],
+            [11.0, 19.0, 30.0],
+            [12.0, 18.0, 33.0],
+            [13.0, 17.0, 30.0],
+        ]
+    )
+    volume = torch.full_like(close, 1_000_000.0)
+    mask = torch.tensor(
+        [
+            [True, True, True],
+            [True, True, True],
+            [True, True, False],
+            [True, True, True],
+        ]
+    )
+    torch.save(
+        {
+            "dates": dates,
+            "stocks": stocks,
+            "open": close,
+            "high": close,
+            "low": close,
+            "close": close,
+            "volume": volume,
+            "vwap": close,
+            "mask": mask,
+        },
+        root / "panel.pt",
+    )
+    torch.save(
+        {
+            "pred": torch.tensor(
+                [
+                    [0.0, 0.0, 0.0],
+                    [0.01, -0.02, 0.03],
+                    [0.04, -0.01, 0.02],
+                    [0.02, -0.03, 0.01],
+                ]
+            )
+        },
+        root / "predictions.pt",
+    )
+    torch.save(
+        {
+            "weights": torch.tensor(
+                [
+                    [0.0, 0.0, 0.0],
+                    [0.2, 0.0, 0.1],
+                    [0.3, 0.0, 0.0],
+                    [0.1, 0.2, 0.0],
+                ]
+            )
+        },
+        root / "weights.pt",
+    )
+    (root / "summary.json").write_text(
+        json.dumps(
+            {
+                "workflow": "synthetic factor-to-backtest demo",
+                "costs_bps": 7,
+                "metrics": {"sharpe": 0.5},
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_systemone_answers_asset_portfolio_questions():
@@ -199,3 +273,90 @@ def test_systemone_cli_writes_portfolio_decision_json(tmp_path: Path):
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["answers"]["asset_action:600519"]["value"] == "increase"
     assert payload["answers"]["trade_allowed:300750"]["type"] == "noul"
+
+
+def test_systemone_build_state_from_artifacts_includes_offline_evidence(tmp_path: Path):
+    artifacts = tmp_path / "artifacts"
+    _write_artifacts(artifacts)
+
+    state = build_state_from_artifacts(artifacts, as_of_index=2, include_realized=True)
+
+    assert state["as_of"] == "2024-01-03"
+    assert state["universe"] == ["AAA", "BBB", "CCC"]
+    assert state["predictions"]["score"]["AAA"] == 0.03999999910593033
+    assert state["tradability"]["CCC"]["tradable"] is False
+    assert state["portfolio"]["current_weight"]["AAA"] == 0.20000000298023224
+    assert state["portfolio"]["target_weight_baseline"]["AAA"] == 0.30000001192092896
+    assert state["cost_model"]["effective_cost_bps"] == 7.0
+    assert state["evaluation"]["realized_date"] == "2024-01-04"
+    assert state["evaluation"]["forward_return"]["AAA"] > 0
+
+
+def test_systemone_evaluates_typed_decisions_with_realized_returns():
+    state = _portfolio_state()
+    state["evaluation"] = {
+        "realized_date": "2025-01-02",
+        "forward_return": {
+            "600519": 0.02,
+            "000001": -0.01,
+            "300750": 0.03,
+        },
+    }
+    decision = decide(state)
+
+    report = evaluate_decisions(state, decision, return_threshold=0.001)
+
+    assert report["contract"] == "system-one-decision-evaluation-v0"
+    assert report["metrics"]["n_assets_evaluated"] == 3
+    assert report["metrics"]["trade_allowed_state_consistency"] == 1.0
+    assert report["metrics"]["action_label_accuracy"] == 1.0
+    assert report["metrics"]["target_weight_forward_return"] > 0
+    assert report["metrics"]["estimated_one_period_cost"] >= 0
+
+
+def test_systemone_build_state_and_evaluate_cli(tmp_path: Path):
+    artifacts = tmp_path / "artifacts"
+    _write_artifacts(artifacts)
+    state = tmp_path / "state.json"
+    decision = tmp_path / "decision.json"
+    evaluation = tmp_path / "evaluation.json"
+
+    runner = CliRunner()
+    build_result = runner.invoke(
+        cli,
+        [
+            "systemone",
+            "build-state",
+            "--artifacts-dir",
+            str(artifacts),
+            "--as-of-index",
+            "2",
+            "--include-realized",
+            "--output",
+            str(state),
+        ],
+    )
+    assert build_result.exit_code == 0
+
+    decide_result = runner.invoke(
+        cli,
+        ["systemone", "decide", "--state", str(state), "--output", str(decision)],
+    )
+    assert decide_result.exit_code == 0
+
+    evaluate_result = runner.invoke(
+        cli,
+        [
+            "systemone",
+            "evaluate",
+            "--state",
+            str(state),
+            "--decision",
+            str(decision),
+            "--output",
+            str(evaluation),
+        ],
+    )
+    assert evaluate_result.exit_code == 0
+    payload = json.loads(evaluation.read_text(encoding="utf-8"))
+    assert payload["metrics"]["n_assets_evaluated"] == 3

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### System-One decision evaluation
+
+- Added `mlquant systemone build-state` to generate typed portfolio decision
+  state JSON directly from local pipeline artifacts.
+- Added `mlquant systemone evaluate` to score typed portfolio decisions with
+  offline realized forward returns.
+- Added decision diagnostics for action-label accuracy, target-weight forward
+  return, turnover, estimated one-period cost, and hindsight regret.
+- Documented the full `build-state -> decide -> evaluate` workflow while keeping
+  realized returns out of the decision step.
+
 ## 0.3.1 - System-One Portfolio Decision Adapter
 
 This release turns the research pipeline into a typed portfolio-decision surface
