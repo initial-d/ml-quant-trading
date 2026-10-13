@@ -32,6 +32,7 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - v0.3.1 release (System-One portfolio decisions): <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.1>
 - System-One portfolio decision adapter: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/systemone_adapter.md>
 - Chinese quant Jev / portfolio decision article: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_quant_jev_portfolio_decision.md>
+- System-One / Jev-style portfolio decision announcement: <https://github.com/initial-d/ml-quant-trading/discussions/71>
 - Six-invariant technical audit: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_en_six_pipeline_invariants.md>
 - Six-invariant technical audit (Chinese): <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_six_pipeline_invariants.md>
 - Technical audit discussion: <https://github.com/initial-d/ml-quant-trading/discussions/57>
