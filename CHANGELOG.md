@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+## 0.3.1 - System-One Portfolio Decision Adapter
+
+This release turns the research pipeline into a typed portfolio-decision surface
+without changing the project's research-only boundary.
+
+### System-One and Jev-style decision interface
+
+- Added `mlquant.systemone`, a preview System-One-compatible portfolio decision
+  adapter for structured research state.
+- Added `mlquant systemone decide`, which converts portfolio state plus typed
+  questions into typed answers such as `asset_action`, `target_weight`,
+  `trade_allowed`, `risk_bucket`, and `max_participation_rate`.
+- Framed the interface as Jev-style in shape: structured state and typed
+  questions in, typed portfolio-intent answers out.
+- Kept the integration explicit: it is not Jev-certified, does not publish
+  calibrated probabilities, and does not create broker orders.
+
+### Documentation and positioning
+
+- Reworked the README around the main reference points: runnable baseline,
+  mask-first factor research, cost-aware validation, and System-One portfolio
+  decisions.
+- Added `docs/systemone_adapter.md` with the state contract, question contract,
+  output shape, and release boundary.
+- Updated `docs/start_here.md` with the decision adapter path.
+
+### Verification
+
+- Added tests for asset actions, target weights, tradability blocking, default
+  question expansion, custom questions, and CLI output.
+- Synchronized package metadata, `mlquant.__version__`, and citation metadata
+  at `0.3.1`.
+
 ## 0.2.6 - PyPI-to-GitHub Contributor Path
 
 This patch turns the packaged demo into a discovery path for the source and

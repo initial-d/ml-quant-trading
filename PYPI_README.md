@@ -1,8 +1,8 @@
 # mlquant
 
 **A reproducible PyTorch research stack for machine-learning multi-factor
-trading: 213 factors, bias correction, portfolio optimization, and vectorized
-backtesting.**
+trading: 213 factors, bias correction, portfolio optimization, vectorized
+backtesting, and System-One-style portfolio decisions.**
 
 [![CI](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml/badge.svg)](https://github.com/initial-d/ml-quant-trading/actions/workflows/ci.yml)
 [![arXiv](https://img.shields.io/badge/arXiv-2507.07107-b31b1b.svg)](https://arxiv.org/abs/2507.07107)
@@ -47,12 +47,15 @@ If the demo saves you setup time, consider
 - vectorized backtesting with turnover and transaction costs
 - AkShare, Baostock, yfinance, and deterministic synthetic data paths
 - auditable public-data validation reports, including negative results
+- `mlquant systemone decide` for typed portfolio-intent decisions from
+  structured research state
 
 ## Start here
 
 - [Source and full documentation](https://github.com/initial-d/ml-quant-trading)
 - [Google Colab quick start](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 - [Public validation dashboard](https://github.com/initial-d/ml-quant-trading/blob/main/docs/validation_dashboard.md)
+- [System-One-compatible portfolio decisions](https://github.com/initial-d/ml-quant-trading/blob/main/docs/systemone_adapter.md)
 - [Research card and limitations](https://github.com/initial-d/ml-quant-trading/blob/main/docs/research_card.md)
 - [100,000-row synthetic dataset](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic)
 - [213-input MLP checkpoint](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp)

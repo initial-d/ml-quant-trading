@@ -11,6 +11,7 @@ This page is the fastest path from discovering the repository to running somethi
 | An ML engineer | `make benchmark` |
 | Using DeepSeek Harness or a coding agent | [DeepSeek Harness Recipe](deepseek_harness_recipe.md), [`AGENTS.md`](../AGENTS.md), and [Agent Reproducibility Guide](agent_reproducibility.md) |
 | Evaluating a quant agent | [Quant Agent Reproducibility Target](quant_agent_reproducibility_target.md) |
+| Exposing pipeline state as typed portfolio decisions | [System-One-Compatible Adapter](systemone_adapter.md) |
 | Ready to customize | Clone the repository and install `-e '.[dev]'` |
 | A contributor | Submit a reproduction report or choose a `good first issue` |
 | A paper reader | `docs/reproducing_paper.md` |
@@ -75,6 +76,18 @@ python -m pip install -e '.[dev]'
 The generated `summary.md` and `summary.json` include the repository and
 [reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 links so successful and failed runs can become useful community evidence.
+
+If you have a portfolio decision state JSON, run:
+
+```bash
+mlquant systemone decide \
+  --state artifacts/systemone/decision_state.json \
+  --output artifacts/systemone/portfolio_decision.json
+```
+
+This is a local preview adapter for research portfolio intent, not broker
+execution or a change to the paper's claims. See the
+[state and question contract](systemone_adapter.md).
 
 If the run helped your work, a Star helps other researchers find the baseline.
 If you changed or evaluated the pipeline, a fork, issue, or reproduction report

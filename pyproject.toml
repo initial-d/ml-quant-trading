@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mlquantx"
-version = "0.2.6"
+version = "0.3.1"
 description = "Reference implementation of ‘ML-Enhanced Multi-Factor Quantitative Trading’ (arXiv:2507.07107)."
 readme = "PYPI_README.md"
 requires-python = ">=3.9"

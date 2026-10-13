@@ -24,6 +24,9 @@ from ..features.bias import limit_move_mask
 from ..models.losses import AdjMSELoss
 from ..models.nets import MLPRegressor
 from ..portfolio.markowitz import MarkowitzConfig, MarkowitzOptimizer
+from ..systemone import decide as systemone_decide
+from ..systemone import load_questions as load_systemone_questions
+from ..systemone import load_state as load_systemone_state
 from ..training.dataset import FactorDataset
 from ..training.trainer import TrainConfig, Trainer
 from ..utils.config import load_config
@@ -302,6 +305,55 @@ def cmd_backtest(config_path: str) -> None:
         else:
             click.echo(f"  {k:<12s}  {v:>10}")
     click.echo(f"\nShareable reports: {markdown_path}  {json_path}")
+
+
+@cli.group("systemone")
+def cmd_systemone() -> None:
+    """Typed decision adapter for research evidence artifacts."""
+
+
+@cmd_systemone.command("decide")
+@click.option(
+    "--state",
+    "state_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to a validation summary.json or compatible state JSON.",
+)
+@click.option(
+    "--questions",
+    "questions_path",
+    default=None,
+    type=click.Path(exists=True, path_type=Path),
+    help="Optional JSON/YAML file with typed question definitions.",
+)
+@click.option(
+    "--output",
+    "output_path",
+    default=None,
+    type=click.Path(path_type=Path),
+    help="Optional path for the typed decision JSON.",
+)
+def cmd_systemone_decide(
+    state_path: Path,
+    questions_path: Path | None,
+    output_path: Path | None,
+) -> None:
+    """Convert a research report into System-One-style typed decisions."""
+    state = load_systemone_state(state_path)
+    questions = (
+        load_systemone_questions(questions_path)
+        if questions_path is not None
+        else None
+    )
+    payload = systemone_decide(state, questions=questions, source_path=state_path)
+    text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(text, encoding="utf-8")
+        click.echo(f"wrote {output_path}")
+    else:
+        click.echo(text, nl=False)
 
 
 def main() -> None:
