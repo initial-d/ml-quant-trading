@@ -3,6 +3,9 @@
 Use this page when announcing releases, asking for benchmark results, or sharing the project
 with research and engineering communities.
 
+For a shorter visitor-facing link with copy-ready snippets, use
+[`share_this_project.md`](share_this_project.md).
+
 ## Short Description
 
 `ml-quant-trading` is an end-to-end PyTorch research stack for ML-enhanced multi-factor

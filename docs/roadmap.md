@@ -38,7 +38,8 @@ easier to trust, and easier to extend.
 - Pick up one review-driven validation task: bootstrap CIs, cross-market public
   data, or cost/slippage stress testing.
 - Improve docstrings for factor families.
-- Add one new ETF or larger-universe public-data example with a clearly documented universe.
+- Run and report the `cross-market-5` public-data smoke preset before scaling to
+  larger ETF or mixed-universe validation.
 
 ## Research Extensions
 

@@ -19,6 +19,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 | [Validation Dashboard](docs/validation_dashboard.md)
 | [Project Facts](docs/answer_index.md)
 | [Citation Guide](docs/citation_conversion.md)
+| [Share This Project](docs/share_this_project.md)
 | [Research Card](docs/research_card.md)
 
 ## What This Is
@@ -163,6 +164,7 @@ construction before backtests are interpreted.
 | Try public data | [Public-Data Validation](docs/public_data_validation.md) |
 | Inspect maintained results | [Validation Dashboard](docs/validation_dashboard.md) |
 | Use typed portfolio decisions | [System-One Adapter](docs/systemone_adapter.md) |
+| Share the project safely | [Share This Project](docs/share_this_project.md) |
 | Cite the project | [Citation Conversion Guide](docs/citation_conversion.md) |
 | Understand boundaries | [Research Card](docs/research_card.md) and [Reality Check](docs/reality_check.md) |
 | Benchmark tensor factors | [Benchmarking Guide](docs/benchmarking.md) |
@@ -177,7 +179,10 @@ construction before backtests are interpreted.
 | Baostock | A-shares | Free registration | Account-backed public data route |
 | yfinance | US equities / ETFs | Public, rate-limited | Convenient validation and notebook examples |
 
-The repository does not redistribute market data.
+The repository does not redistribute market data. AkShare, Baostock, and
+yfinance data are downloaded on demand by the loader scripts. Public upstream
+interfaces can change or rate-limit requests. Synthetic data is generated
+deterministically from a fixed seed.
 
 ## Citation
 

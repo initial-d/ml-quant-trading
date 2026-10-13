@@ -62,6 +62,8 @@ ETF_50 = (
     "EWT", "EWJ", "EWG", "EWU", "FXI", "MCHI", "INDA", "EWZ", "EWW", "EWC",
 )
 
+CROSS_MARKET_5 = ("SPY", "QQQ", "TLT", "GLD", "AGG")
+
 CN_LARGE_25 = (
     "sh.600000", "sh.600036", "sh.600519", "sh.600585", "sh.600809",
     "sh.600887", "sh.601012", "sh.601088", "sh.601166", "sh.601318",
@@ -72,6 +74,7 @@ CN_LARGE_25 = (
 
 PRESETS = {
     "us-large-100": US_LARGE_100,
+    "cross-market-5": CROSS_MARKET_5,
     "etf-50": ETF_50,
     "mixed-150": US_LARGE_100 + ETF_50,
     "cn-large-25": CN_LARGE_25,
@@ -317,6 +320,8 @@ def _long_only_top_quantile_weights(
 ) -> np.ndarray:
     if scores.shape != valid.shape:
         raise ValueError("scores and valid mask must have the same shape")
+    if not 0.0 < top_quantile <= 1.0:
+        raise ValueError("top_quantile must be in (0, 1]")
     weights = np.zeros_like(scores, dtype=np.float32)
     for t in range(scores.shape[0]):
         ok = valid[t] & np.isfinite(scores[t])

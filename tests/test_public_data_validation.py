@@ -10,6 +10,7 @@ from scripts.public_data_validation import (
     ValidationConfig,
     _codes_from_frame,
     _cost_sensitivity_table,
+    _long_only_top_quantile_weights,
     _markdown_table,
     _normalize_akshare_tickers,
     _normalize_baostock_tickers,
@@ -108,6 +109,17 @@ def test_public_data_validation_markdown_escapes_pipes():
     assert "alpha \\| beta" in table
 
 
+def test_top_quantile_weights_reject_invalid_quantiles():
+    scores = pd.DataFrame([[1.0, 2.0, 3.0]]).to_numpy()
+    valid = pd.DataFrame([[True, True, True]]).to_numpy()
+
+    with pytest.raises(ValueError, match="top_quantile"):
+        _long_only_top_quantile_weights(scores, valid, top_quantile=0.0)
+
+    with pytest.raises(ValueError, match="top_quantile"):
+        _long_only_top_quantile_weights(scores, valid, top_quantile=1.5)
+
+
 def test_normalize_baostock_tickers_lowercases_valid_codes():
     tickers = _normalize_baostock_tickers(("SH.600000", "sz.000001"))
 
@@ -150,6 +162,12 @@ def test_select_tickers_resolves_csi_300_for_akshare():
         tickers = _select_tickers("csi-300", "", 2, source="akshare")
 
     assert tickers == ("000001", "600519")
+
+
+def test_select_tickers_supports_cross_market_smoke_preset():
+    tickers = _select_tickers("cross-market-5", "", 10, source="yfinance")
+
+    assert tickers == ("SPY", "QQQ", "TLT", "GLD", "AGG")
 
 
 def test_select_tickers_rejects_csi_300_for_non_akshare_source():
