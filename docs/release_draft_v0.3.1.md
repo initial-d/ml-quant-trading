@@ -28,6 +28,9 @@ questions about actions, weights, tradability, liquidity, and risk.
   contribution, cost-aware validation, and System-One portfolio decision module.
 - Added `docs/systemone_adapter.md` with the state contract, question contract,
   output shape, and release boundary.
+- Added a Chinese positioning article for the quant Jev-style portfolio
+  decision surface:
+  `docs/article_zh_quant_jev_portfolio_decision.md`.
 - Synchronized package metadata, `mlquant.__version__`, and citation metadata at
   `0.3.1`.
 
@@ -98,6 +101,9 @@ mlquant systemone decide \
 
 See [docs/systemone_adapter.md](systemone_adapter.md) for the full state and
 question contract.
+
+Chinese explanation:
+[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](article_zh_quant_jev_portfolio_decision.md).
 
 ## Verification
 

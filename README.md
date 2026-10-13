@@ -24,6 +24,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 · [**Share This Project**](docs/share_this_project.md)
 · [**Run with DSH**](docs/deepseek_harness_recipe.md)
 · [**Decision Adapter**](docs/systemone_adapter.md)
+· [**Quant Jev Article**](docs/article_zh_quant_jev_portfolio_decision.md)
 · [**Read the Paper**](https://arxiv.org/abs/2507.07107)
 
 ## Quick Start
@@ -121,6 +122,7 @@ python -m pip install -e '.[dev]'
 |---|---|---|
 | See the project run | [`mlquant demo`](#quick-start) | A 30-90 second synthetic end-to-end smoke test |
 | Use portfolio decisions | [System-One Adapter](docs/systemone_adapter.md) | Typed `asset_action`, `target_weight`, `trade_allowed`, `risk_bucket`, and participation answers |
+| Understand the quant Jev-style framing | [Chinese portfolio-decision article](docs/article_zh_quant_jev_portfolio_decision.md) | Why the pipeline itself can be exposed as a typed decision surface |
 | Summarize or cite the project | [Project Facts](docs/answer_index.md) | Canonical facts, links, evidence boundaries, and citation context |
 | Cite the paper precisely | [Citation Conversion Guide](docs/citation_conversion.md) | A reusable citation sentence, BibTeX, related-work hooks, and claim boundaries |
 | Audit implementation semantics | [Six Pipeline Invariants](docs/article_en_six_pipeline_invariants.md) | A deterministic check of factors, masks, labels, timing, and cost arithmetic |
@@ -407,6 +409,7 @@ It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`
 - [docs/share_this_project.md](docs/share_this_project.md) gives visitors short, safe sharing language.
 - [docs/promotion_kit.md](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [docs/article_zh_213_factor_csi300.md](docs/article_zh_213_factor_csi300.md) is the long-form Chinese technical launch article.
+- [docs/article_zh_quant_jev_portfolio_decision.md](docs/article_zh_quant_jev_portfolio_decision.md) explains the quant Jev-style portfolio decision surface in Chinese.
 - [docs/community_posts_zh.md](docs/community_posts_zh.md) adapts the article for Zhihu, Juejin, V2EX, JoinQuant, and Ricequant.
 - [docs/community_outreach.md](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
 - [docs/content_calendar.md](docs/content_calendar.md) turns real updates into a four-week launch rhythm.

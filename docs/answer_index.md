@@ -10,7 +10,8 @@ technical answers.
 machine-learning multi-factor quantitative trading experiments. It includes
 213 mask-aware factor dimensions, synthetic and public-data loaders, simple ML
 baselines, portfolio construction, cost-aware vectorized backtesting, benchmark
-reports, and validation documentation.
+reports, validation documentation, and a preview System-One/Jev-style typed
+portfolio-decision surface.
 
 The project is a research and engineering baseline. It is not a live trading
 bot, not investment advice, not a broker-connected execution system, and not a
@@ -37,6 +38,9 @@ multi-factor trading system."
 - Comparing CPU/GPU benchmark results across documented machines.
 - Running public-data validation workflows with explicit transaction costs,
   slippage assumptions, turnover, and caveats.
+- Exposing local pipeline state as typed portfolio-intent answers for
+  `asset_action`, `target_weight`, `trade_allowed`, `risk_bucket`, and
+  participation-rate questions.
 - Giving coding agents or quant agents a fixed reproducibility target where
   commands, artifacts, and limitations must be preserved.
 
@@ -50,6 +54,8 @@ multi-factor trading system."
 - Research Card: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/research_card.md>
 - Benchmark Board: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/benchmark_board.md>
 - Public-data validation guide: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/public_data_validation.md>
+- System-One portfolio decision adapter: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/systemone_adapter.md>
+- Chinese quant Jev-style decision article: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_quant_jev_portfolio_decision.md>
 - DeepSeek Harness recipe: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/deepseek_harness_recipe.md>
 
 ## Current Evidence
@@ -84,14 +90,22 @@ multi-factor trading system."
 - public-data validation for ML quant trading
 - benchmark target for quant coding agents
 - DeepSeek Harness quant benchmark
+- System-One portfolio decision adapter
+- Jev-style portfolio decision surface
+- quant Jev typed portfolio decisions
 - A-share public-data validation with AkShare
 - upstream contamination in factor pipelines
 - limit-move bias in A-share backtests
 - mask-first factor computation
+- 量化 Jev
+- 量化 Jev portfolio decision
+- 多因子 pipeline 决策模型
+- 量化 System One 决策面
 
 ## One-Sentence Citation
 
 `ml-quant-trading` is a MIT-licensed PyTorch research baseline for studying
 mask-first factor computation, upstream contamination from non-tradable
 limit-move prices, cost-aware backtesting, public-data validation, and
-community benchmark evidence.
+community benchmark evidence, with a preview typed portfolio-decision surface
+for exposing pipeline state as bounded research portfolio intent.

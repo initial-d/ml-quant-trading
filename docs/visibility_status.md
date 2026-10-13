@@ -29,6 +29,9 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 - Agent Quant Benchmark Challenge: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/agent_quant_benchmark_challenge.md>
 - Agent Quant Benchmark Challenge discussion: <https://github.com/initial-d/ml-quant-trading/discussions/66>
 - Agent Quant Benchmark participation prompt: <https://github.com/initial-d/ml-quant-trading/discussions/66#discussioncomment-18304922>
+- v0.3.1 release (System-One portfolio decisions): <https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.1>
+- System-One portfolio decision adapter: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/systemone_adapter.md>
+- Chinese quant Jev / portfolio decision article: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_quant_jev_portfolio_decision.md>
 - Six-invariant technical audit: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_en_six_pipeline_invariants.md>
 - Six-invariant technical audit (Chinese): <https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_six_pipeline_invariants.md>
 - Technical audit discussion: <https://github.com/initial-d/ml-quant-trading/discussions/57>
@@ -395,12 +398,14 @@ Operating takeaways:
 
 Short description:
 
-> PyTorch research stack for ML multi-factor trading: 213 factors, bias correction,
-> portfolio optimization, and vectorized backtesting.
+> PyTorch research stack for ML multi-factor trading: 213 factors, bias
+> correction, portfolio optimization, vectorized backtesting, and typed
+> System-One/Jev-style portfolio decisions.
 
 Primary ask:
 
-> Share CPU/GPU benchmark results, public-data reproduction notes, and setup feedback.
+> Share CPU/GPU benchmark results, public-data reproduction notes, typed
+> portfolio-decision evaluations, and setup feedback.
 
 ## Operating Rules
 
@@ -415,6 +420,9 @@ Primary ask:
 - Add more real benchmark results to `docs/benchmark_board.md`.
 - Track whether the Awesome DSH Plugin listing sends DSH-specific benchmark
   reports, not just repository views.
+- Publish one carefully tailored Chinese post around the quant Jev-style
+  portfolio decision article, then watch whether `README.zh-CN.md`,
+  `systemone_adapter.md`, and the article become search or ChatGPT referrers.
 - Add more public-data mini reproductions with larger or differently constructed universes.
 - Ask new users to try the Dev Container and report first-run friction.
 - Post the v0.2.1 validation entrypoint release to one relevant community at a time with a customized note.

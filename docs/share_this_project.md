@@ -8,8 +8,8 @@ the project into a trading-performance claim.
 
 `ml-quant-trading` is a MIT-licensed PyTorch research stack for reproducible
 multi-factor experiments: 213 mask-aware factors, synthetic and public-data
-paths, simple ML baselines, portfolio construction, cost-aware backtests, and
-auditable benchmark reports.
+paths, simple ML baselines, portfolio construction, cost-aware backtests,
+auditable benchmark reports, and typed System-One/Jev-style portfolio decisions.
 
 ## Best First Link
 
@@ -80,6 +80,27 @@ report the result as engineering evidence rather than investment advice.
 Challenge: https://github.com/initial-d/ml-quant-trading/blob/main/docs/agent_quant_benchmark_challenge.md
 ```
 
+### System-One / Jev-Style Decision Surface
+
+```text
+I am exploring a quant-native Jev-style interface in ml-quant-trading.
+
+Instead of putting an external model inside the strategy pipeline, the pipeline
+itself is exposed as:
+
+structured portfolio state + typed questions -> typed portfolio-intent answers
+
+The preview adapter answers asset_action, target_weight, trade_allowed,
+risk_bucket, and participation-rate questions from factor, prediction,
+tradability, liquidity, risk, cost, and weight state.
+
+It is research portfolio intent, not broker execution or investment advice.
+
+Adapter docs: https://github.com/initial-d/ml-quant-trading/blob/main/docs/systemone_adapter.md
+Chinese article: https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_quant_jev_portfolio_decision.md
+Repo: https://github.com/initial-d/ml-quant-trading
+```
+
 ## Ten-Minute Call To Action
 
 For a first-time visitor, ask for exactly one action:
@@ -101,6 +122,8 @@ or the [benchmark board](benchmark_board.md).
 
 - The project is runnable without proprietary data.
 - Synthetic and public-data runs are reproducibility checks, not alpha claims.
+- The System-One/Jev-style adapter is a typed research decision surface, not
+  order routing, broker execution, or a hosted model certification claim.
 - Benchmark reports should preserve commands, commit SHAs, environments, raw
   outputs, generated artifacts, warnings, and caveats.
 - Private users can submit redacted evaluation notes without exposing data,

@@ -131,3 +131,39 @@ PyTorch 算子、A 股涨跌停/停牌处理、MLP/Transformer、Markowitz 和�
 
 欢迎复现后用自己的成本和股票池挑战结果：
 [打开零账号 Colab，跑一遍并提交结果](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
+
+## 量化 Jev / System-One Decision Surface
+
+这一组发布稿用于介绍 `v0.3.1` 的 portfolio decision adapter。正文可以直接使用
+[`article_zh_quant_jev_portfolio_decision.md`](article_zh_quant_jev_portfolio_decision.md)，
+也可以按社区节奏压缩成下面的短帖。不要把它描述成官方 Jev 集成、实盘交易模型或
+投资建议。
+
+### 标题
+
+量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface
+
+### 短帖
+
+我给 `ml-quant-trading` 补了一个 System-One/Jev-style portfolio decision
+adapter。
+
+它的思路不是把外部模型塞进量化 pipeline，而是把 pipeline 本身封装成一个可调用的
+typed decision surface：
+
+```text
+pipeline state + typed portfolio questions -> typed portfolio-intent answers
+```
+
+state 里可以放因子、mask、模型预测、当前持仓、目标权重、流动性、风险估计和成本假设；
+question 可以问某个资产应该增持、持有、减持还是排除，目标权重是多少，是否允许交易，
+风险桶是什么，研究模拟里的最大参与率是多少。
+
+输出不是券商订单，也不是实盘交易指令，而是研究型 portfolio intent。这样多因子
+pipeline 的最终判断可以被保存、比较、测试和离线评估，而不是只停留在一张回测曲线上。
+
+GitHub：
+[访问 GitHub 仓库](https://github.com/initial-d/ml-quant-trading)
+
+完整中文解释：
+[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](https://github.com/initial-d/ml-quant-trading/blob/main/docs/article_zh_quant_jev_portfolio_decision.md)

@@ -3,6 +3,9 @@
 This page describes the preview adapter that exposes `ml-quant-trading` pipeline
 state as typed portfolio-intent decisions.
 
+Chinese positioning article:
+[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](article_zh_quant_jev_portfolio_decision.md).
+
 The adapter is intentionally scoped to research:
 
 - it answers asset, weight, tradability, liquidity, and risk questions;

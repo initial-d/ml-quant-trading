@@ -17,8 +17,8 @@ than noisy.
 
 Description:
 
-> End-to-end PyTorch research stack for ML-enhanced multi-factor trading, factor tensors,
-> bias correction, portfolio optimization, and reproducible backtesting.
+> PyTorch ML quant research: 213 factors, bias correction, portfolio
+> optimization, backtesting, and System-One/Jev-style decisions.
 
 Website:
 
@@ -28,7 +28,8 @@ Topics:
 
 `quantitative-finance`, `algorithmic-trading`, `machine-learning`, `pytorch`,
 `portfolio-optimization`, `alpha-factors`, `backtesting`, `research`,
-`quant`, `factor-models`, `financial-machine-learning`
+`quant`, `factor-models`, `financial-machine-learning`, `system-one`,
+`portfolio-decision`, `jev`
 
 Social preview image:
 

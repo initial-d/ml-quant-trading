@@ -40,6 +40,7 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 [**Colab 在线运行**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**查看公开验证结果**](docs/validation_dashboard.md)
 · [**审计六项管线不变量**](docs/article_zh_six_pipeline_invariants.md)
+· [**量化 Jev 决策面**](docs/article_zh_quant_jev_portfolio_decision.md)
 · [**体验数据集与模型**](docs/huggingface_artifacts.md)
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
@@ -52,12 +53,15 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 
 `ml-quant-trading` 是一个简洁、便于 fork 的端到端 A 股量化研究系统。仓库集成了张量因子引擎、213 维因子库、偏差修正、ML baseline、Markowitz 投资组合优化、向量化回测、synthetic 与公开数据演示，以及 CI、测试与 benchmark 工具，适合复现和扩展多因子量化研究。
 
+`v0.3.1` 还新增了 System-One/Jev-style portfolio decision surface：不是把外部模型塞进策略 pipeline，而是把 pipeline 产出的因子、预测、mask、持仓、流动性、风险和成本封装成结构化 state，再回答 `asset_action`、`target_weight`、`trade_allowed`、`risk_bucket` 等 typed questions。它输出研究型 portfolio intent，不做券商、订单、账户或实盘执行。
+
 ## 快速入口
 
 | 你的目标 | 从这里开始 | 能得到什么 |
 |---|---|---|
 | 先看项目能否跑通 | `mlquant demo` | 30–90 秒、无需行情数据的端到端冒烟测试 |
 | 不安装直接体验 | [Google Colab](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb) | 无需账号或行情 API 的浏览器内完整 Demo |
+| 使用量化 Jev-style 决策接口 | [System-One Adapter](docs/systemone_adapter.md) · [中文长文](docs/article_zh_quant_jev_portfolio_decision.md) | 从 pipeline artifacts 生成 decision state，并输出可评估的 portfolio intent |
 | 审计实现语义 | [六项可复现管线不变量](docs/article_zh_six_pipeline_invariants.md) | 确定性检查因子、mask、标签边界、执行时序与成本计算 |
 | 检查可下载产物 | [Hugging Face 数据集](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic) · [MLP 模型](https://huggingface.co/dddyym/ml-quant-trading-synthetic-mlp) | 由确定性 Quick Start 导出的 10 万行 synthetic 数据和 213 输入模型；不含真实或专有行情 |
 | 查看真实公开数据结果 | [CSI 300 验证看板](docs/validation_dashboard.md) | 成本敏感性、换手率、基线与复现命令 |
@@ -103,6 +107,7 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 | `models.losses` | AdjMSE、IC、RankIC loss |
 | `portfolio.markowitz` | 横截面 Markowitz 优化（收缩协方差、禁止卖空） |
 | `backtest.engine` | 向量化回测，输出 Sharpe / IC / IR / DD 等指标 |
+| `systemone` | System-One/Jev-style typed portfolio decision adapter |
 
 因子库共包含 **213 个因子**：9 个精选 Alpha101 公式和 204 个手工构建的 legacy 因子。完整说明请参阅[因子手册](docs/factor_handbook.md)。
 
@@ -153,6 +158,29 @@ python scripts/public_data_validation.py \
 
 运行方式和输出说明请参阅 [Public-Data Validation](docs/public_data_validation.md)。这些结果仅用于验证诊断，不是交易建议。
 
+### Portfolio Decision / 量化 Jev-style 接口
+
+如果已经跑过 `mlquant demo`，可以把本地 artifacts 转成 decision state，再生成结构化 portfolio intent：
+
+```bash
+mlquant systemone build-state \
+  --artifacts-dir artifacts/small \
+  --as-of-index -2 \
+  --output artifacts/systemone/decision_state.json
+
+mlquant systemone decide \
+  --state artifacts/systemone/decision_state.json \
+  --output artifacts/systemone/portfolio_decision.json
+```
+
+这条路径的定位是：
+
+```text
+pipeline state + typed portfolio questions -> typed portfolio-intent answers
+```
+
+完整 state/question/output contract 见 [System-One Adapter](docs/systemone_adapter.md)。中文解释见[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](docs/article_zh_quant_jev_portfolio_decision.md)。
+
 ### 为什么值得 Star 或 Fork？
 
 - 你需要一套能运行的 ML 多因子研究参考实现，而不是只有截图的策略介绍。
@@ -169,6 +197,8 @@ python scripts/public_data_validation.py \
 - [AkShare CSI 300 日频 213 因子报告](docs/validation_akshare_csi300_full_pipeline_20260729.md)
 - [中文技术长文：213 因子与含成本验证](docs/article_zh_213_factor_csi300.md)
 - [中文技术长文：可信 Sharpe 之前的六项管线不变量](docs/article_zh_six_pipeline_invariants.md)
+- [中文技术长文：量化 Jev-style Portfolio Decision Surface](docs/article_zh_quant_jev_portfolio_decision.md)
+- [System-One Adapter 文档](docs/systemone_adapter.md)
 - [知乎、掘金、V2EX、聚宽、米筐定制发布稿](docs/community_posts_zh.md)
 - [Reality Check and Validation Status](docs/reality_check.md)
 - [Public-Data Validation](docs/public_data_validation.md)
