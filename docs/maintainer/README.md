@@ -34,3 +34,4 @@ these are the drafts they were written from.
 - [v0.2.6](release_draft_v0.2.6.md) — PyPI-to-GitHub contributor path
 - [v0.3.0](release_draft_v0.3.0.md) — Agent Quant Benchmark Challenge
 - [v0.3.1](release_draft_v0.3.1.md) — System-One portfolio decision adapter
+- [v0.4.0](release_draft_v0.4.0.md) — out-of-sample evaluation and lighter install

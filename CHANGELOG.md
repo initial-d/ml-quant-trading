@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+## 0.4.0 - Out-of-Sample Evaluation and Lighter Install
+
+This release contains breaking changes; see **Upgrading** below.
+
+### Upgrading from 0.3.x
+
+- Public-data loaders need the new extra:
+  `python -m pip install -U 'mlquantx[data]'`. Without it,
+  `load_akshare_panel`, `load_baostock_panel`, and `load_yfinance_panel` raise
+  an `ImportError` that names the extra.
+- `mlquant demo` metrics now cover only the out-of-sample window and will
+  differ from 0.3.x reports, which were in-sample. Set `train_frac` in the
+  config to move the split.
+- Code that calls `Trainer` directly now gets a chronological validation split;
+  pass `val_split_mode="random"` to reproduce 0.3.x training.
+- `run_backtest` charges the initial entry trade. Results only change when the
+  first weight row is non-zero.
+
 ### Out-of-sample demo and board-aware limit masks
 
 - `mlquant demo` / `mlquant train` now train only on the first `train_frac`
