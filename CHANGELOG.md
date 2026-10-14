@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Out-of-sample demo and board-aware limit masks
+
+- `mlquant demo` / `mlquant train` now train only on the first `train_frac`
+  (default `0.6`) of dates, and `mlquant backtest` scores only the remaining
+  out-of-sample window. Previously the demo trained, predicted, and backtested
+  on the same dates, so its metrics were in-sample. `summary.json` gains an
+  `evaluation` block with both windows. Demo metrics change as a result.
+- `Trainer` validation now holds out the most recent samples
+  (`val_split_mode: time`) instead of a shuffled split that mixed adjacent
+  days; `val_split_mode: random` keeps the old behaviour.
+- Added `mlquant.features.board_limit_pct` and `limit_pct: board` so the
+  limit-move proxy uses ±20 % for STAR / ChiNext and ±30 % for BSE names.
+  `limit_move_mask` accepts scalar, `[N]`, or `[T, N]` thresholds.
+- `gen-data` now saves the panel's optional `amount`, `limit_up`, `limit_down`,
+  and `last_close` fields, so the demo's limit mask uses the synthetic
+  exchange limit prices instead of the return proxy.
+- Removed `src/mlquant/features.py`, which was shadowed by the
+  `mlquant.features` package and could never be imported.
+
 ### System-One decision evaluation
 
 - Added `mlquant systemone build-state` to generate typed portfolio decision

@@ -20,7 +20,8 @@ from ..backtest.engine import run_backtest
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
 from ..features.legacy_factors import compute_legacy_set
 from ..features.alpha101 import compute_alpha_set  # backward compat
-from ..features.bias import limit_move_mask
+from ..features.bias import board_limit_pct, limit_move_mask
+from ..features.target import target_01
 from ..models.losses import AdjMSELoss
 from ..models.nets import MLPRegressor
 from ..portfolio.markowitz import MarkowitzConfig, MarkowitzOptimizer
@@ -48,12 +49,52 @@ def _artifacts_dir(cfg) -> Path:
     return p
 
 
+_PANEL_FIELDS = ("open", "high", "low", "close", "volume", "vwap", "mask")
+_OPTIONAL_PANEL_FIELDS = ("amount", "limit_up", "limit_down", "last_close")
+
+
+def _load_panel(art: Path):
+    """Rebuild the :class:`Panel` written by ``gen-data``, optional fields included."""
+    from ..data.panel import Panel
+
+    blob = torch.load(art / "panel.pt", weights_only=False)
+    optional = {k: blob[k] for k in _OPTIONAL_PANEL_FIELDS if blob.get(k) is not None}
+    return Panel(
+        dates=blob["dates"], stocks=blob["stocks"],
+        **{k: blob[k] for k in _PANEL_FIELDS},
+        **optional,
+    )
+
+
+def _resolve_limit_pct(cfg, panel):
+    """``limit_pct`` is a number, or ``"board"`` for per-board A-share thresholds."""
+    limit_pct = cfg.get("limit_pct", 0.098)
+    if isinstance(limit_pct, str):
+        if limit_pct != "board":
+            raise click.BadParameter(f"limit_pct must be a number or 'board', got {limit_pct!r}")
+        return board_limit_pct(panel.stocks, panel.dates)
+    return float(limit_pct)
+
+
+def _oos_start(cfg, n_dates: int) -> int:
+    """First out-of-sample date index; the model only trains on dates before it."""
+    train_frac = float(cfg.get("train_frac", 0.6))
+    if not 0.0 < train_frac < 1.0:
+        raise click.BadParameter(f"train_frac must be in (0, 1), got {train_frac}")
+    return max(1, min(n_dates - 2, int(n_dates * train_frac)))
+
+
+def _date_str(value) -> str:
+    return str(np.datetime_as_string(np.datetime64(value, "D")))
+
+
 def _write_backtest_summary(
     output_dir: Path,
     metrics: dict,
     *,
     config_path: str,
     costs_bps: float,
+    evaluation: dict | None = None,
 ) -> tuple[Path, Path]:
     """Write portable JSON and Markdown summaries for sharing and review."""
     clean_metrics = {
@@ -72,11 +113,23 @@ def _write_backtest_summary(
             "Synthetic research output only; not investment advice or evidence of live performance."
         ),
     }
+    if evaluation is not None:
+        payload["evaluation"] = evaluation
     json_path = output_dir / "summary.json"
     json_path.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+
+    window_lines = []
+    if evaluation is not None:
+        window_lines = [
+            (
+                f"- Train window: `{evaluation['train_start']}` → `{evaluation['train_end']}`;"
+                f" out-of-sample window: `{evaluation['oos_start']}` → `{evaluation['oos_end']}`"
+            ),
+            "- Metrics cover the out-of-sample window only; the model never trained on it.",
+        ]
 
     rows = []
     for key, value in clean_metrics.items():
@@ -94,6 +147,7 @@ def _write_backtest_summary(
             "",
             f"- Config: `{config_path}`",
             f"- Transaction cost assumption: `{costs_bps:g} bps`",
+            *window_lines,
             "- Workflow: synthetic data → 213 factors → MLP → Markowitz → backtest",
             f"- Source: [{PROJECT_URL}]({PROJECT_URL})",
             (
@@ -173,12 +227,10 @@ def cmd_gen_data(config_path: str) -> None:
     syn = SyntheticConfig(**cfg.synthetic.to_dict()) if "synthetic" in cfg else SyntheticConfig()
     panel = make_synthetic_panel(syn)
     out = _artifacts_dir(cfg) / "panel.pt"
-    torch.save({
-        "dates": panel.dates, "stocks": panel.stocks,
-        "open":  panel.open,  "high":  panel.high,  "low":  panel.low,
-        "close": panel.close, "volume": panel.volume, "vwap": panel.vwap,
-        "mask":  panel.mask,
-    }, out)
+    blob = {"dates": panel.dates, "stocks": panel.stocks}
+    for key in _PANEL_FIELDS + _OPTIONAL_PANEL_FIELDS:
+        blob[key] = getattr(panel, key)
+    torch.save(blob, out)
     click.echo(f"wrote {out}  ({panel.n_dates} dates × {panel.n_stocks} stocks)")
 
 
@@ -188,15 +240,8 @@ def cmd_features(config_path: str) -> None:
     cfg = load_config(config_path)
     seed_everything(cfg.get("seed", 42))
     art = _artifacts_dir(cfg)
-    panel_blob = torch.load(art / "panel.pt", weights_only=False)
-    from ..data.panel import Panel
-    panel = Panel(
-        dates=panel_blob["dates"], stocks=panel_blob["stocks"],
-        open=panel_blob["open"], high=panel_blob["high"], low=panel_blob["low"],
-        close=panel_blob["close"], volume=panel_blob["volume"], vwap=panel_blob["vwap"],
-        mask=panel_blob["mask"],
-    )
-    bias_mask = limit_move_mask(panel, limit_pct=cfg.get("limit_pct", 0.098))
+    panel = _load_panel(art)
+    bias_mask = limit_move_mask(panel, limit_pct=_resolve_limit_pct(cfg, panel))
     factors, mask, names = compute_legacy_set(panel)
     mask = mask & bias_mask
     torch.save({"factors": factors, "mask": mask, "names": names}, art / "features.pt")
@@ -209,17 +254,19 @@ def cmd_train(config_path: str) -> None:
     cfg = load_config(config_path)
     seed_everything(cfg.get("seed", 42))
     art = _artifacts_dir(cfg)
-    panel_blob = torch.load(art / "panel.pt", weights_only=False)
+    panel = _load_panel(art)
     feat_blob  = torch.load(art / "features.pt", weights_only=False)
+    fwd_ret, _ = target_01(panel)
 
-    close = panel_blob["close"]
-    fwd_ret = torch.zeros_like(close)
-    fwd_ret[:-1] = close[1:] / close[:-1].clamp_min(1e-9) - 1.0
-
+    # Train only on dates before the out-of-sample window. Slicing to
+    # ``oos + 1`` keeps the label of the last training day (close at ``oos``),
+    # which is already known when the first out-of-sample signal is formed.
+    T = fwd_ret.shape[0]
+    oos = _oos_start(cfg, T)
     ds = FactorDataset(
-        factors=feat_blob["factors"],
-        mask=feat_blob["mask"],
-        forward_returns=fwd_ret,
+        factors=feat_blob["factors"][: oos + 1],
+        mask=feat_blob["mask"][: oos + 1],
+        forward_returns=fwd_ret[: oos + 1],
     )
     n_features = ds.features.shape[1]
     model = MLPRegressor(in_dim=n_features, hidden=cfg.get("hidden", 128))
@@ -227,14 +274,18 @@ def cmd_train(config_path: str) -> None:
                       TrainConfig(**(cfg.train.to_dict() if "train" in cfg else {})))
     trainer.fit(ds)
 
-    # Write predictions for every (t, n) cell that's tradable.
+    # Write predictions for every tradable out-of-sample (t, n) cell.
     with torch.no_grad():
         T, N, F = feat_blob["factors"].shape
         flat = feat_blob["factors"].reshape(-1, F)
         pred = model(flat.to(trainer.cfg.device)).cpu().reshape(T, N)
     pred = pred * feat_blob["mask"].float()
-    torch.save({"pred": pred}, art / "predictions.pt")
-    click.echo(f"wrote predictions: {pred.shape}")
+    pred[:oos] = 0.0
+    torch.save({"pred": pred, "oos_start": oos}, art / "predictions.pt")
+    click.echo(
+        f"wrote predictions: {pred.shape}  (trained on dates [0, {oos}),"
+        f" out-of-sample from {oos})"
+    )
 
 
 @cli.command("portfolio")
@@ -257,8 +308,9 @@ def cmd_portfolio(config_path: str) -> None:
     opt = MarkowitzOptimizer(mk_cfg)
 
     T, N = pred.shape
+    oos = int(pred_blob.get("oos_start", 0))
     weights = np.zeros_like(pred)
-    for t in range(look_back, T - 1):
+    for t in range(max(look_back, oos), T - 1):
         tradable = mask[t]
         idx = np.where(tradable)[0]
         if idx.size < 5:
@@ -282,6 +334,10 @@ def cmd_backtest(config_path: str) -> None:
     art = _artifacts_dir(cfg)
     panel_blob = torch.load(art / "panel.pt", weights_only=False)
     weight_blob = torch.load(art / "weights.pt", weights_only=False)
+    pred_path = art / "predictions.pt"
+    oos = 0
+    if pred_path.exists():
+        oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0))
 
     close = panel_blob["close"].numpy()
     rets = np.zeros_like(close)
@@ -289,7 +345,22 @@ def cmd_backtest(config_path: str) -> None:
 
     weights = weight_blob["weights"].numpy()
     costs_bps = cfg.get("costs_bps", 5.0)
-    res = run_backtest(weights, rets, costs_bps=costs_bps)
+    # Score only the out-of-sample window. Starting one row early keeps the
+    # flat book before the first out-of-sample rebalance, so the entry trade
+    # is charged its transaction cost.
+    start = max(0, oos - 1)
+    res = run_backtest(weights[start:], rets[start:], costs_bps=costs_bps)
+    evaluation = None
+    if oos > 0:
+        dates = panel_blob["dates"]
+        evaluation = {
+            "train_start": _date_str(dates[0]),
+            "train_end": _date_str(dates[oos - 1]),
+            "oos_start": _date_str(dates[oos]),
+            "oos_end": _date_str(dates[-1]),
+            "n_train_dates": oos,
+            "n_oos_dates": int(len(dates) - oos),
+        }
     out = art / "backtest.pkl"
     with open(out, "wb") as fh:
         pickle.dump(res, fh)
@@ -298,9 +369,10 @@ def cmd_backtest(config_path: str) -> None:
         res.metrics,
         config_path=config_path,
         costs_bps=costs_bps,
+        evaluation=evaluation,
     )
 
-    click.echo("\nBacktest summary")
+    click.echo("\nBacktest summary" + (" (out-of-sample window)" if evaluation else ""))
     click.echo("-" * 40)
     for k, v in res.metrics.items():
         if isinstance(v, float):

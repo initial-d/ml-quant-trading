@@ -3,9 +3,12 @@
 
 seed: 42
 artifacts_dir: artifacts/small
-limit_pct: 0.098
+limit_pct: 0.098            # or "board" for per-board A-share thresholds
 costs_bps: 5.0
 cov_lookback: 60
+# Chronological split: the model trains on the first 60% of dates and the
+# backtest scores only the remaining out-of-sample dates.
+train_frac: 0.6
 hidden: 64
 loss_gamma: 0.1
 

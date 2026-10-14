@@ -103,3 +103,66 @@ def test_backtest_summary_is_shareable_and_strict_json(tmp_path):
     assert "not investment advice" in markdown
     assert "https://github.com/initial-d/ml-quant-trading" in markdown
     assert "open the report form" in markdown
+
+
+TINY_CONFIG = """\
+seed: 7
+artifacts_dir: artifacts/tiny
+limit_pct: 0.098
+costs_bps: 5.0
+cov_lookback: 20
+train_frac: 0.6
+hidden: 8
+synthetic:
+  n_stocks: 20
+  n_dates: 120
+  seed: 7
+train:
+  epochs: 1
+  batch_size: 256
+  save_dir: artifacts/tiny/checkpoints
+portfolio:
+  risk_aversion: 5.0
+  weight_cap: 0.2
+  long_only: true
+  solver: SCS
+"""
+
+
+def test_pipeline_scores_only_the_out_of_sample_window(tmp_path):
+    import torch
+
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        Path("tiny.yaml").write_text(TINY_CONFIG, encoding="utf-8")
+        result = runner.invoke(cli, ["demo", "--config", "tiny.yaml"])
+        assert result.exit_code == 0, result.output
+
+        art = Path("artifacts/tiny")
+        pred = torch.load(art / "predictions.pt", weights_only=False)
+        oos = pred["oos_start"]
+        assert oos == 72
+        assert not pred["pred"][:oos].any()
+
+        weights = torch.load(art / "weights.pt", weights_only=False)["weights"]
+        assert not weights[:oos].any()
+        assert weights[oos:].abs().sum() > 0
+
+        summary = json.loads((art / "summary.json").read_text(encoding="utf-8"))
+        evaluation = summary["evaluation"]
+        assert evaluation["n_train_dates"] == oos
+        assert evaluation["n_oos_dates"] == 120 - oos
+        assert evaluation["train_end"] < evaluation["oos_start"]
+        # One flat row before the first out-of-sample rebalance, then the window.
+        assert summary["metrics"]["n_periods"] == 120 - oos + 1
+        assert "out-of-sample window" in (art / "summary.md").read_text(encoding="utf-8")
+
+
+def test_invalid_train_frac_is_rejected(tmp_path):
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        Path("bad.yaml").write_text(TINY_CONFIG.replace("train_frac: 0.6", "train_frac: 1.5"),
+                                    encoding="utf-8")
+        result = runner.invoke(cli, ["demo", "--config", "bad.yaml"])
+        assert result.exit_code != 0
+        assert "train_frac" in result.output

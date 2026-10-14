@@ -1,6 +1,9 @@
 """Bias-correction limit-day mask."""
 from __future__ import annotations
 
+from dataclasses import replace
+
+import pytest
 import torch
 
 from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
@@ -23,3 +26,33 @@ def test_limit_mask_subset_of_panel_mask():
     m = limit_move_mask(p)
     # halted cells (panel.mask = False) should also be False here
     assert (m & ~p.mask).sum().item() == 0
+
+
+def test_board_limit_pct_classifies_a_share_boards():
+    from mlquant.features.bias import board_limit_pct
+
+    stocks = ["600519", "sz.300750", "688981.SS", "bj.430047", "000001.SZ", "AAPL", "SYN00001"]
+    pct = board_limit_pct(stocks, default=0.5)
+    assert pct.tolist() == pytest.approx([0.098, 0.198, 0.198, 0.298, 0.098, 0.5, 0.5])
+
+
+def test_board_limit_pct_applies_chinext_rule_change_by_date():
+    import numpy as np
+
+    from mlquant.features.bias import board_limit_pct
+
+    dates = np.array(["2020-08-21", "2020-08-24"], dtype="datetime64[D]")
+    pct = board_limit_pct(["300750", "688981"], dates)
+    assert pct.shape == (2, 2)
+    assert pct[:, 0].tolist() == pytest.approx([0.098, 0.198])   # ChiNext switches
+    assert pct[:, 1].tolist() == pytest.approx([0.198, 0.198])   # STAR was always 20 %
+
+
+def test_limit_mask_accepts_per_stock_thresholds():
+    p = make_synthetic_panel(SyntheticConfig(n_stocks=2, n_dates=20, seed=13))
+    p = replace(p, limit_up=None, limit_down=None, last_close=None)
+    p.close[5, :] = p.close[4, :] * 1.15
+    # Stock 0 on a 10 % board (masked), stock 1 on a 20 % board (tradable).
+    m = limit_move_mask(p, limit_pct=torch.tensor([0.098, 0.198]))
+    assert not bool(m[5, 0])
+    assert bool(m[5, 1]) == bool(p.mask[5, 1])

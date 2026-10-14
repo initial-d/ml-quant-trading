@@ -46,6 +46,32 @@ Cross-sectional ML pipelines are especially vulnerable to leakage. Common risks 
 
 A publishable result should document the train, validation, and test split, plus any gap or purging rule used to prevent overlap.
 
+### What `mlquant demo` does
+
+The CLI pipeline splits by date. `train_frac` (default `0.6`) sets the first
+out-of-sample date index; the model trains only on earlier dates, its
+validation set is the most recent slice of those training samples
+(`val_split_mode: time`), and the backtest scores only the out-of-sample window.
+`summary.json` records both windows under `evaluation`. The one-day label of the
+last training date uses the close of the first out-of-sample date, which is
+already known when the first out-of-sample signal is formed, so no purge gap is
+needed for the default one-day horizon; longer horizons need one.
+
+This is a single split, not a walk-forward evaluation. Demo metrics come from
+synthetic data and are expected to hover around zero or below after costs.
+`scripts/public_data_validation.py` runs rolling walk-forward splits.
+
+## Limit-Move Masks
+
+Without exchange-published `limit_up` / `limit_down` prices, limit days are
+detected with a `|return| > limit_pct` proxy. A scalar `limit_pct` (default
+`0.098`) only fits Main Board names. Set `limit_pct: board` in the config, or
+pass `mlquant.features.board_limit_pct(stocks, dates)` to `limit_move_mask`,
+to use ±20 % thresholds for STAR Market and ChiNext (ChiNext from 2020-08-24)
+and ±30 % for the Beijing Stock Exchange. The ticker code cannot reveal ST
+status (±5 %) or the unlimited first trading days after an IPO; supply real
+limit prices when those cases matter.
+
 ## Transaction Costs
 
 Backtest returns should be reported both before and after transaction costs. Cost assumptions should include commissions, taxes, fees, and any exchange-specific trading expenses that apply to the target market.
