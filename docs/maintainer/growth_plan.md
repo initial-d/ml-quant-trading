@@ -25,7 +25,7 @@ Primary audience:
 - It has a clear factor library: 213 factors, including 204 legacy factors.
 - It includes CI, tests, issue templates, contribution docs, and benchmark tooling.
 - It has enough real engineering depth to be fork-worthy, not just a notebook.
-- It now has a short [`Share This Project`](share_this_project.md) page for
+- It now has a short [`Share This Project`](../share_this_project.md) page for
   copy-ready recommendations that keep the framing on reproducibility evidence.
 
 ## Current High-Leverage Work

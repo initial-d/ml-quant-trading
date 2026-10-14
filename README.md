@@ -304,6 +304,9 @@ cd ml-quant-trading
 python -m pip install -e '.[dev]'  # add ,gpu for CUDA; add ,mosek for MOSEK solver
 ```
 
+The public-data loaders (AkShare, Baostock, yfinance) live in the `data` extra:
+`python -m pip install 'mlquantx[data]'`. The `dev` extra already includes it.
+
 ### Google Colab Quick Start
 
 Run the deterministic end-to-end pipeline in Google Colab without a market-data
@@ -388,10 +391,10 @@ For VS Code or GitHub Codespaces, use the included Dev Container:
 It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`.
 
 <details>
-<summary><b>Maintainer, launch, and community resources</b></summary>
+<summary><b>Documentation index</b></summary>
 
 - [CHANGELOG.md](CHANGELOG.md) summarizes public releases.
-- [docs/launch_playbook.md](docs/launch_playbook.md) contains the launch checklist, recommended repository topics, and social preview guidance.
+- [docs/maintainer/](docs/maintainer/README.md) collects launch, outreach, and release-draft notes for maintainers.
 - [docs/start_here.md](docs/start_here.md) gives new users a fast path through the project.
 - [docs/research_card.md](docs/research_card.md) summarizes intended use, validation status, data assumptions, and known risks.
 - [docs/reality_check.md](docs/reality_check.md) explains what is real, what is still a smoke test, and what is not claimed.
@@ -407,20 +410,9 @@ It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`
 - [docs/validation_akshare_csi300_full_pipeline_20260729.md](docs/validation_akshare_csi300_full_pipeline_20260729.md) records the daily 213-factor AkShare CSI 300 public-data approximation.
 - [docs/validation_digest_20260727.md](docs/validation_digest_20260727.md) summarizes the public validation and discovery surface for `v0.2.1`.
 - [docs/share_this_project.md](docs/share_this_project.md) gives visitors short, safe sharing language.
-- [docs/promotion_kit.md](docs/promotion_kit.md) contains copy-ready social and community posts.
 - [docs/article_zh_213_factor_csi300.md](docs/article_zh_213_factor_csi300.md) is the long-form Chinese technical launch article.
 - [docs/article_zh_quant_jev_portfolio_decision.md](docs/article_zh_quant_jev_portfolio_decision.md) explains the quant Jev-style portfolio decision surface in Chinese.
-- [docs/community_posts_zh.md](docs/community_posts_zh.md) adapts the article for Zhihu, Juejin, V2EX, JoinQuant, and Ricequant.
-- [docs/community_outreach.md](docs/community_outreach.md) lists target communities and copy-ready outreach posts.
-- [docs/content_calendar.md](docs/content_calendar.md) turns real updates into a four-week launch rhythm.
-- [docs/visibility_status.md](docs/visibility_status.md) tracks live launch links, contributor calls, and next outreach steps.
 - [docs/community.md](docs/community.md) explains contribution lanes and maintainer response rules.
-- [docs/release_draft_v0.1.0.md](docs/release_draft_v0.1.0.md) is the first public baseline release draft.
-- [docs/release_draft_v0.2.0.md](docs/release_draft_v0.2.0.md) is the public validation and contributor-workflow release draft.
-- [docs/release_draft_v0.2.1.md](docs/release_draft_v0.2.1.md) is the validation entrypoint and outreach follow-through release draft.
-- [docs/release_draft_v0.2.2.md](docs/release_draft_v0.2.2.md) is the AkShare public A-share validation release draft.
-- [docs/release_draft_v0.3.0.md](docs/release_draft_v0.3.0.md) is the Agent Quant Benchmark Challenge release draft.
-- [docs/release_draft_v0.3.1.md](docs/release_draft_v0.3.1.md) is the System-One portfolio decision release draft.
 - [`v0.1.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.1.0) is the first public research baseline release.
 - [`v0.2.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.0) is the public validation and contributor-workflow release.
 - [`v0.2.1`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.1) is the validation entrypoint and outreach follow-through release.
@@ -647,10 +639,9 @@ assumptions, and limitations.
 See [docs/roadmap.md](docs/roadmap.md) for contributor-friendly tasks, research
 extensions, engineering extensions, and community milestones.
 
-For announcements, release posts, and benchmark calls, see the
-[Promotion Kit](docs/promotion_kit.md). For the maintainer growth loop, see
-[docs/growth_plan.md](docs/growth_plan.md). For paper-specific positioning, see
-the [Citation Conversion Guide](docs/citation_conversion.md).
+For paper-specific positioning, see the
+[Citation Conversion Guide](docs/citation_conversion.md). Maintainer launch and
+release notes live in [docs/maintainer/](docs/maintainer/README.md).
 
 ## Boundary
 

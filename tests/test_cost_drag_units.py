@@ -57,3 +57,13 @@ def test_legacy_alias_still_reads():
     assert res.cost_drag == res.cost_drag_cumulative
     assert res.metrics["cost_drag"] == res.metrics["cost_drag_cumulative"]
     assert "cost_drag_cumulative" in res.metrics
+
+
+def test_initial_entry_from_flat_book_is_charged():
+    """Buying the first book costs the same as any other full rebalance."""
+    weights = np.array([[0.5, 0.5], [0.5, 0.5]])
+    returns = np.zeros_like(weights)
+    res = run_backtest(weights, returns, costs_bps=10.0)
+    assert np.isclose(res.portfolio_returns[0], -1.0 * 10e-4)
+    assert np.isclose(res.portfolio_returns[1], 0.0)
+    assert np.isclose(res.cost_drag_cumulative, 10e-4)

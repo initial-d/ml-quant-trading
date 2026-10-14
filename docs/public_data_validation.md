@@ -44,6 +44,9 @@ copy-ready report.
 
 ## Larger Public-Data Run
 
+Public-data runs need the provider extra: `python -m pip install 'mlquantx[data]'`
+(already included in `.[dev]`).
+
 The default public run uses a 100-name US large-cap preset from yfinance:
 
 ```bash

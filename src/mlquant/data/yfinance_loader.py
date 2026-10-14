@@ -3,9 +3,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import torch
-from typing import Sequence, Optional, Union
-import yfinance as yf
+from typing import Sequence, Union
 
+from ._optional import require
 from .panel import Panel
 
 def load_yfinance_panel(
@@ -34,6 +34,7 @@ def load_yfinance_panel(
     if not tickers:
         raise ValueError("Tickers list cannot be empty")
 
+    yf = require("yfinance")
     df = yf.download(list(tickers), start=start, end=end)
     if df.empty:
         raise ValueError(f"No data returned for tickers {tickers} from {start} to {end}")

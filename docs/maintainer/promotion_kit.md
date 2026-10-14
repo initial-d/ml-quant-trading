@@ -4,7 +4,7 @@ Use this page when announcing releases, asking for benchmark results, or sharing
 with research and engineering communities.
 
 For a shorter visitor-facing link with copy-ready snippets, use
-[`share_this_project.md`](share_this_project.md).
+[`share_this_project.md`](../share_this_project.md).
 
 ## Short Description
 

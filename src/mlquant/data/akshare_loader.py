@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import torch
 
+from ._optional import require
 from .panel import Panel
 
 
@@ -41,7 +42,7 @@ def load_akshare_panel(
     retry_sleep : float
         Base seconds to wait between retry attempts.
     """
-    import akshare
+    akshare = require("akshare")
 
     if not tickers:
         raise ValueError("Tickers list cannot be empty")

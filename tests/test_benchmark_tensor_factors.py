@@ -2,7 +2,6 @@ import pytest
 import json
 from pathlib import Path
 
-import pytest
 
 from scripts.benchmark_tensor_factors import (
     PROTOCOL_VERSION,

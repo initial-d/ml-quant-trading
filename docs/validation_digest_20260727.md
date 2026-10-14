@@ -59,7 +59,7 @@ to run and audit before it is impressive.
 Recorded on 2026-07-27:
 
 - Repository pulse during outreach: 55 stars, 28 forks, 4 watchers.
-- GitHub traffic snapshot in `docs/visibility_status.md`: 1,206 views and 246
+- GitHub traffic snapshot in `docs/maintainer/visibility_status.md`: 1,206 views and 246
   unique visitors over GitHub's rolling 14-day window.
 - Clone snapshot: 465 total clones and 249 unique cloners over the same window.
 - High-interest paths include the Chinese README, factor handbook, issue #22,

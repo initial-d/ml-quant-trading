@@ -99,11 +99,11 @@ mlquant systemone decide \
   --output artifacts/systemone/portfolio_decision.json
 ```
 
-See [docs/systemone_adapter.md](systemone_adapter.md) for the full state and
+See [docs/systemone_adapter.md](../systemone_adapter.md) for the full state and
 question contract.
 
 Chinese explanation:
-[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](article_zh_quant_jev_portfolio_decision.md).
+[量化 Jev 不一定要接入模型：把多因子 Pipeline 封装成 Portfolio Decision Surface](../article_zh_quant_jev_portfolio_decision.md).
 
 ## Verification
 

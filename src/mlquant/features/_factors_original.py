@@ -5,7 +5,7 @@ import torch
 
 from ..data.panel import Panel
 from .tensor_factors import (
-    cs_rank, cs_zscore, delay, delta, ts_corr, ts_max, ts_mean, ts_min, ts_rank, ts_std,
+    cs_rank, cs_zscore, delay, delta, ts_corr, ts_max, ts_min, ts_rank, ts_std,
 )
 from .legacy_factors import register_legacy_factor
 

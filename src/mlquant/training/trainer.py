@@ -9,11 +9,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Iterable, Optional
+from typing import Callable, Iterable
 
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 from .dataset import FactorDataset
 
@@ -29,6 +29,10 @@ class TrainConfig:
     log_every:   int   = 50
     save_dir:    str   = "checkpoints"
     val_split:   float = 0.1
+    # "time" holds out the most recent samples (FactorDataset is ordered by
+    # date), so validation never sees days that precede training days.
+    # "random" restores the old shuffled split for backward compatibility.
+    val_split_mode: str = "time"
     extra:       dict  = field(default_factory=dict)
 
 
@@ -54,10 +58,18 @@ class Trainer:
     def fit(self, dataset: FactorDataset) -> dict:
         n_val = max(1, int(len(dataset) * self.cfg.val_split))
         n_train = len(dataset) - n_val
-        train_ds, val_ds = torch.utils.data.random_split(
-            dataset, [n_train, n_val],
-            generator=torch.Generator().manual_seed(0),
-        )
+        if self.cfg.val_split_mode == "time":
+            train_ds = Subset(dataset, range(n_train))
+            val_ds = Subset(dataset, range(n_train, len(dataset)))
+        elif self.cfg.val_split_mode == "random":
+            train_ds, val_ds = torch.utils.data.random_split(
+                dataset, [n_train, n_val],
+                generator=torch.Generator().manual_seed(0),
+            )
+        else:
+            raise ValueError(
+                f"val_split_mode must be 'time' or 'random', got {self.cfg.val_split_mode!r}"
+            )
         train_loader = DataLoader(train_ds, batch_size=self.cfg.batch_size,
                                   shuffle=True, drop_last=True)
         val_loader   = DataLoader(val_ds,   batch_size=self.cfg.batch_size)

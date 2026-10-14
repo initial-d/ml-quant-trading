@@ -199,7 +199,7 @@ pipeline state + typed portfolio questions -> typed portfolio-intent answers
 - [中文技术长文：可信 Sharpe 之前的六项管线不变量](docs/article_zh_six_pipeline_invariants.md)
 - [中文技术长文：量化 Jev-style Portfolio Decision Surface](docs/article_zh_quant_jev_portfolio_decision.md)
 - [System-One Adapter 文档](docs/systemone_adapter.md)
-- [知乎、掘金、V2EX、聚宽、米筐定制发布稿](docs/community_posts_zh.md)
+- [维护者发布与推广材料](docs/maintainer/README.md)
 - [Reality Check and Validation Status](docs/reality_check.md)
 - [Public-Data Validation](docs/public_data_validation.md)
 - [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md)

@@ -35,16 +35,21 @@ dependencies = [
     "click>=8.1",
     "rich>=13.0",
     "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+# Public market-data providers. Only needed for the AkShare / Baostock /
+# yfinance loaders; the synthetic demo runs without them.
+data = [
     "yfinance>=0.2.0",
     "baostock>=0.8.8",
     "akshare>=1.18.0",
 ]
-
-[project.optional-dependencies]
 mosek = ["Mosek>=10.0"]
 ecos  = ["ecos>=2.0"]
 gpu = ["cupy-cuda12x>=12.0"]
 dev = [
+    "mlquantx[data]",
     "pytest>=7.4",
     "pytest-cov>=4.1",
     "ruff>=0.4",
@@ -86,7 +91,7 @@ extend-exclude = ["legacy"]
 [tool.ruff.lint]
 # Keep CI focused on fatal errors for now. The legacy factor modules still need
 # a dedicated formatting pass before stricter style families can be enabled.
-select = ["E9", "F63", "F7", "F82", "B"]
+select = ["E9", "F", "B"]
 ignore = []
 
 [tool.mypy]

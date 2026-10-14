@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import unittest.mock as mock
-import numpy as np
-import pandas as pd
 import torch
 import pytest
 from mlquant.data.baostock_loader import load_baostock_panel
