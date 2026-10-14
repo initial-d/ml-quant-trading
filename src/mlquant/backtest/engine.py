@@ -10,8 +10,9 @@ returns : np.ndarray [T, N]
     earned by ``weights[t-1]``).
 costs_bps : float
     Round-trip transaction cost in basis points charged on absolute
-    weight changes. The default 5 bps roughly matches A-share retail
-    commissions + half-spread on liquid names.
+    weight changes, including the initial entry from a flat book. The
+    default 5 bps roughly matches A-share retail commissions + half-spread
+    on liquid names.
 
 The engine is intentionally tiny — every realistic refinement (slippage
 models, borrow fees, T+1 settlement) goes into a sibling module rather
@@ -79,8 +80,10 @@ def run_backtest(
     w_lag[1:] = weights[:-1]
 
     gross = (w_lag * returns).sum(axis=1)
-    # Cost drag from rebalancing day t.
-    delta = np.zeros_like(weights)
+    # Cost drag from rebalancing day t. The book starts flat, so the
+    # first row's weights are a full entry trade and are charged too.
+    delta = np.empty_like(weights)
+    delta[0] = np.abs(weights[0])
     delta[1:] = np.abs(weights[1:] - weights[:-1])
     cost = delta.sum(axis=1) * (costs_bps * 1e-4)
     net = gross - cost

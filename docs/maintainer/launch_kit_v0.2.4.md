@@ -103,7 +103,7 @@ https://github.com/initial-d/ml-quant-trading/blob/main/docs/backtest_cost_drag_
 如何在不破坏旧报告的前提下修复字段契约。
 
 正文直接改编
-[`backtest_cost_drag_story.md`](backtest_cost_drag_story.md)，保留实验表格、迁移
+[`backtest_cost_drag_story.md`](../backtest_cost_drag_story.md)，保留实验表格、迁移
 代码和“审计自己的回测”章节。结尾只放技术故事和仓库链接，不使用收益截图。
 
 ## X / LinkedIn

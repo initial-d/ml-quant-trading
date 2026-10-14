@@ -14,7 +14,7 @@ pipeline without overstating the result?
 
 ## What changed
 
-- Add the [Agent Quant Benchmark Challenge](agent_quant_benchmark_challenge.md).
+- Add the [Agent Quant Benchmark Challenge](../agent_quant_benchmark_challenge.md).
 - Connect the challenge from the README top links and fast-path table.
 - Point agent users to existing reproduction, benchmark, DSH, public-data, and
   private-evaluation report templates.

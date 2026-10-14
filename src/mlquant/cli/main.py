@@ -19,7 +19,6 @@ import torch
 from ..backtest.engine import run_backtest
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
 from ..features.legacy_factors import compute_legacy_set
-from ..features.alpha101 import compute_alpha_set  # backward compat
 from ..features.bias import board_limit_pct, limit_move_mask
 from ..features.target import target_01
 from ..models.losses import AdjMSELoss
@@ -345,11 +344,9 @@ def cmd_backtest(config_path: str) -> None:
 
     weights = weight_blob["weights"].numpy()
     costs_bps = cfg.get("costs_bps", 5.0)
-    # Score only the out-of-sample window. Starting one row early keeps the
-    # flat book before the first out-of-sample rebalance, so the entry trade
-    # is charged its transaction cost.
-    start = max(0, oos - 1)
-    res = run_backtest(weights[start:], rets[start:], costs_bps=costs_bps)
+    # Score only the out-of-sample window; the engine charges the entry
+    # trade on its first row.
+    res = run_backtest(weights[oos:], rets[oos:], costs_bps=costs_bps)
     evaluation = None
     if oos > 0:
         dates = panel_blob["dates"]

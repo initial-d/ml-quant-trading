@@ -207,7 +207,6 @@ def ewma(x: Tensor, mask: Tensor, alpha: float) -> Tuple[Tensor, Tensor]:
     if not 0.0 < alpha <= 1.0:
         raise ValueError(f"alpha must be in (0,1], got {alpha}")
     x64  = x.to(torch.float64).masked_fill(~mask, 0.0)
-    m64  = mask.to(torch.float64)
     out  = torch.zeros_like(x64)
     last = torch.zeros(x64.shape[1], dtype=torch.float64, device=x.device)
     for t in range(x64.shape[0]):

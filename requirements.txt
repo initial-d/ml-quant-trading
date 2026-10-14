@@ -16,5 +16,7 @@ pyyaml>=6.0
 click>=8.1
 rich>=13.0
 tqdm>=4.65
+# Public market-data providers (the `[data]` extra).
 yfinance>=0.2.0
 baostock>=0.8.8
+akshare>=1.18.0

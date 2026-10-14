@@ -30,10 +30,9 @@ import torch
 
 from ..data.panel import Panel
 from .tensor_factors import (
-    cs_rank, cs_zscore,
-    delay, delta,
-    ewma,
-    ts_corr, ts_max, ts_mean, ts_min, ts_rank, ts_std, ts_sum,
+    cs_zscore,
+    delta,
+    ts_mean,
 )
 
 

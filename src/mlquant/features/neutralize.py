@@ -47,7 +47,6 @@ def neutralize_industry(
     Tensor [T, N] — residuals, masked cells set to 0.
     """
     T, N = x.shape
-    K = industry_onehot.shape[-1]
     out = torch.zeros_like(x)
 
     for t in range(T):

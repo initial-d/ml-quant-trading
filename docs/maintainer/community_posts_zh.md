@@ -4,7 +4,7 @@
 用于立即体验。发布前应再次检查对应社区的自荐规则，并在发布后回复技术问题。
 不要在同一天把完全相同的正文群发到所有平台。
 
-统一配图：[`assets/validation-cost-sensitivity.png`](assets/validation-cost-sensitivity.png)。
+统一配图：[`assets/validation-cost-sensitivity.png`](../assets/validation-cost-sensitivity.png)。
 图中横轴是交易成本而非时间，发布时不要称为净值曲线。
 
 ## 知乎
@@ -20,7 +20,7 @@ PyTorch 多因子研究框架开源后，用 AkShare 当前沪深 300 数据做�
 2021—2024 日频验证。结果里最值得看的不是缓冲组合 22.20% 的年化收益，而是
 朴素因子组合从 31.57% 毛年化掉到 15.80% 净年化的过程。
 
-正文使用 [`article_zh_213_factor_csi300.md`](article_zh_213_factor_csi300.md)
+正文使用 [`article_zh_213_factor_csi300.md`](../article_zh_213_factor_csi300.md)
 全文。结尾仅保留：
 
 > 想检查工程是否能在你的环境跑通：
@@ -135,7 +135,7 @@ PyTorch 算子、A 股涨跌停/停牌处理、MLP/Transformer、Markowitz 和�
 ## 量化 Jev / System-One Decision Surface
 
 这一组发布稿用于介绍 `v0.3.1` 的 portfolio decision adapter。正文可以直接使用
-[`article_zh_quant_jev_portfolio_decision.md`](article_zh_quant_jev_portfolio_decision.md)，
+[`article_zh_quant_jev_portfolio_decision.md`](../article_zh_quant_jev_portfolio_decision.md)，
 也可以按社区节奏压缩成下面的短帖。不要把它描述成官方 Jev 集成、实盘交易模型或
 投资建议。
 

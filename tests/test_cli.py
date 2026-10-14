@@ -153,8 +153,7 @@ def test_pipeline_scores_only_the_out_of_sample_window(tmp_path):
         assert evaluation["n_train_dates"] == oos
         assert evaluation["n_oos_dates"] == 120 - oos
         assert evaluation["train_end"] < evaluation["oos_start"]
-        # One flat row before the first out-of-sample rebalance, then the window.
-        assert summary["metrics"]["n_periods"] == 120 - oos + 1
+        assert summary["metrics"]["n_periods"] == 120 - oos
         assert "out-of-sample window" in (art / "summary.md").read_text(encoding="utf-8")
 
 

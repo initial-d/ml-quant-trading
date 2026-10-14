@@ -20,6 +20,21 @@
   exchange limit prices instead of the return proxy.
 - Removed `src/mlquant/features.py`, which was shadowed by the
   `mlquant.features` package and could never be imported.
+- `run_backtest` now charges transaction cost on the initial entry from a
+  flat book (row 0). Runs whose first weight row was already non-zero report
+  slightly higher `cost_drag_cumulative`; runs that start flat are unchanged.
+
+### Packaging and repository layout
+
+- AkShare, Baostock, and yfinance moved from required dependencies to the new
+  `data` extra (`pip install 'mlquantx[data]'`); `dev` includes it. Loaders
+  raise an `ImportError` naming the extra when a provider is missing, and the
+  synthetic demo no longer installs them.
+- Ruff now enforces the full pyflakes (`F`) rule family on `src` and `tests`;
+  unused imports and variables were removed.
+- Launch, outreach, and release-draft pages moved to `docs/maintainer/`, with
+  an index at `docs/maintainer/README.md`. Research and validation docs stay
+  in `docs/`.
 
 ### System-One decision evaluation
 

@@ -21,6 +21,12 @@ training, portfolio construction, cost-aware backtesting, and Markdown/JSON
 report generation. The default config ships inside the wheel, so the command
 works outside a repository checkout.
 
+The AkShare, Baostock, and yfinance public-data loaders are an optional extra:
+
+```bash
+python -m pip install 'mlquantx[data]'
+```
+
 ## Customize or contribute
 
 The wheel is the fastest way to try the project. Clone the repository when you

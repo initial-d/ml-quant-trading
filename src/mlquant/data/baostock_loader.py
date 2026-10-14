@@ -3,8 +3,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import torch
-from typing import Sequence, Optional, Union
+from typing import Sequence, Union
 
+from ._optional import require
 from .panel import Panel
 
 def load_baostock_panel(
@@ -37,7 +38,7 @@ def load_baostock_panel(
             "use proxy_vwap=True"
         )
 
-    import baostock as bs
+    bs = require("baostock")
 
     if not tickers:
         raise ValueError("Tickers list cannot be empty")

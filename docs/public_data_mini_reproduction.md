@@ -27,6 +27,9 @@ Factor subset:
 
 ## Reproduction Snippet
 
+Install the public-data extra first: `python -m pip install 'mlquantx[data]'`
+(a source checkout with `.[dev]` already includes it).
+
 This follows the same pattern as `notebooks/public_factor_ic.ipynb`.
 
 ```python
