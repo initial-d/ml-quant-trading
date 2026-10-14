@@ -206,7 +206,7 @@ submit a structured
 
 **Other current calls for contributors**
 
-- Try the [`v0.3.1` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.1).
+- Try the [`v0.4.0` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.0).
 - Read the [Research Card](docs/research_card.md) for intended use, current evidence, and non-goals.
 - Read the [public-data mini reproduction](docs/public_data_mini_reproduction.md).
 - Share benchmark or public-data results in [Discussions #13](https://github.com/initial-d/ml-quant-trading/discussions/13).
@@ -419,6 +419,7 @@ It installs Python 3.11 and the project with `python -m pip install -e '.[dev]'`
 - [`v0.2.2`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.2.2) is the AkShare public A-share validation release.
 - [`v0.3.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.0) is the Agent Quant Benchmark Challenge release.
 - [`v0.3.1`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.3.1) is the typed portfolio-decision adapter release.
+- [`v0.4.0`](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.0) is the out-of-sample evaluation and lighter-install release.
 - [Benchmark and reproduction discussion](https://github.com/initial-d/ml-quant-trading/discussions/13) is open for community reports.
 
 </details>
