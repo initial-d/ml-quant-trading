@@ -2,10 +2,15 @@
 
 ## Unreleased
 
+## 0.4.1 - Mask-First Factors and Halt-Safe Returns
+
 ### Mask-first limit masks and halt-safe returns
 
 Factor values and backtest metrics change on panels with limit moves or halts;
 re-run reports produced with 0.4.0.
+
+The A-share validation reports and dashboard under `docs/` were produced before
+this fix and now carry a protocol note; their numbers are unchanged.
 
 - `mlquant features` now computes factors on a panel whose `mask` already
   excludes limit-move days, as the paper's mask-first protocol requires.
