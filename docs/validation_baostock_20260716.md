@@ -2,6 +2,12 @@
 
 > **Units note.** `cost_drag` in the tables below is *cumulative over the run*, not annualised — unlike `ann_return`, `gross_ann_return` and `ann_vol` beside it. Divide by the number of years before comparing it with a per-year figure, and do not compare it across reports of different lengths. The field is named `cost_drag_cumulative` in new output; see [the metric glossary](public_data_validation.md#metric-glossary).
 
+> **Protocol note.** This run predates v0.4.1, when the validation scripts
+> applied no limit-move mask: limit-day prices entered factors, labels, and the
+> tradable universe, and halted cells could enter returns as zero-filled prices.
+> The numbers are kept as recorded; re-run with v0.4.1 or later for mask-first
+> results.
+
 
 > 2026-07-16 · Windows 11 · PyTorch 2.13.0+cpu · Python 3.12.7
 

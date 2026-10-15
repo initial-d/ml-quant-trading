@@ -1,5 +1,11 @@
 # Validation Dashboard
 
+> **Protocol note.** The snapshots below predate v0.4.1, when the validation scripts
+> applied no limit-move mask: limit-day prices entered factors, labels, and the
+> tradable universe, and halted cells could enter returns as zero-filled prices.
+> The numbers are kept as recorded; re-run with v0.4.1 or later for mask-first
+> results.
+
 This page tracks the maintained public-data validation snapshot for
 `ml-quant-trading`. It is designed as a reproducibility dashboard, not a live
 trading scoreboard.
