@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import math
 import pickle
+from dataclasses import replace
 from importlib.resources import as_file, files
 from pathlib import Path
 
@@ -241,7 +242,9 @@ def cmd_features(config_path: str) -> None:
     art = _artifacts_dir(cfg)
     panel = _load_panel(art)
     bias_mask = limit_move_mask(panel, limit_pct=_resolve_limit_pct(cfg, panel))
-    factors, mask, names = compute_legacy_set(panel)
+    # Mask-first: factors read ``panel.mask``, so limit-move prices are
+    # excluded from every rolling window, not only from the limit day's row.
+    factors, mask, names = compute_legacy_set(replace(panel, mask=bias_mask))
     mask = mask & bias_mask
     torch.save({"factors": factors, "mask": mask, "names": names}, art / "features.pt")
     click.echo(f"wrote features: {factors.shape}  alphas={names}")
@@ -293,14 +296,13 @@ def cmd_portfolio(config_path: str) -> None:
     cfg = load_config(config_path)
     seed_everything(cfg.get("seed", 42))
     art = _artifacts_dir(cfg)
-    panel_blob = torch.load(art / "panel.pt", weights_only=False)
+    panel = _load_panel(art)
     pred_blob  = torch.load(art / "predictions.pt", weights_only=False)
 
-    close = panel_blob["close"].numpy()
-    mask = panel_blob["mask"].numpy()
+    mask = panel.mask.numpy()
     pred = pred_blob["pred"].numpy()
-    rets = np.zeros_like(close)
-    rets[1:] = close[1:] / np.clip(close[:-1], 1e-9, None) - 1.0
+    # Halt-aware returns: loaders zero-fill halted prices.
+    rets = panel.returns.numpy()
 
     look_back = cfg.get("cov_lookback", 60)
     mk_cfg = MarkowitzConfig(**(cfg.portfolio.to_dict() if "portfolio" in cfg else {}))
@@ -338,9 +340,8 @@ def cmd_backtest(config_path: str) -> None:
     if pred_path.exists():
         oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0))
 
-    close = panel_blob["close"].numpy()
-    rets = np.zeros_like(close)
-    rets[1:] = close[1:] / np.clip(close[:-1], 1e-9, None) - 1.0
+    # Halt-aware returns: loaders zero-fill halted prices.
+    rets = _load_panel(art).returns.numpy()
 
     weights = weight_blob["weights"].numpy()
     costs_bps = cfg.get("costs_bps", 5.0)

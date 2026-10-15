@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import torch
 from click.testing import CliRunner
 
 from mlquant.cli.main import (
@@ -165,3 +166,56 @@ def test_invalid_train_frac_is_rejected(tmp_path):
         result = runner.invoke(cli, ["demo", "--config", "bad.yaml"])
         assert result.exit_code != 0
         assert "train_frac" in result.output
+
+
+def test_features_compute_factors_on_the_limit_masked_panel(monkeypatch, tmp_path):
+    """Mask-first: ``features`` must hand factor code a panel whose mask already
+    excludes limit days, not filter the factor output afterwards."""
+    import mlquant.cli.main as cli_main
+    from mlquant.features.bias import limit_move_mask
+
+    seen = {}
+    real = cli_main.compute_legacy_set
+
+    def spy(panel, **kwargs):
+        seen["mask"] = panel.mask.clone()
+        return real(panel, names=("alpha_001", "stock_001"), **kwargs)
+
+    monkeypatch.setattr(cli_main, "compute_legacy_set", spy)
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        Path("tiny.yaml").write_text(TINY_CONFIG, encoding="utf-8")
+        assert runner.invoke(cli, ["gen-data", "--config", "tiny.yaml"]).exit_code == 0
+        result = runner.invoke(cli, ["features", "--config", "tiny.yaml"])
+        assert result.exit_code == 0, result.output
+
+        panel = cli_main._load_panel(Path("artifacts/tiny"))
+        assert torch.equal(seen["mask"], limit_move_mask(panel, limit_pct=0.098))
+
+
+def test_portfolio_and_backtest_survive_zero_filled_halts(tmp_path):
+    """A held stock that halts (close zero-filled by loaders) must not book
+    -100 % or an astronomical rebound in the backtest."""
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        Path("tiny.yaml").write_text(TINY_CONFIG, encoding="utf-8")
+        assert runner.invoke(cli, ["demo", "--config", "tiny.yaml"]).exit_code == 0
+        art = Path("artifacts/tiny")
+
+        weights = torch.load(art / "weights.pt", weights_only=False)["weights"]
+        oos = torch.load(art / "predictions.pt", weights_only=False)["oos_start"]
+        t, stock = oos + 5, int(weights[oos + 5].argmax())
+        assert weights[t, stock] > 0
+
+        blob = torch.load(art / "panel.pt", weights_only=False)
+        for key in ("last_close", "limit_up", "limit_down"):
+            blob[key] = None
+        blob["close"][t + 1:t + 3, stock] = 0.0
+        blob["mask"][t + 1:t + 3, stock] = False
+        torch.save(blob, art / "panel.pt")
+
+        result = runner.invoke(cli, ["backtest", "--config", "tiny.yaml"])
+        assert result.exit_code == 0, result.output
+        summary = json.loads((art / "summary.json").read_text(encoding="utf-8"))
+        assert summary["metrics"]["max_dd"] < 0.5
+        assert abs(summary["metrics"]["ann_return"]) < 10.0

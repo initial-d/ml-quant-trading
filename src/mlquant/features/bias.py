@@ -35,6 +35,7 @@ behaves identically on synthetic and real feeds.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from typing import Optional, Sequence, Union
 
 import numpy as np
@@ -150,13 +151,34 @@ def _return_inside(panel: Panel, limit_pct: Union[float, torch.Tensor]) -> torch
     """``|return| <= limit_pct`` proxy mask."""
     if panel.last_close is not None:
         prev = panel.last_close.clamp_min(1e-9)
+        move = (panel.close / prev) - 1.0
     else:
-        prev = torch.roll(panel.close, shifts=1, dims=0).clamp_min(1e-9)
-        prev[0] = panel.close[0]
-    move = (panel.close / prev) - 1.0
+        # Halt-aware: measured from the last tradable close, so a zero-filled
+        # halt row does not turn the resumption day into a fake limit move.
+        move = panel.returns
     if isinstance(limit_pct, torch.Tensor):
         limit_pct = limit_pct.to(device=move.device, dtype=move.dtype)
     return move.abs() <= limit_pct
 
 
-__all__ = ["limit_move_mask", "board_limit_pct"]
+def apply_limit_mask(
+    panel: Panel,
+    *,
+    limit_pct: Union[float, torch.Tensor] = MAIN_BOARD_LIMIT_PCT,
+    eps: float = 1e-3,
+) -> Panel:
+    """Return ``panel`` with limit-move days removed from its ``mask``.
+
+    This is the mask-first step. Factor code reads ``panel.mask``, so
+    computing factors on the returned panel keeps limit-move prices out of
+    every rolling window; intersecting :func:`limit_move_mask` with the
+    factor mask afterwards only drops the limit day itself and still lets
+    its price leak into the following ``window`` days.
+
+    Keep using the original panel for P&L: a position held into a limit
+    move still earns that return.
+    """
+    return replace(panel, mask=limit_move_mask(panel, limit_pct=limit_pct, eps=eps))
+
+
+__all__ = ["limit_move_mask", "board_limit_pct", "apply_limit_mask"]

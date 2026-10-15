@@ -47,6 +47,7 @@ from scripts.public_data_validation import (
     _cost_sensitivity_table,
     _fit_predict_model,
     _forward_returns,
+    _limit_masked_panel,
     _json_safe,
     _markdown_table,
     _metadata,
@@ -490,6 +491,7 @@ def _full_pipeline_metadata(
         "stages": [
             "akshare_current_csi300_universe",
             "ohlcv_panel",
+            "mask_first_limit_move_mask",
             "selected_factor_set_features",
             "walk_forward_mlp_training",
             "cross_sectional_score_neutralization",
@@ -603,14 +605,17 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
 
     returns = _to_numpy(panel.returns)
     target = _forward_returns(panel)
-    valid_panel = _valid_forward_mask(panel)
+    factor_panel = _limit_masked_panel(panel)
+    # Limit days leave the universe only on the signal date t; checking t+1
+    # against the limit mask would peek at tomorrow's limit move.
+    valid_panel = _valid_forward_mask(panel) & _to_numpy(factor_panel.mask).astype(bool)
     click.echo(f"stage: computing factor set {cfg.factor_set}")
     if cfg.factor_set == "alpha101":
-        features, factor_valid, factor_names = _alpha101_features(panel)
+        features, factor_valid, factor_names = _alpha101_features(factor_panel)
     elif cfg.factor_set == "all":
         from mlquant.features import compute_legacy_set
 
-        factor_tensor, factor_mask, factor_names = compute_legacy_set(panel)
+        factor_tensor, factor_mask, factor_names = compute_legacy_set(factor_panel)
         features = _to_numpy(factor_tensor)
         factor_valid = _to_numpy(factor_mask).astype(bool)
     else:

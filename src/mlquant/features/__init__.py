@@ -27,7 +27,7 @@ from .tensor_factors import (
     delta,
 )
 from .neutralize import neutralize_cs, neutralize_industry
-from .bias import board_limit_pct, limit_move_mask
+from .bias import apply_limit_mask, board_limit_pct, limit_move_mask
 from .alpha101 import compute_alpha_set, ALPHA_REGISTRY
 from .legacy_factors import compute_legacy_set, LEGACY_REGISTRY
 
@@ -36,7 +36,7 @@ __all__ = [
     "ts_corr", "ts_cov", "ts_max", "ts_mean", "ts_min",
     "ts_rank", "ts_std", "ts_sum", "ewma", "delay", "delta",
     "neutralize_cs", "neutralize_industry",
-    "limit_move_mask", "board_limit_pct",
+    "limit_move_mask", "board_limit_pct", "apply_limit_mask",
     "compute_alpha_set", "ALPHA_REGISTRY",
     "compute_legacy_set", "LEGACY_REGISTRY",
 ]
