@@ -10,6 +10,7 @@ from scripts.public_data_validation import (
     ValidationConfig,
     _codes_from_frame,
     _cost_sensitivity_table,
+    _limit_masked_panel,
     _long_only_top_quantile_weights,
     _markdown_table,
     _normalize_akshare_tickers,
@@ -235,3 +236,54 @@ def test_public_data_validation_cost_table_escapes_pipes():
 
     assert "0 \\| 7 bps" in table
     assert "equal \\| weight" in table
+
+
+def test_limit_masked_panel_masks_a_share_limit_days_only():
+    """Validation factors are computed mask-first on A-share boards; non-A-share
+    tickers keep their mask because they have no daily price limit."""
+    from dataclasses import replace
+
+    import torch
+
+    from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+    p = make_synthetic_panel(SyntheticConfig(n_stocks=3, n_dates=30, halt_prob=0.0, seed=5))
+    p = replace(
+        p,
+        stocks=pd.Series(["600000", "300750", "AAPL"]).to_numpy(),
+        dates=pd.bdate_range("2023-01-02", periods=30).to_numpy(),
+        limit_up=None, limit_down=None, last_close=None,
+    )
+    p.close[10:, :] *= 1.15                   # +15 % on day 10 for all three
+    masked = _limit_masked_panel(p)
+    assert not bool(masked.mask[10, 0])       # main board: 10 % limit
+    assert bool(masked.mask[10, 1])           # ChiNext: 20 % limit
+    assert bool(masked.mask[10, 2])           # US ticker: no limit
+    assert torch.equal(masked.close, p.close)
+
+
+def test_run_validation_computes_factors_on_limit_masked_panel(tmp_path: Path):
+    import scripts.public_data_validation as pdv
+
+    seen = {}
+    real = pdv._alpha101_features
+
+    def spy(panel):
+        seen["mask"] = panel.mask.clone()
+        return real(panel)
+
+    cfg = ValidationConfig(
+        source="synthetic", preset="us-large-100", tickers=(), start="2021-01-01",
+        end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5.0, slippage_bps=0.0,
+        cost_grid_bps=(), bootstrap_samples=0, bootstrap_block_size=10, train_window=30,
+        test_window=10, step=10, top_quantile=0.25, seed=3, epochs=1, batch_size=64,
+        hidden=8, models=("alpha101_mean",), output_dir=tmp_path, synthetic_dates=60,
+        synthetic_stocks=8,
+    )
+    with mock.patch.object(pdv, "_alpha101_features", side_effect=spy):
+        run_validation(cfg)
+
+    panel = load_validation_panel(cfg)
+    assert (seen["mask"] == _limit_masked_panel(panel).mask).all()
+    metadata = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["limit_mask"].startswith("mask-first")

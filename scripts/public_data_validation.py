@@ -36,7 +36,7 @@ from mlquant.backtest.engine import run_backtest
 from mlquant.data import make_panel
 from mlquant.data.panel import Panel
 from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
-from mlquant.features import compute_legacy_set
+from mlquant.features import apply_limit_mask, board_limit_pct, compute_legacy_set
 from mlquant.features.legacy_factors import LEGACY_REGISTRY
 from mlquant.models import MLPRegressor, TransformerRegressor
 
@@ -294,6 +294,23 @@ def _alpha101_names() -> tuple[str, ...]:
 
 def _to_numpy(x: torch.Tensor) -> np.ndarray:
     return x.detach().cpu().numpy()
+
+
+LIMIT_MASK_PROTOCOL = (
+    "mask-first: A-share limit-move days (exchange limit prices when present, "
+    "otherwise per-board return proxy) are removed from the panel mask before "
+    "factors are computed and from the tradable universe; P&L uses unmasked returns"
+)
+
+
+def _limit_masked_panel(panel: Panel) -> Panel:
+    """Mask-first panel: limit-move days removed before any factor is computed.
+
+    Non-A-share tickers get an infinite threshold, so US equities and ETFs are
+    left untouched.
+    """
+    limit_pct = board_limit_pct(panel.stocks, panel.dates, default=float("inf"))
+    return apply_limit_mask(panel, limit_pct=limit_pct.to(panel.device))
 
 
 def _forward_returns(panel: Panel) -> np.ndarray:
@@ -579,6 +596,7 @@ def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
         "cuda_version": torch.version.cuda or "unavailable",
         "cuda_device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none",
         "panel": _panel_coverage(panel),
+        "limit_mask": LIMIT_MASK_PROTOCOL,
         "limitations": notes,
     }
 
@@ -603,12 +621,15 @@ def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
     panel.assert_consistent()
     returns = _to_numpy(panel.returns)
     target = _forward_returns(panel)
-    valid_panel = _valid_forward_mask(panel)
+    factor_panel = _limit_masked_panel(panel)
+    # Limit days leave the universe only on the signal date t; checking t+1
+    # against the limit mask would peek at tomorrow's limit move.
+    valid_panel = _valid_forward_mask(panel) & _to_numpy(factor_panel.mask).astype(bool)
 
     alpha_features: np.ndarray | None = None
     alpha_valid: np.ndarray | None = None
     if any(m in cfg.models for m in ("alpha101_mean", "mlp_alpha101", "transformer_alpha101")):
-        alpha_features, alpha_valid, _ = _alpha101_features(panel)
+        alpha_features, alpha_valid, _ = _alpha101_features(factor_panel)
         valid_alpha = valid_panel & alpha_valid
     else:
         valid_alpha = valid_panel

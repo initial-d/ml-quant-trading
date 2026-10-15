@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+### Mask-first limit masks and halt-safe returns
+
+Factor values and backtest metrics change on panels with limit moves or halts;
+re-run reports produced with 0.4.0.
+
+- `mlquant features` now computes factors on a panel whose `mask` already
+  excludes limit-move days, as the paper's mask-first protocol requires.
+  Previously the limit mask was intersected with the factor output afterwards,
+  which dropped the limit day but still let its price enter the next `window`
+  days of every rolling factor.
+- Added `mlquant.features.apply_limit_mask(panel, limit_pct=...)`, which
+  returns the panel with limit days masked and prices unchanged.
+- `scripts/public_data_validation.py` and
+  `scripts/akshare_csi300_full_pipeline.py` now apply the board-aware limit
+  mask before computing factors and before selecting the tradable universe.
+  Non-A-share tickers are unaffected. `metadata.json` records the protocol
+  under `limit_mask`.
+- `Panel.returns` without `last_close` now measures each return from the last
+  tradable close. Loaders zero-fill halted prices, so the previous-row formula
+  booked a halt as -100 % and the resumption as a huge gain.
+- `mlquant portfolio` and `mlquant backtest` use `Panel.returns` instead of
+  raw `close[t] / close[t-1]`, so zero-filled halts no longer corrupt the
+  covariance history or backtest P&L.
+- The limit-move return proxy uses the same halt-aware returns, so a
+  resumption day is no longer flagged as a limit move.
+
 ## 0.4.0 - Out-of-Sample Evaluation and Lighter Install
 
 This release contains breaking changes; see **Upgrading** below.

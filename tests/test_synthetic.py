@@ -35,3 +35,22 @@ def test_seed_determinism():
     b = make_synthetic_panel(SyntheticConfig(n_stocks=10, n_dates=30, seed=7))
     assert torch.equal(a.close, b.close)
     assert torch.equal(a.mask,  b.mask)
+
+
+def test_returns_bridge_zero_filled_halts():
+    """Loaders zero-fill halted prices; returns must not book -100 % / +1e9."""
+    from dataclasses import replace
+
+    p = make_synthetic_panel(SyntheticConfig(n_stocks=3, n_dates=20, halt_prob=0.0, seed=4))
+    close = p.close.clone()
+    mask = p.mask.clone()
+    close[5:7, 0] = 0.0                       # two halted days, zero-filled
+    mask[5:7, 0] = False
+    p = replace(p, close=close, mask=mask, last_close=None, limit_up=None, limit_down=None)
+
+    r = p.returns
+    assert r[5, 0].item() == 0.0 and r[6, 0].item() == 0.0
+    expected = (close[7, 0] / close[4, 0] - 1.0).item()
+    assert abs(r[7, 0].item() - expected) < 1e-6
+    assert r.abs().max().item() < 0.5
+    assert r[0].abs().sum().item() == 0.0

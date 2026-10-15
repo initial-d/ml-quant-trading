@@ -113,20 +113,25 @@ class Panel:
 
         When :attr:`last_close` is present we use it directly so the day-0
         return is meaningful and adjusted-vs-unadjusted close mismatches
-        do not inject NaNs. Otherwise we fall back to the previous-row
-        close.
+        do not inject NaNs. Otherwise we fall back to the close of the most
+        recent *tradable* day. Loaders zero-fill halted cells, so dividing by
+        the previous row would book a halt as -100 % and the resumption as
+        an enormous gain; using the last tradable close instead books the
+        whole move across the halt on the resumption day.
         """
         if self.last_close is not None:
             prev = self.last_close.clamp_min(1e-9)
             ret = self.close / prev - 1.0
             valid = self.mask & (self.last_close > 0)
             return ret.masked_fill(~valid, 0.0)
-        prev = torch.roll(self.close, shifts=1, dims=0)
-        prev[0] = self.close[0]                     # avoid div-by-zero on day 0
-        ret = self.close / prev - 1.0
-        ret[0] = 0.0
-        valid = self.mask & torch.roll(self.mask, shifts=1, dims=0)
-        valid[0] = False
+        T, N = self.mask.shape
+        rows = torch.arange(T, device=self.mask.device).unsqueeze(1).expand(T, N)
+        last_tradable = torch.where(self.mask, rows, torch.full_like(rows, -1)).cummax(dim=0).values
+        prev_idx = torch.roll(last_tradable, shifts=1, dims=0)
+        prev_idx[0] = -1                            # day 0 has no previous close
+        prev = self.close.gather(0, prev_idx.clamp_min(0))
+        ret = self.close / prev.clamp_min(1e-9) - 1.0
+        valid = self.mask & (prev_idx >= 0) & (prev > 0)
         return ret.masked_fill(~valid, 0.0)
 
     @property
