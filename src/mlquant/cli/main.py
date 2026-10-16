@@ -310,11 +310,13 @@ def cmd_portfolio(config_path: str) -> None:
 
     T, N = pred.shape
     oos = int(pred_blob.get("oos_start", 0))
+    # Fewer names than this cannot reach full investment under weight_cap.
+    min_names = max(5, math.ceil((1.0 - mk_cfg.cash_weight) / mk_cfg.weight_cap - 1e-9))
     weights = np.zeros_like(pred)
     for t in range(max(look_back, oos), T - 1):
         tradable = mask[t]
         idx = np.where(tradable)[0]
-        if idx.size < 5:
+        if idx.size < min_names:
             continue
         mu = pred[t, idx].astype(np.float64)
         history = rets[t - look_back:t, idx]

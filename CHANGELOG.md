@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Markowitz optimiser: DPP form, reliability, and caching
+
+- The risk term is now `sum_squares(F.T @ w)` with `Sigma = F F^T` instead of
+  `quad_form(w, Sigma)` on a covariance parameter. The old form was not DPP, so
+  cvxpy re-canonicalised the problem on every solve and the warm-start cache
+  never took effect. It also certified the covariance PSD numerically, which
+  failed intermittently (ARPACK no-convergence) when the look-back window was
+  shorter than the universe; in a 60-day x 200-name stress test, 5 of 32
+  solves raised, and the error bypassed the solver fallback.
+- One problem is cached per universe size, so days with the same number of
+  tradable names reuse it. On the demo's 199 out-of-sample rebalances the
+  solve loop is about 1.6x faster; on rank-deficient random panels it is
+  2.7-5x faster. Weights match the old form to within solver tolerance.
+- `solve` raises a clear `ValueError` when `n * weight_cap` cannot reach the
+  invested weight, and `mlquant portfolio` skips such days instead of logging
+  a solver failure.
+
 ## 0.4.1 - Mask-First Factors and Halt-Safe Returns
 
 ### Mask-first limit masks and halt-safe returns
