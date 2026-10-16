@@ -36,3 +36,36 @@ def test_higher_risk_aversion_lower_variance():
     var_low  = float(w_low  @ cov @ w_low)
     var_high = float(w_high @ cov @ w_high)
     assert var_high <= var_low + 1e-8
+
+
+def test_problem_is_dpp_and_cached_per_universe_size():
+    """The risk term must be DPP, or cvxpy re-canonicalises on every solve."""
+    import warnings
+
+    mu, history = _toy_problem(n=30, T=60)
+    opt = MarkowitzOptimizer(MarkowitzConfig(weight_cap=0.1))
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        opt.solve(mu, history)
+        opt.solve(mu * 2, history * 1.1)
+    problem = opt._problems[30][3]
+    assert problem.is_dpp()
+    assert len(opt._problems) == 1
+
+
+def test_rank_deficient_history_solves():
+    """More names than look-back days: the covariance is rank-deficient."""
+    rng = np.random.default_rng(3)
+    opt = MarkowitzOptimizer(MarkowitzConfig(risk_aversion=5.0, weight_cap=0.05))
+    for _ in range(5):
+        w = opt.solve(rng.normal(0, 0.01, 200), rng.normal(0, 0.02, size=(60, 200)))
+        assert abs(w.sum() - 1.0) < 1e-3
+        assert w.max() <= 0.05 + 1e-3
+
+
+def test_infeasible_weight_cap_raises_clear_error():
+    import pytest
+
+    mu, history = _toy_problem(n=10)
+    with pytest.raises(ValueError, match="infeasible"):
+        MarkowitzOptimizer(MarkowitzConfig(weight_cap=0.05)).solve(mu, history)
