@@ -25,11 +25,18 @@ mlquant demo
 `数据 → 因子 → 模型 → 组合 → 回测`，并在 `artifacts/small/` 生成可分享的
 Markdown/JSON 报告。
 
+**旧版本用户：**先运行 `python -m pip install --upgrade mlquantx`。
+[v0.4.1](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.1)
+将涨跌停观测在滚动因子计算前屏蔽，并从最近可交易收盘价计算跨停牌收益；
+v0.4.0 已将 Demo 评估改为按时间留出的样本外区间。公开数据加载器需要
+`python -m pip install --upgrade 'mlquantx[data]'`；旧版 A 股或含停牌报告需要重跑。
+这些是工程正确性改进，不是新增收益证据。
+
 Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 [提交一次复现报告](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
 如果这个基线对你有用，点个 Star 也能帮助其他研究者找到它。
 
-| 213 个因子 | 4 条数据路径 | 100 个测试 | 可复现 benchmark |
+| 213 个因子 | 4 条数据路径 | 100+ 个测试 | 可复现 benchmark |
 |---:|---:|---:|---:|
 | Mask-aware PyTorch 张量 | Synthetic、AkShare、Baostock、yfinance | 确定性工程检查 | [查看完整基准](docs/benchmark_board.md) |
 
@@ -45,9 +52,10 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 · [**阅读论文**](https://arxiv.org/abs/2507.07107)
 · [**提交一次复现报告**](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 
-> **2026 年 8 月复现挑战：**打开零账号 Colab 跑一次，把自动生成的报告、
+> **参与复现：**打开零行情账号 Colab 跑一次，把自动生成的报告、
 > 运行环境和 commit SHA 填入[结构化报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)。
-> 成功和失败结果都欢迎；符合要求的报告会署名加入社区验证区，并汇总到 [Discussion #43](https://github.com/initial-d/ml-quant-trading/discussions/43)。
+> 成功和失败结果都欢迎；Agent、DSH 和脱敏私有评估可参加当前的
+> [Agent Quant Benchmark Challenge](https://github.com/initial-d/ml-quant-trading/discussions/66)。
 
 ## 项目概述
 
@@ -68,9 +76,12 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 | 理解研究结论边界 | [Research Card](docs/research_card.md) | 适用范围、非目标、数据假设与已知限制 |
 | 贡献一次运行结果 | [复现报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml) | 跑 Colab、结构化提交报告并获得 README 署名 |
 
-## 当前公开验证
+## 归档公开验证（2026-07-29）
 
-最新维护结果采用 AkShare 的当前沪深 300 公开数据，在日频 213 因子近似流程中显式计入换手和交易成本。缓冲因子组合在 7 bps 有效成本假设下得到 22.20% 年化收益、0.919 Sharpe；同区间等权基线为 17.75% 和 0.882。完整口径、成本敏感性图和复现命令见[验证看板](docs/validation_dashboard.md)。
+**以下数字生成于 v0.4.1 修复前，尚未用修正后的 mask-first 与停牌收益口径重新验证。**
+保留原始报告便于审计；不能把这些数字当作当前版本的验证结果。请使用 v0.4.1 或更新版本重跑。
+
+归档结果采用 AkShare 的当前沪深 300 公开数据，在日频 213 因子近似流程中显式计入换手和交易成本。缓冲因子组合在 7 bps 有效成本假设下得到 22.20% 年化收益、0.919 Sharpe；同区间等权基线为 17.75% 和 0.882。完整口径、成本敏感性图和复现命令见[验证看板](docs/validation_dashboard.md)。
 
 这些结果是公开数据上的研究近似，不是论文的精确复现，不代表样本外收益，也不构成投资建议。
 
@@ -87,7 +98,7 @@ Demo 跑通后，可以继续[查看 benchmark](docs/benchmark_board.md)或
 
 这些结果链接到原始 PR，便于检查环境、命令、限制和评审过程。你也可以
 [打开零账号 Colab，运行并提交生成的报告](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)。
-本月结果请用[结构化复现报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)提交，并汇总到 [2026 年 8 月复现挑战](https://github.com/initial-d/ml-quant-trading/discussions/43)。
+运行结果请用[结构化复现报告表单](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)提交；Agent、DSH 和脱敏私有评估请参阅 [Agent Quant Benchmark Challenge](https://github.com/initial-d/ml-quant-trading/discussions/66)。
 
 ## 研究与教学用途声明
 

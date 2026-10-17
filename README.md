@@ -38,6 +38,16 @@ No market-data account or API key is required. The deterministic demo runs the
 full research pipeline in about 30-90 seconds on a typical CPU-only laptop and
 writes shareable Markdown and JSON reports under `artifacts/small/`.
 
+**Returning after an earlier release?** Upgrade with
+`python -m pip install --upgrade mlquantx`. The
+[`v0.4.1` release](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.1)
+masks limit-move observations before rolling factors and measures returns across
+zero-filled halts from the last tradable close. Version `v0.4.0` also moved demo
+evaluation to a held-out chronological window and made public-data dependencies
+optional. Install `python -m pip install --upgrade 'mlquantx[data]'` for public
+loaders; re-run older A-share or halt-bearing reports. These are correctness
+changes, not new trading-performance evidence.
+
 ```text
 data -> masks -> 213 factors -> model scores -> portfolio weights -> cost-aware backtest
 ```
@@ -139,10 +149,14 @@ python -m pip install -e '.[dev]'
 
 ## Validation Dashboard
 
-Latest maintained public-data snapshot:
+Archived public-data snapshot (2026-07-29, before v0.4.1):
 [AkShare CSI 300 Daily 213-Factor Validation](docs/validation_dashboard.md).
-The detailed dashboard includes cost-sensitivity charts, caveats, and
-reproduction commands.
+
+**The numbers below predate the v0.4.1 mask-first and halt-safe return fixes.**
+They remain historical records and have not been revalidated with the corrected
+protocol. Re-run with v0.4.1 or later before drawing conclusions. The detailed
+dashboard includes the protocol note, cost-sensitivity charts, and reproduction
+commands.
 
 | Run | Universe | Frequency | Factor set | Main result at 7 bps effective cost |
 |---|---|---:|---:|---|
@@ -150,7 +164,7 @@ reproduction commands.
 | Equal-weight baseline | Same panel | Daily | n/a | 17.75% ann. return, 0.882 Sharpe, 1.8744 final equity |
 | Naive daily factor selection | Same panel | Daily | 213 | Positive gross edge, but high turnover reduces net performance |
 
-Headline strategy table from the maintained snapshot:
+Strategy table from that archived snapshot:
 
 | Strategy | Annual return | Sharpe | Max drawdown | Turnover | Cost drag | Final equity |
 |---|---:|---:|---:|---:|---:|---:|

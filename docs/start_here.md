@@ -95,6 +95,16 @@ is more informative.
 
 ## 3. Try a Public-Data Notebook
 
+Since v0.4.0, public-data loaders require the optional `data` extra:
+
+```bash
+python -m pip install --upgrade 'mlquantx[data]'
+```
+
+A source checkout installed with `.[dev]` already includes it. A-share or
+halt-bearing reports produced before v0.4.1 need to be re-run with the mask-first
+and halt-safe protocol; see the [release notes](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.1).
+
 Before interpreting any result, skim the
 [Research Card](research_card.md). It explains the intended use, non-goals,
 data assumptions, and current validation status in one place.
@@ -150,7 +160,7 @@ Good current entry points:
 - [Collect community CPU/GPU benchmark results](https://github.com/initial-d/ml-quant-trading/issues/7)
 - [Submit a structured Colab or local reproduction report](https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml)
 - [Follow the reproducibility contract](reproducibility_contract.md) when reporting benchmark or validation evidence
-- [Join the August 2026 reproduction challenge](https://github.com/initial-d/ml-quant-trading/discussions/43)
+- [Join the Agent Quant Benchmark Challenge](https://github.com/initial-d/ml-quant-trading/discussions/66) for agent, DSH, or redacted private-evaluation reports
 - [Pair on a public-data validation or benchmark contribution](https://github.com/initial-d/ml-quant-trading/issues/22)
 
 ## 6. What Not to Expect

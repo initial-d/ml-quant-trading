@@ -86,6 +86,60 @@ This page tracks the current public launch surface for `ml-quant-trading`.
 
 ## Traffic Snapshot
 
+Recorded on 2026-10-17 at 10:00 Asia/Shanghai from GitHub APIs. Raw aggregate
+responses and exact collection commands are preserved in
+[visibility_snapshots/2026-10-17.json](visibility_snapshots/2026-10-17.json).
+Source checkout: `7490ab331029ded71fa9df6343f37782e127bcc2`.
+This is repository activity, not benchmark, market-data, or investment evidence.
+
+| Metric | 2026-09-20 snapshot | 2026-10-17 snapshot | Change |
+|---|---:|---:|---:|
+| Stars at observation time | 87 | 90 | +3 |
+| Forks at observation time | 36 | 38 | +2 |
+| Watchers at observation time | 4 | 4 | 0 |
+| Rolling-window views | 935 | 579 | -38.1% |
+| Rolling-window unique visitors | 220 | 167 | -24.1% |
+| Rolling-window clones | 487 | 456 | -6.4% |
+| Rolling-window unique cloners | 195 | 206 | +5.6% |
+
+The current traffic responses contain UTC daily buckets from 2026-10-02 through
+2026-10-15. They are delayed rolling windows, not calendar-month totals or an
+experiment measuring the effect of any release. The September snapshot's latest
+bucket was 2026-09-18.
+
+The maintainer recalls a recent count of 91; its observation time is unknown and
+it was not independently captured. The current count of 90 is one lower (1.1%).
+GitHub does not expose the reason for a removed star through these endpoints.
+Do not attribute it to a user, account cleanup, or release without evidence.
+
+- Top referrers by visits: GitHub (51), Google (26), ChatGPT (5), project site
+  (5), Bing (2), and arXiv (2). Referrers are partial; counts are visits, not
+  unique-user totals.
+- Chinese onboarding remains a useful content route: `README.zh-CN.md` had 19
+  visits from 14 unique visitors; the Chinese factor handbook had 8 from 6.
+- Current stargazers include 34 who starred in July, 17 in August, 9 in September,
+  and 3 in October through the observation time. These are surviving cohorts,
+  **not historical gross additions or cancellation counts**; October is partial.
+- The latest release is [v0.4.1](https://github.com/initial-d/ml-quant-trading/releases/tag/v0.4.1)
+  (2026-10-15), and main changed on 2026-10-16. The project is actively maintained;
+  lower traffic does not establish inactivity or user dissatisfaction.
+
+Operating takeaways:
+
+- A one-star change is too little evidence to diagnose a retention problem.
+  Acquisition has cooled compared with the September window; clones have fallen
+  much less than views. Neither clone counts nor unique cloners establish private
+  adoption, because CI, bots, and repeated downloads can contribute.
+- Keep Chinese onboarding aligned with the current challenge and optional data
+  installation. Put the v0.4.1 protocol caveat beside archived headline returns.
+- The next useful contribution is a reproducible v0.4.1 run, including failed
+  runs with exact metadata. A corrected public-data result remains separate work;
+  no market data was fetched for this visibility update.
+- See the [October 17 action note](visibility_action_20261017.md) for today's
+  bounded changes and a draft technical post. Compare any future snapshot with
+  this saved baseline; do not treat star/view ratios as a conversion funnel.
+
+
 Recorded on 2026-09-20 from GitHub's rolling 14-day traffic window
 (latest daily bucket available through 2026-09-18):
 
