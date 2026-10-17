@@ -23,7 +23,8 @@ proprietary paper experiment was not run or evaluated here.
 - Provider probes used the base plus the candidate patch; the fix was committed
   before final verification. Evidence scripts were untracked during the runs.
 - Bundle integrity: [checksums.txt](checksums.txt). Traceback repository paths
-  are redacted to `<repo>`; error messages and test failures remain intact.
+  are redacted to `<repo>` and trailing whitespace is stripped; error messages
+  and test failures remain intact.
 
 ## The causality issue
 

@@ -9,7 +9,7 @@ tmp_path = PosixPath('/private/var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/p
         from dataclasses import replace
         import scripts.public_data_validation as pdv
         from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
-    
+
         panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
         mask = panel.mask.clone()
         mask[31, 0] = False
@@ -24,12 +24,12 @@ tmp_path = PosixPath('/private/var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/p
         )
         books = []
         real = pdv._equal_weight
-    
+
         def capture(valid):
             weights = real(valid)
             books.append(weights.copy())
             return weights
-    
+
         for data in (panel, halted):
             with mock.patch.object(pdv, "load_validation_panel", return_value=data), \
                  mock.patch.object(pdv, "_equal_weight", side_effect=capture):
@@ -50,7 +50,7 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112defc20>
         from dataclasses import replace
         import scripts.akshare_csi300_full_pipeline as full
         from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
-    
+
         panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
         mask = panel.mask.clone()
         mask[31, 0] = False
@@ -66,17 +66,17 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112defc20>
             output_dir=tmp_path,
         )
         seen = {}
-    
+
         def predict(model, features, target, labels, validation_cfg, *, prediction_valid=None):
             if prediction_valid is None:
                 prediction_valid = labels
             seen["labels"] = labels.copy()
             seen["signals"] = prediction_valid.copy()
             return np.where(prediction_valid, features[:, :, 0], np.nan)
-    
+
         def write(config, data, names, rows, sensitivity, strategies, returns):
             seen["equal_weight"] = strategies["equal_weight_daily"]
-    
+
         monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
         monkeypatch.setattr(full, "_alpha101_features", lambda panel: (
             np.ones((60, 8, 3), dtype=np.float32), mask.numpy().copy(), ["a", "b", "c"],
@@ -84,7 +84,7 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112defc20>
         monkeypatch.setattr(full, "_fit_predict_model", predict)
         monkeypatch.setattr(full, "_write_outputs", write)
         full.run_full_pipeline(cfg)
-    
+
 >       assert seen["equal_weight"][30, 0] > 0
 E       assert np.float32(0.0) > 0
 
