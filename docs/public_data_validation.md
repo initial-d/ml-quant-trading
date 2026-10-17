@@ -462,6 +462,22 @@ python scripts/public_data_validation.py \
 A synthetic run cannot replace a public-data report, but it confirms that the
 validation harness itself is working on your platform.
 
+## Signal-Date Availability
+
+Portfolio selection and out-of-sample prediction use only the availability mask
+on signal date `t`, after the mask-first limit rule and factor warm-up checks.
+Tomorrow's availability must not decide whether a stock can be selected today.
+Forward-label eligibility (`t` and `t+1` both observed) is used separately for
+historical model training and trailing IC estimation.
+
+Reports produced through v0.4.1 used the forward-label mask for portfolio
+selection and prediction too. That excluded a stock immediately before a missing
+or halted next-day observation, introducing lookahead into the universe. Re-run
+such reports with the corrected signal-date protocol; new metadata records it in
+`availability_protocol`. Holding and execution across halts remain simplified:
+this change removes tomorrow's availability from selection but does not add a
+halt-aware execution simulator.
+
 ## Auditing Reports
 
 Before sharing a validation run, audit the generated `summary.json`:

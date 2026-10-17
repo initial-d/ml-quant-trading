@@ -154,7 +154,9 @@ Archived public-data snapshot (2026-07-29, before v0.4.1):
 
 **The numbers below predate the v0.4.1 mask-first and halt-safe return fixes.**
 They remain historical records and have not been revalidated with the corrected
-protocol. Re-run with v0.4.1 or later before drawing conclusions. The detailed
+protocol. The [October 17 audit](docs/audits/public-revalidation-20261017/README.md)
+also found next-day availability entering portfolio selection through v0.4.1;
+revalidation requires that correction too. The detailed
 dashboard includes the protocol note, cost-sensitivity charts, and reproduction
 commands.
 

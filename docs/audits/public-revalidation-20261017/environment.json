@@ -1,0 +1,38 @@
+{
+  "base_commit": "ccdcf16a7c0768dbb31fa22f91ae02b692f0fd9b",
+  "working_tree_dirty": true,
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "pytorch": "2.14.1",
+  "akshare": "1.19.1",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu": "Apple M5",
+  "logical_cpus": 10,
+  "memory_bytes": 34359738368,
+  "device": "cpu",
+  "cuda_available": false,
+  "mps_available": true,
+  "torch_threads_default": 4,
+  "torch_interop_threads_default": 10,
+  "data_source": "AkShare public A-share OHLCV",
+  "cost_assumptions": "5 bps costs + 2 bps slippage for planned run; not applicable to provider probe",
+  "limitations": [
+    "Public provider responses may change or fail.",
+    "No normalized July panel is available for exact comparison.",
+    "Candidate patch is uncommitted at probe time; base commit and patch are preserved."
+  ],
+  "corrected_code_commit": "3443987fcabdf1c46d198bfa7a878bd4e938a0a0",
+  "probe_working_tree": "base commit plus candidate patch; fixed code committed afterwards",
+  "verification_working_tree": "corrected code commit; untracked evidence scripts only",
+  "verification_threads": {
+    "OMP_NUM_THREADS": 1,
+    "OPENBLAS_NUM_THREADS": 1,
+    "same_input_torch": 1,
+    "same_input_interop": 1,
+    "pytest_torch": null,
+    "pytest_interop": null
+  },
+  "pytest_threads_note": "OMP/BLAS environment fixed; test suite sets or changes PyTorch pools in individual tests; no test timing comparison claimed",
+  "demo_costs_bps": 5,
+  "same_input_effective_costs_bps": 7
+}

@@ -1,0 +1,103 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_signal_weights_do_not_use_tomorrows_availability _____________
+
+tmp_path = PosixPath('/private/var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/pytest-of-duyimin/pytest-8/test_signal_weights_do_not_use0')
+
+    def test_signal_weights_do_not_use_tomorrows_availability(tmp_path):
+        """A halt discovered tomorrow must not change today's equal-weight book."""
+        from dataclasses import replace
+        import scripts.public_data_validation as pdv
+        from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+        panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+        mask = panel.mask.clone()
+        mask[31, 0] = False
+        halted = replace(panel, mask=mask)
+        cfg = ValidationConfig(
+            source="synthetic", preset="us-large-100", tickers=(), start="2021-01-01",
+            end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=0,
+            cost_grid_bps=(), bootstrap_samples=0, bootstrap_block_size=10, train_window=30,
+            test_window=10, step=10, top_quantile=0.25, seed=3, epochs=1, batch_size=64,
+            hidden=8, models=("equal_weight",), output_dir=tmp_path, synthetic_dates=60,
+            synthetic_stocks=8,
+        )
+        books = []
+        real = pdv._equal_weight
+
+        def capture(valid):
+            weights = real(valid)
+            books.append(weights.copy())
+            return weights
+
+        for data in (panel, halted):
+            with mock.patch.object(pdv, "load_validation_panel", return_value=data), \
+                 mock.patch.object(pdv, "_equal_weight", side_effect=capture):
+                run_validation(cfg)
+        import numpy as np
+>       assert np.allclose(books[0][:31], books[1][:31])
+E       AssertionError: assert False
+E        +  where False = <function allclose at 0x106f652f0>(array([[0.   , 0.   , 0.   , 0.   , 0.   , 0.   , 0.   , 0.   ],\n       [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.1...25, 0.125, 0.125, 0.125, 0.125],\n       [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]],\n      dtype=float32), array([[0.        , 0.        , 0.        , 0.        , 0.        ,\n        0.        , 0.        , 0.        ],\n     ....        , 0.14285715, 0.14285715, 0.14285715, 0.14285715,\n        0.14285715, 0.14285715, 0.14285715]], dtype=float32))
+E        +    where <function allclose at 0x106f652f0> = <module 'numpy' from '<repo>/.venv/lib/python3.12/site-packages/numpy/__init__.py'>.allclose
+
+tests/test_public_data_validation.py:323: AssertionError
+_________ test_full_pipeline_separates_signal_and_forward_label_masks __________
+
+tmp_path = PosixPath('/private/var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/pytest-of-duyimin/pytest-8/test_full_pipeline_separates_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x112defc20>
+
+    def test_full_pipeline_separates_signal_and_forward_label_masks(tmp_path, monkeypatch):
+        from dataclasses import replace
+        import scripts.akshare_csi300_full_pipeline as full
+        from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+        panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+        mask = panel.mask.clone()
+        mask[31, 0] = False
+        panel = replace(panel, mask=mask)
+        cfg = full.FullPipelineConfig(
+            source="synthetic", preset="custom", tickers=(), start="2021-01-01",
+            end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=0,
+            cost_grid_bps=(), train_window=30, test_window=10, step=10, top_quantile=0.25,
+            seed=3, epochs=1, batch_size=64, hidden=8, factor_set="alpha101",
+            covariance_window=10, optimizer_candidates=5, optimizer_weight_cap=0.25,
+            optimizer_risk_aversion=1, rebalance_step=1, factor_ic_window=20,
+            min_tradable_ratio=0.9, bootstrap_samples=0, bootstrap_block_size=10,
+            output_dir=tmp_path,
+        )
+        seen = {}
+
+        def predict(model, features, target, labels, validation_cfg, *, prediction_valid=None):
+            if prediction_valid is None:
+                prediction_valid = labels
+            seen["labels"] = labels.copy()
+            seen["signals"] = prediction_valid.copy()
+            return np.where(prediction_valid, features[:, :, 0], np.nan)
+
+        def write(config, data, names, rows, sensitivity, strategies, returns):
+            seen["equal_weight"] = strategies["equal_weight_daily"]
+
+        monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
+        monkeypatch.setattr(full, "_alpha101_features", lambda panel: (
+            np.ones((60, 8, 3), dtype=np.float32), mask.numpy().copy(), ["a", "b", "c"],
+        ))
+        monkeypatch.setattr(full, "_fit_predict_model", predict)
+        monkeypatch.setattr(full, "_write_outputs", write)
+        full.run_full_pipeline(cfg)
+
+>       assert seen["equal_weight"][30, 0] > 0
+E       assert np.float32(0.0) > 0
+
+tests/test_akshare_csi300_full_pipeline.py:228: AssertionError
+----------------------------- Captured stdout call -----------------------------
+stage: loading AkShare panel
+stage: panel loaded (60 dates x 8 stocks)
+stage: computing factor set alpha101
+stage: computed 3 factors
+stage: training walk-forward MLP
+stage: building scores
+stage: building daily portfolios
+stage: writing reports
+=========================== short test summary info ============================
+FAILED tests/test_public_data_validation.py::test_signal_weights_do_not_use_tomorrows_availability
+FAILED tests/test_akshare_csi300_full_pipeline.py::test_full_pipeline_separates_signal_and_forward_label_masks

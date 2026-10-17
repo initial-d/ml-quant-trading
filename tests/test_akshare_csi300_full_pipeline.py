@@ -184,3 +184,64 @@ def test_write_equity_curves_exports_daily_series(tmp_path):
     assert rows[1]["date"] == "2021-01-04"
     assert float(rows[-1]["equal_weight_daily_equity"]) > 1.10
     assert "equal_weight_daily_return" in rows[0]
+
+
+def test_full_pipeline_separates_signal_and_forward_label_masks(tmp_path, monkeypatch):
+    from dataclasses import replace
+    import scripts.akshare_csi300_full_pipeline as full
+    from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+    panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+    mask = panel.mask.clone()
+    mask[31, 0] = False
+    panel = replace(panel, mask=mask)
+    cfg = full.FullPipelineConfig(
+        source="synthetic", preset="custom", tickers=(), start="2021-01-01",
+        end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=0,
+        cost_grid_bps=(), train_window=30, test_window=10, step=10, top_quantile=0.25,
+        seed=3, epochs=1, batch_size=64, hidden=8, factor_set="alpha101",
+        covariance_window=10, optimizer_candidates=5, optimizer_weight_cap=0.25,
+        optimizer_risk_aversion=1, rebalance_step=1, factor_ic_window=20,
+        min_tradable_ratio=0.9, bootstrap_samples=0, bootstrap_block_size=10,
+        output_dir=tmp_path,
+    )
+    seen = {}
+
+    def predict(model, features, target, labels, validation_cfg, *, prediction_valid=None):
+        if prediction_valid is None:
+            prediction_valid = labels
+        seen["labels"] = labels.copy()
+        seen["signals"] = prediction_valid.copy()
+        return np.where(prediction_valid, features[:, :, 0], np.nan)
+
+    def write(config, data, names, rows, sensitivity, strategies, returns):
+        seen["equal_weight"] = strategies["equal_weight_daily"]
+
+    monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
+    monkeypatch.setattr(full, "_alpha101_features", lambda panel: (
+        np.ones((60, 8, 3), dtype=np.float32), mask.numpy().copy(), ["a", "b", "c"],
+    ))
+    monkeypatch.setattr(full, "_fit_predict_model", predict)
+    monkeypatch.setattr(full, "_write_outputs", write)
+    full.run_full_pipeline(cfg)
+
+    assert seen["equal_weight"][30, 0] > 0
+    assert seen["equal_weight"][31, 0] == 0
+    assert seen["signals"][30, 0]
+    assert not seen["labels"][30, 0]
+
+
+def test_rolling_ic_ignores_missing_labels_but_scores_current_universe():
+    rng = np.random.default_rng(12)
+    features = rng.normal(size=(80, 8, 2)).astype(np.float32)
+    target = features[:, :, 0] * 0.01
+    signal_valid = np.ones((80, 8), dtype=bool)
+    label_valid = signal_valid.copy()
+    label_valid[20:30, 0] = False
+    changed = target.copy()
+    changed[~label_valid] = 1e8
+    kwargs = dict(lookback=30, rebalance_step=1, label_valid=label_valid)
+    clean = _rolling_ic_weighted_scores(features, target, signal_valid, **kwargs)
+    poisoned = _rolling_ic_weighted_scores(features, changed, signal_valid, **kwargs)
+    assert np.allclose(clean, poisoned, equal_nan=True)
+    assert np.isfinite(clean[25, 0])
