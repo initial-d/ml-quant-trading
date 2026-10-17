@@ -1,0 +1,18 @@
+probe 600519 2026-10-17T11:16:12.370361+08:00
+AkShare download progress: 1/1 (600519)
+Warning: Failed to fetch 600519: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "<stdin>", line 11, in <module>
+  File "<repo>/src/mlquant/data/akshare_loader.py", line 109, in load_akshare_panel
+    raise ValueError(
+ValueError: No data returned for tickers ['600519'] from 2021-01-01 to 2025-01-01
+{'ticker': '600519', 'started_at': '2026-10-17T11:16:12.370361+08:00', 'retries': 1, 'start': '2021-01-01', 'end': '2025-01-01', 'adjust': 'qfq', 'status': 'failed', 'error_type': 'ValueError', 'error': "No data returned for tickers ['600519'] from 2021-01-01 to 2025-01-01", 'wall_seconds': 1.8582072090357542}
+probe 000001 2026-10-17T11:16:14.228948+08:00
+AkShare download progress: 1/1 (000001)
+Warning: Failed to fetch 000001: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+Traceback (most recent call last):
+  File "<stdin>", line 11, in <module>
+  File "<repo>/src/mlquant/data/akshare_loader.py", line 109, in load_akshare_panel
+    raise ValueError(
+ValueError: No data returned for tickers ['000001'] from 2021-01-01 to 2025-01-01
+{'ticker': '000001', 'started_at': '2026-10-17T11:16:14.228948+08:00', 'retries': 1, 'start': '2021-01-01', 'end': '2025-01-01', 'adjust': 'qfq', 'status': 'failed', 'error_type': 'ValueError', 'error': "No data returned for tickers ['000001'] from 2021-01-01 to 2025-01-01", 'wall_seconds': 0.12058529094792902}

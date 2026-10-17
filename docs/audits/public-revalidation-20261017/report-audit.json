@@ -1,0 +1,7 @@
+[
+  {
+    "check": "report",
+    "message": "report passed all audit checks",
+    "severity": "pass"
+  }
+]

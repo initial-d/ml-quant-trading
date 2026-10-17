@@ -8,9 +8,10 @@
 
 > **Availability note (2026-10-17).** The public validation scripts through
 > v0.4.1 also used next-day availability for today's portfolio selection and
-> prediction. The corrected main branch separates signal-date eligibility from
+> prediction. The corrected implementation separates signal-date eligibility from
 > historical label eligibility. These archived numbers have not been revalidated
-> under that correction. See [the protocol](public_data_validation.md#signal-date-availability).
+> under that correction. See [the protocol](public_data_validation.md#signal-date-availability)
+> and [the regression and data-blocker report](audits/public-revalidation-20261017/README.md).
 
 This page tracks the maintained public-data validation snapshot for
 `ml-quant-trading`. It is designed as a reproducibility dashboard, not a live
