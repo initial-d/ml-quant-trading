@@ -18,6 +18,7 @@ see [reality_check.md](../reality_check.md) and
 - [growth_plan.md](growth_plan.md) — maintainer growth loop
 - [github_profile_growth.md](github_profile_growth.md) — GitHub profile notes
 - [visibility_status.md](visibility_status.md) — live launch links and traffic snapshots
+- [visibility_action_20261017.md](visibility_action_20261017.md) — October 17 diagnosis, onboarding fixes, and a draft correctness post
 
 ## Release drafts
 
