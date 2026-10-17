@@ -8,6 +8,12 @@
 > The numbers are kept as recorded; re-run with v0.4.1 or later for mask-first
 > results.
 
+> **Availability note (2026-10-17).** The public validation scripts through
+> v0.4.1 also used next-day availability for today's portfolio selection and
+> prediction. The corrected main branch separates signal-date eligibility from
+> historical label eligibility. These archived numbers have not been revalidated
+> under that correction. See [the protocol](public_data_validation.md#signal-date-availability).
+
 
 This report records the first full AkShare-backed public A-share validation run
 for `v0.2.2`. It is a reproducibility and engineering diagnostic, not a trading

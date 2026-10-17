@@ -287,3 +287,70 @@ def test_run_validation_computes_factors_on_limit_masked_panel(tmp_path: Path):
     assert (seen["mask"] == _limit_masked_panel(panel).mask).all()
     metadata = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
     assert metadata["limit_mask"].startswith("mask-first")
+
+
+def test_signal_weights_do_not_use_tomorrows_availability(tmp_path):
+    """A halt discovered tomorrow must not change today's equal-weight book."""
+    from dataclasses import replace
+    import scripts.public_data_validation as pdv
+    from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+    panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+    mask = panel.mask.clone()
+    mask[31, 0] = False
+    halted = replace(panel, mask=mask)
+    cfg = ValidationConfig(
+        source="synthetic", preset="us-large-100", tickers=(), start="2021-01-01",
+        end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=0,
+        cost_grid_bps=(), bootstrap_samples=0, bootstrap_block_size=10, train_window=30,
+        test_window=10, step=10, top_quantile=0.25, seed=3, epochs=1, batch_size=64,
+        hidden=8, models=("equal_weight",), output_dir=tmp_path, synthetic_dates=60,
+        synthetic_stocks=8,
+    )
+    books = []
+    real = pdv._equal_weight
+
+    def capture(valid):
+        weights = real(valid)
+        books.append(weights.copy())
+        return weights
+
+    for data in (panel, halted):
+        with mock.patch.object(pdv, "load_validation_panel", return_value=data), \
+             mock.patch.object(pdv, "_equal_weight", side_effect=capture):
+            run_validation(cfg)
+    import numpy as np
+    assert np.allclose(books[0][:31], books[1][:31])
+    assert books[1][30, 0] > 0
+    assert books[1][31, 0] == 0
+    assert bool(panel.mask[31, 0])
+    assert not bool(halted.mask[31, 0])
+
+
+def test_model_predicts_before_halt_without_training_on_missing_label(tmp_path):
+    import numpy as np
+    import scripts.public_data_validation as pdv
+
+    cfg = ValidationConfig(
+        source="synthetic", preset="us-large-100", tickers=(), start="2021-01-01",
+        end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=0,
+        cost_grid_bps=(), bootstrap_samples=0, bootstrap_block_size=10, train_window=30,
+        test_window=10, step=10, top_quantile=0.25, seed=3, epochs=1, batch_size=64,
+        hidden=8, models=("mlp_alpha101",), output_dir=tmp_path, synthetic_dates=60,
+        synthetic_stocks=8,
+    )
+    features = np.random.default_rng(3).normal(size=(60, 8, 3)).astype(np.float32)
+    target = features[:, :, 0] * 0.01
+    signal_valid = np.ones((60, 8), dtype=bool)
+    signal_valid[31, 0] = False
+    label_valid = signal_valid.copy()
+    label_valid[:-1] &= signal_valid[1:]
+    label_valid[-1] = False
+    target[~label_valid] = np.nan
+    preds = pdv._fit_predict_model(
+        "mlp_alpha101", features, target, label_valid, cfg,
+        prediction_valid=signal_valid,
+    )
+    assert np.isfinite(preds[30, 0])
+    assert np.isnan(preds[31, 0])
+    assert np.isfinite(preds[40, 0])  # no NaN label poisoned later training

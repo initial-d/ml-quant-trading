@@ -240,6 +240,7 @@ def _rolling_ic_weighted_scores(
     *,
     lookback: int,
     rebalance_step: int,
+    label_valid: np.ndarray | None = None,
 ) -> np.ndarray:
     """Build factor-composite scores from trailing IC estimates only."""
     if features.shape[:2] != target.shape or target.shape != valid.shape:
@@ -248,12 +249,16 @@ def _rolling_ic_weighted_scores(
     scores = np.full((n_dates, n_stocks), np.nan, dtype=np.float32)
     lookback = max(20, lookback)
     rebalance_step = max(1, rebalance_step)
+    if label_valid is None:
+        label_valid = valid
+    if label_valid.shape != valid.shape:
+        raise ValueError("label and signal masks must have the same shape")
 
     for t in range(n_dates):
         if t < 20 or t % rebalance_step != 0:
             continue
         start = max(0, t - lookback)
-        hist_valid = valid[start:t]
+        hist_valid = label_valid[start:t]
         if int(hist_valid.sum()) < max(100, n_features * 30):
             continue
 
@@ -606,9 +611,8 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
     returns = _to_numpy(panel.returns)
     target = _forward_returns(panel)
     factor_panel = _limit_masked_panel(panel)
-    # Limit days leave the universe only on the signal date t; checking t+1
-    # against the limit mask would peek at tomorrow's limit move.
-    valid_panel = _valid_forward_mask(panel) & _to_numpy(factor_panel.mask).astype(bool)
+    valid_panel = _to_numpy(factor_panel.mask).astype(bool, copy=True)
+    label_valid = _valid_forward_mask(panel) & valid_panel
     click.echo(f"stage: computing factor set {cfg.factor_set}")
     if cfg.factor_set == "alpha101":
         features, factor_valid, factor_names = _alpha101_features(factor_panel)
@@ -624,7 +628,10 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
     valid_alpha = valid_panel & factor_valid
 
     click.echo("stage: training walk-forward MLP")
-    raw_preds = _fit_predict_model("mlp_alpha101", features, target, valid_alpha, validation_cfg)
+    raw_preds = _fit_predict_model(
+        "mlp_alpha101", features, target, label_valid & factor_valid, validation_cfg,
+        prediction_valid=valid_alpha,
+    )
     click.echo("stage: building scores")
     neutralized_preds = _neutralize_score_matrix(raw_preds, valid_alpha)
     alpha_scores = np.nanmean(features, axis=2)
@@ -635,6 +642,7 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
         valid_alpha,
         lookback=cfg.factor_ic_window,
         rebalance_step=cfg.rebalance_step,
+        label_valid=label_valid & factor_valid,
     )
     neutralized_ic_weighted = _neutralize_score_matrix(ic_weighted_scores, valid_alpha)
 
