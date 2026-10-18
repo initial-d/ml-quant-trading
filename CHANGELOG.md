@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Full-pipeline validation: execution coverage
+
+- Reports now show joint factor-mask coverage, per-split training/prediction
+  sample counts and skip reasons, finite predictions, and portfolio cash and
+  P&L exposure dates. An untrained or all-cash MLP is explicitly marked as
+  not evidence of model performance.
+- Report audits surface coverage warnings. Full-panel metrics are preserved;
+  differing warm-up/exposure dates are flagged instead of presenting them as
+  matched-window comparisons. Synthetic reports identify their evidence class.
+
 ### Public validation: signal-date availability
 
 - The generic and full AkShare validation scripts now select portfolios and
