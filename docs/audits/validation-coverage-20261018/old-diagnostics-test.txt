@@ -1,0 +1,46 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_full_pipeline_reports_skipped_training_and_empty_portfolios _______
+
+tmp_path = PosixPath('/private/var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/pytest-of-duyimin/pytest-11/test_full_pipeline_reports_ski0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x11307f590>
+
+    def test_full_pipeline_reports_skipped_training_and_empty_portfolios(tmp_path, monkeypatch):
+        """A no-label model must be reported as skipped, not as zero-return skill."""
+        import json
+        import scripts.akshare_csi300_full_pipeline as full
+        from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+        panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+        cfg = full.FullPipelineConfig(
+            source="synthetic", preset="custom", tickers=(), start="2021-01-01",
+            end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=2,
+            cost_grid_bps=(), train_window=30, test_window=10, step=10, top_quantile=0.25,
+            seed=3, epochs=1, batch_size=64, hidden=8, factor_set="alpha101",
+            covariance_window=10, optimizer_candidates=5, optimizer_weight_cap=0.25,
+            optimizer_risk_aversion=1, rebalance_step=1, factor_ic_window=20,
+            min_tradable_ratio=0.9, bootstrap_samples=0, bootstrap_block_size=10,
+            output_dir=tmp_path,
+        )
+        monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
+        monkeypatch.setattr(full, "_alpha101_features", lambda panel: (
+            np.ones((60, 8, 3), dtype=np.float32), np.zeros((60, 8), dtype=bool), ["a", "b", "c"],
+        ))
+        full.run_full_pipeline(cfg)
+        report = json.loads((tmp_path / "summary.json").read_text())
+>       diagnostics = report["diagnostics"]
+                      ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'diagnostics'
+
+tests/test_akshare_csi300_full_pipeline.py:273: KeyError
+----------------------------- Captured stdout call -----------------------------
+stage: loading AkShare panel
+stage: panel loaded (60 dates x 8 stocks)
+stage: computing factor set alpha101
+stage: computed 3 factors
+stage: training walk-forward MLP
+stage: building scores
+stage: building daily portfolios
+stage: writing reports
+=========================== short test summary info ============================
+FAILED tests/test_akshare_csi300_full_pipeline.py::test_full_pipeline_reports_skipped_training_and_empty_portfolios

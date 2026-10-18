@@ -1,0 +1,35 @@
+{
+  "code_commit": "fed2db53109cc0a419b6d02d0e4db6de308b5bdd",
+  "provider_probe_commit": "a0b33491266d578d63c300ad3d79832d237c40db",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "pytorch": "2.14.1",
+  "akshare": "1.19.1",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu": "Apple M5",
+  "logical_cpus": 10,
+  "memory_bytes": 34359738368,
+  "device": "cpu",
+  "cuda_available": false,
+  "mps_available": true,
+  "comparison_threads": {
+    "OMP_NUM_THREADS": 1,
+    "OPENBLAS_NUM_THREADS": 1,
+    "torch": 1,
+    "interop": 1
+  },
+  "pytest_threads_note": "OMP/BLAS fixed at 1; individual tests may change torch pools; no timing comparison claimed.",
+  "evidence_classes": {
+    "comparison": "synthetic engineering",
+    "provider_probes": "public-data access failure; no panel"
+  },
+  "costs_bps": 5,
+  "slippage_bps": 2,
+  "provider_probe_costs": "not applicable; download only",
+  "limitations": [
+    "No public-data panel or new market performance result.",
+    "No proprietary paper experiment.",
+    "Comparison preserves full-panel warm-up cash and differing exposure windows."
+  ],
+  "working_tree_note": "Tests/lint passed on candidate code identical to recorded code commit; replay used clean committed tree."
+}

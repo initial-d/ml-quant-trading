@@ -1,0 +1,201 @@
+{
+  "category": "synthetic engineering evidence; no investment or predictive evidence",
+  "base_commit": "a0b33491266d578d63c300ad3d79832d237c40db",
+  "current_commit": "fed2db53109cc0a419b6d02d0e4db6de308b5bdd",
+  "python": "3.12.14",
+  "pytorch": "2.14.1",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "device": "cpu",
+  "torch_threads": 1,
+  "torch_interop_threads": 1,
+  "synthetic_config": {
+    "n_dates": 120,
+    "n_stocks": 20,
+    "halt_prob": 0,
+    "seed": 7
+  },
+  "panel_sha256": "6c09274ae546aa1cfeae4397392d33f19ae02025d62eb64ffb224a1f60f2bc6f",
+  "panel_hash_method": "SHA-256 of field names and C-order bytes: open/high/low/close/volume/vwap/amount/mask",
+  "weights_identical": true,
+  "metrics_identical": true,
+  "cost_sensitivity_identical": true,
+  "costs_bps": 5,
+  "slippage_bps": 2,
+  "diagnostics": {
+    "factor_label_cells": 1020,
+    "factor_signal_cells": 1040,
+    "factor_signal_ratio": 0.43333333333333335,
+    "limit_eligible_cells": 2380,
+    "metric_window": "full_panel_including_warmup_cash",
+    "model": {
+      "finite_prediction_cells": 0,
+      "min_train_samples": 852,
+      "prediction_dates": 0,
+      "skipped_splits": 3,
+      "splits": [
+        {
+          "status": "insufficient_training_samples",
+          "test_end_exclusive": 80,
+          "test_samples": 240,
+          "test_start": 60,
+          "train_end_exclusive": 60,
+          "train_samples": 0,
+          "train_start": 0
+        },
+        {
+          "status": "insufficient_training_samples",
+          "test_end_exclusive": 100,
+          "test_samples": 400,
+          "test_start": 80,
+          "train_end_exclusive": 80,
+          "train_samples": 240,
+          "train_start": 20
+        },
+        {
+          "status": "insufficient_training_samples",
+          "test_end_exclusive": 119,
+          "test_samples": 380,
+          "test_start": 100,
+          "train_end_exclusive": 100,
+          "train_samples": 640,
+          "train_start": 40
+        }
+      ],
+      "total_splits": 3,
+      "trained_splits": 0
+    },
+    "panel_cells": 2400,
+    "raw_tradable_cells": 2400,
+    "strategies": {
+      "equal_weight_daily": {
+        "cash_dates": 1,
+        "first_pnl_exposure_date": "2020-01-06T00:00:00.000000",
+        "invested_dates": 119,
+        "last_pnl_exposure_date": "2020-06-17T00:00:00.000000",
+        "pnl_exposure_dates": 118
+      },
+      "factor_ic_optimized_daily": {
+        "cash_dates": 120,
+        "first_pnl_exposure_date": null,
+        "invested_dates": 0,
+        "last_pnl_exposure_date": null,
+        "pnl_exposure_dates": 0
+      },
+      "factor_ic_weighted_daily": {
+        "cash_dates": 120,
+        "first_pnl_exposure_date": null,
+        "invested_dates": 0,
+        "last_pnl_exposure_date": null,
+        "pnl_exposure_dates": 0
+      },
+      "factor_mean_buffered_daily": {
+        "cash_dates": 68,
+        "first_pnl_exposure_date": "2020-04-08T00:00:00.000000",
+        "invested_dates": 52,
+        "last_pnl_exposure_date": "2020-06-17T00:00:00.000000",
+        "pnl_exposure_dates": 51
+      },
+      "factor_mean_daily": {
+        "cash_dates": 68,
+        "first_pnl_exposure_date": "2020-04-08T00:00:00.000000",
+        "invested_dates": 52,
+        "last_pnl_exposure_date": "2020-06-17T00:00:00.000000",
+        "pnl_exposure_dates": 51
+      },
+      "factor_mean_optimized_daily": {
+        "cash_dates": 68,
+        "first_pnl_exposure_date": "2020-04-08T00:00:00.000000",
+        "invested_dates": 52,
+        "last_pnl_exposure_date": "2020-06-17T00:00:00.000000",
+        "pnl_exposure_dates": 51
+      },
+      "mlp_optimized_daily": {
+        "cash_dates": 120,
+        "first_pnl_exposure_date": null,
+        "invested_dates": 0,
+        "last_pnl_exposure_date": null,
+        "pnl_exposure_dates": 0
+      },
+      "mlp_top20_neutralized_daily": {
+        "cash_dates": 120,
+        "first_pnl_exposure_date": null,
+        "invested_dates": 0,
+        "last_pnl_exposure_date": null,
+        "pnl_exposure_dates": 0
+      },
+      "mlp_top20_raw_daily": {
+        "cash_dates": 120,
+        "first_pnl_exposure_date": null,
+        "invested_dates": 0,
+        "last_pnl_exposure_date": null,
+        "pnl_exposure_dates": 0
+      }
+    },
+    "warnings": [
+      "No walk-forward split was trained; zero-return MLP rows are not evidence of model performance.",
+      "The model produced no finite predictions.",
+      "factor_ic_weighted_daily: no invested dates; an all-cash row is not evidence of model performance.",
+      "factor_ic_optimized_daily: no invested dates; an all-cash row is not evidence of model performance.",
+      "mlp_top20_raw_daily: no invested dates; an all-cash row is not evidence of model performance.",
+      "mlp_top20_neutralized_daily: no invested dates; an all-cash row is not evidence of model performance.",
+      "mlp_optimized_daily: no invested dates; an all-cash row is not evidence of model performance.",
+      "Strategies have different P&L exposure dates. Full-panel metrics include warm-up cash and are not matched-window comparisons."
+    ]
+  },
+  "audit": {
+    "base": [
+      {
+        "severity": "pass",
+        "check": "report",
+        "message": "report passed all audit checks"
+      }
+    ],
+    "current": [
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "No walk-forward split was trained; zero-return MLP rows are not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "The model produced no finite predictions."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "factor_ic_weighted_daily: no invested dates; an all-cash row is not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "factor_ic_optimized_daily: no invested dates; an all-cash row is not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "mlp_top20_raw_daily: no invested dates; an all-cash row is not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "mlp_top20_neutralized_daily: no invested dates; an all-cash row is not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "mlp_optimized_daily: no invested dates; an all-cash row is not evidence of model performance."
+      },
+      {
+        "severity": "warning",
+        "check": "execution_coverage",
+        "message": "Strategies have different P&L exposure dates. Full-panel metrics include warm-up cash and are not matched-window comparisons."
+      }
+    ]
+  },
+  "limitations": [
+    "Short synthetic panel deliberately lacks enough joint-factor training samples; not a market experiment.",
+    "Base runner/writer and model helper loaded from recorded Git commit; other unchanged helpers are shared.",
+    "No bootstrap inference; full-panel metrics retain warm-up cash and differing exposure windows."
+  ]
+}
