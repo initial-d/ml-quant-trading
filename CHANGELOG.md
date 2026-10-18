@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Public validation: signal-date availability
+
+- The generic and full AkShare validation scripts now select portfolios and
+  predict scores using signal-date availability. Previously they also required
+  next-day availability, so a known future halt or missing row changed today's
+  holdings. Historical training labels and trailing IC estimates still require
+  observations on both dates.
+- New validation metadata records `availability_protocol`. Reports made with
+  v0.4.1 or earlier need revalidation; changing the selection mask can change
+  weights, turnover, and net performance. This is a causality fix, not alpha
+  evidence or a halt-aware execution model.
+
 ### Markowitz optimiser: DPP form, reliability, and caching
 
 - The risk term is now `sum_squares(F.T @ w)` with `Sigma = F F^T` instead of

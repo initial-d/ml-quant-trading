@@ -23,7 +23,7 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 import click
 import numpy as np
@@ -321,7 +321,8 @@ def _forward_returns(panel: Panel) -> np.ndarray:
 
 
 def _valid_forward_mask(panel: Panel, factor_mask: torch.Tensor | None = None) -> np.ndarray:
-    valid = _to_numpy(panel.mask).astype(bool)
+    # This is label eligibility, not the signal-date portfolio universe.
+    valid = _to_numpy(panel.mask).astype(bool, copy=True)
     valid[:-1] &= valid[1:]
     valid[-1] = False
     if factor_mask is not None:
@@ -397,7 +398,15 @@ def _fit_predict_model(
     target: np.ndarray,
     valid: np.ndarray,
     cfg: ValidationConfig,
+    *,
+    prediction_valid: np.ndarray | None = None,
 ) -> np.ndarray:
+    # Training may require a known forward label. Inference must use only
+    # information available on the signal date, including on pre-halt days.
+    if prediction_valid is None:
+        prediction_valid = valid
+    if prediction_valid.shape != valid.shape:
+        raise ValueError("prediction and label masks must have the same shape")
     _seed_everything(cfg.seed)
     preds = np.full(target.shape, np.nan, dtype=np.float32)
     splits = _walk_forward_splits(
@@ -409,7 +418,7 @@ def _fit_predict_model(
     in_dim = features.shape[-1]
     for split_id, (train_start, train_end, test_start, test_end) in enumerate(splits):
         train_valid = valid[train_start:train_end]
-        test_valid = valid[test_start:test_end]
+        test_valid = prediction_valid[test_start:test_end]
         x_train = features[train_start:train_end][train_valid]
         y_train = target[train_start:train_end][train_valid]
         x_test = features[test_start:test_end][test_valid]
@@ -597,6 +606,10 @@ def _metadata(cfg: ValidationConfig, panel: Panel) -> dict[str, object]:
         "cuda_device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none",
         "panel": _panel_coverage(panel),
         "limit_mask": LIMIT_MASK_PROTOCOL,
+        "availability_protocol": (
+            "signal-date availability for portfolio selection and prediction; "
+            "next-date availability is used only for historical training labels"
+        ),
         "limitations": notes,
     }
 
@@ -622,9 +635,9 @@ def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
     returns = _to_numpy(panel.returns)
     target = _forward_returns(panel)
     factor_panel = _limit_masked_panel(panel)
-    # Limit days leave the universe only on the signal date t; checking t+1
-    # against the limit mask would peek at tomorrow's limit move.
-    valid_panel = _valid_forward_mask(panel) & _to_numpy(factor_panel.mask).astype(bool)
+    # Portfolio eligibility cannot depend on tomorrow's halt or data coverage.
+    valid_panel = _to_numpy(factor_panel.mask).astype(bool, copy=True)
+    label_valid = _valid_forward_mask(panel) & valid_panel
 
     alpha_features: np.ndarray | None = None
     alpha_valid: np.ndarray | None = None
@@ -656,7 +669,10 @@ def run_validation(cfg: ValidationConfig) -> list[dict[str, float | int | str]]:
     for model_name in ("mlp_alpha101", "transformer_alpha101"):
         if model_name in cfg.models:
             assert alpha_features is not None
-            preds = _fit_predict_model(model_name, alpha_features, target, valid_alpha, cfg)
+            preds = _fit_predict_model(
+                model_name, alpha_features, target, label_valid & alpha_valid, cfg,
+                prediction_valid=valid_alpha,
+            )
             strategies[model_name] = _long_only_top_quantile_weights(
                 preds,
                 valid_alpha & np.isfinite(preds),

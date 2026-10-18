@@ -1,0 +1,19 @@
+Install:
+/Users/duyimin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/python -m pip freeze
+
+Provider probe (source saved in provider_probe.py; original execution used the same code on stdin):
+.venv/bin/python -u docs/audits/public-revalidation-20261017/provider_probe.py
+
+Old-code regressions (public validation script sources temporarily loaded from base ccdcf16; corrected sources restored before validation):
+.venv/bin/python -m pytest tests/test_public_data_validation.py::test_signal_weights_do_not_use_tomorrows_availability tests/test_akshare_csi300_full_pipeline.py::test_full_pipeline_separates_signal_and_forward_label_masks -q
+
+Corrected verification at 3443987:
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest
+.venv/bin/python -m ruff check src tests scripts/public_data_validation.py scripts/akshare_csi300_full_pipeline.py
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/mlquant demo
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python docs/audits/public-revalidation-20261017/compare_signal_masks.py
+.venv/bin/python scripts/audit_validation_report.py artifacts/revalidation-20261017/corrected/summary.json --output-md artifacts/revalidation-20261017/report-audit.md --output-json artifacts/revalidation-20261017/report-audit.json
+
+git diff --check
