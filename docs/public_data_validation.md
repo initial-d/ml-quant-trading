@@ -478,6 +478,35 @@ such reports with the corrected signal-date protocol; new metadata records it in
 this change removes tomorrow's availability from selection but does not add a
 halt-aware execution simulator.
 
+## Full-Pipeline Execution Coverage
+
+The full-pipeline report includes an `Execution Coverage` section and a
+`diagnostics` object in `summary.json`. Inspect these before interpreting the
+result table:
+
+- Raw tradable, limit-eligible, joint factor-valid signal, and historical label
+  cell counts show how much input survives each mask. The factor signal ratio
+  uses all panel cells as its denominator.
+- The MLP records each planned split's training/prediction samples and status.
+  Training needs at least `max(32, 4 * feature_count)` samples; insufficient
+  training samples or no prediction samples cause a recorded skip. Finite
+  prediction cells count the final prediction matrix, including any overlap
+  overwritten by later splits.
+- Each portfolio records invested and cash dates, plus first/last P&L exposure
+  dates. The engine earns a return on date `t` from the weights on `t-1`;
+  last-row positions have no later return in the panel. Cash dates can still
+  incur exit costs.
+
+If no split trains, no finite prediction appears, or a strategy stays all-cash,
+the report displays a coverage warning. An all-cash MLP's finite zero-return
+metrics are **not evidence of model performance**. The run remains recorded
+as useful failure evidence.
+
+Metrics still use the full panel, including warm-up cash. Strategies can have
+different exposure dates, so their full-panel metrics are not matched-window
+comparisons. Coverage reporting does not repair evaluation-window differences,
+prove alpha, or revalidate archived reports.
+
 ## Auditing Reports
 
 Before sharing a validation run, audit the generated `summary.json`:
@@ -494,6 +523,12 @@ tickers with no data, missing equal-weight baseline, non-finite metrics, negativ
 cost settings, unusual turnover/drawdown, and non-positive final equity. It is a
 quality gate for reproducibility reports, not a judgement about whether a
 strategy is good.
+
+For new full-pipeline reports, the audit also surfaces execution-coverage
+warnings, including skipped training, empty portfolios, and differing P&L
+exposure dates. These are warnings rather than errors so failed runs can be
+preserved. Archived reports without `diagnostics` retain the existing checks;
+an audit pass alone does not establish that a model trained or held positions.
 
 For the default artifact path, the Make target is:
 

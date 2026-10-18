@@ -1,0 +1,26 @@
+[
+  {
+    "ticker": "600519",
+    "started_at": "2026-10-18T09:03:10.963270+08:00",
+    "retries": 1,
+    "start": "2021-01-01",
+    "end": "2025-01-01",
+    "adjust": "qfq",
+    "status": "failed",
+    "error_type": "ValueError",
+    "error": "No data returned for tickers ['600519'] from 2021-01-01 to 2025-01-01",
+    "wall_seconds": 0.3465902078896761
+  },
+  {
+    "ticker": "000001",
+    "started_at": "2026-10-18T09:03:11.310246+08:00",
+    "retries": 1,
+    "start": "2021-01-01",
+    "end": "2025-01-01",
+    "adjust": "qfq",
+    "status": "failed",
+    "error_type": "ValueError",
+    "error": "No data returned for tickers ['000001'] from 2021-01-01 to 2025-01-01",
+    "wall_seconds": 0.1371590420603752
+  }
+]

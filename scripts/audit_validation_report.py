@@ -125,6 +125,11 @@ def audit_report(
         if final_equity is not None and final_equity <= 0:
             findings.append(_finding("error", f"{strategy}.final_equity", "final equity must be positive"))
 
+    diagnostics = report.get("diagnostics")
+    if isinstance(diagnostics, dict):
+        for warning in diagnostics.get("warnings", []):
+            findings.append(_finding("warning", "execution_coverage", str(warning)))
+
     if not findings:
         findings.append(_finding("pass", "report", "report passed all audit checks"))
     return findings

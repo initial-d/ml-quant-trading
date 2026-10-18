@@ -525,6 +525,49 @@ def _full_pipeline_metadata(
     return metadata
 
 
+def _coverage_diagnostics(panel, valid_panel, valid_alpha, label_valid, model, strategies) -> dict:
+    """Report execution coverage without changing the backtest or its window."""
+    warnings = []
+    if not valid_alpha.any():
+        warnings.append("No factor-valid signal cells remain after the joint factor mask.")
+    if model.get("trained_splits") == 0:
+        warnings.append("No walk-forward split was trained; zero-return MLP rows are not evidence of model performance.")
+    elif model.get("skipped_splits", 0):
+        warnings.append(f"{model['skipped_splits']} walk-forward splits were skipped; inspect sample counts and reasons.")
+    if model.get("finite_prediction_cells") == 0:
+        warnings.append("The model produced no finite predictions.")
+    coverage = {}
+    exposure_masks = []
+    for name, weights in strategies.items():
+        invested = np.abs(weights).sum(axis=1) > 0
+        # The engine earns returns[t] using weights[t-1]. Last-row weights
+        # can incur entry costs but have no subsequent return in this panel.
+        exposed = np.concatenate(([False], invested[:-1]))
+        dates = np.flatnonzero(exposed)
+        coverage[name] = {
+            "invested_dates": int(invested.sum()),
+            "cash_dates": int((~invested).sum()),
+            "pnl_exposure_dates": int(exposed.sum()),
+            "first_pnl_exposure_date": str(panel.dates[dates[0]]) if dates.size else None,
+            "last_pnl_exposure_date": str(panel.dates[dates[-1]]) if dates.size else None,
+        }
+        exposure_masks.append(exposed)
+        if not invested.any():
+            warnings.append(f"{name}: no invested dates; an all-cash row is not evidence of model performance.")
+    if any(not np.array_equal(exposure_masks[0], mask) for mask in exposure_masks[1:]):
+        warnings.append("Strategies have different P&L exposure dates. Full-panel metrics include warm-up cash and are not matched-window comparisons.")
+    return {
+        "panel_cells": int(valid_panel.size),
+        "raw_tradable_cells": int(_to_numpy(panel.mask).astype(bool).sum()),
+        "limit_eligible_cells": int(valid_panel.sum()),
+        "factor_signal_cells": int(valid_alpha.sum()),
+        "factor_signal_ratio": float(valid_alpha.mean()),
+        "factor_label_cells": int(label_valid.sum()),
+        "model": model, "strategies": coverage, "warnings": warnings,
+        "metric_window": "full_panel_including_warmup_cash",
+    }
+
+
 def _write_outputs(
     cfg: FullPipelineConfig,
     panel,
@@ -533,6 +576,8 @@ def _write_outputs(
     sensitivity_rows: Sequence[dict[str, float | int | str]],
     strategies: dict[str, np.ndarray],
     returns: np.ndarray,
+    *,
+    diagnostics: dict | None = None,
 ) -> None:
     cfg.output_dir.mkdir(parents=True, exist_ok=True)
     metadata = _full_pipeline_metadata(cfg, panel, factor_names)
@@ -553,6 +598,7 @@ def _write_outputs(
                     "metadata": metadata,
                     "results": list(rows),
                     "cost_sensitivity": list(sensitivity_rows),
+                    "diagnostics": diagnostics,
                 }
             ),
             f,
@@ -563,7 +609,8 @@ def _write_outputs(
         panel_meta = metadata["panel"]
         pipeline = metadata["pipeline"]
         f.write("# AkShare CSI 300 Full-Pipeline Validation Summary\n\n")
-        f.write("This report is a public-data research diagnostic, not a trading claim.\n\n")
+        evidence = "synthetic engineering" if cfg.source == "synthetic" else "public-data research"
+        f.write(f"This report is a {evidence} diagnostic, not a trading claim.\n\n")
         f.write("| Field | Value |\n|---|---|\n")
         f.write(f"| Source | {cfg.source} |\n")
         f.write(f"| Preset | {cfg.preset} |\n")
@@ -581,12 +628,31 @@ def _write_outputs(
         f.write(f"| Rebalance | {rebalance_label} |\n")
         f.write(f"| Costs + slippage | {cfg.costs_bps:.2f} + {cfg.slippage_bps:.2f} bps |\n")
         f.write(f"| Python / PyTorch | {platform.python_version()} / {torch.__version__} |\n\n")
+        if diagnostics is not None:
+            f.write("## Execution Coverage\n\n")
+            f.write(f"Factor-valid signal cells: {diagnostics['factor_signal_cells']} / {diagnostics['panel_cells']}; "
+                    f"historical label cells: {diagnostics['factor_label_cells']}.\n\n")
+            model = diagnostics["model"]
+            f.write(f"MLP splits trained / planned: {model.get('trained_splits', 'unknown')} / "
+                    f"{model.get('total_splits', 'unknown')}; finite prediction cells: "
+                    f"{model.get('finite_prediction_cells', 'unknown')}. "
+                    "Per-split sample counts and skip reasons are in `summary.json`.\n\n")
+            f.write("| Strategy | Invested dates | Cash dates | P&L exposure dates | First / last P&L exposure |\n|---|---:|---:|---:|---|\n")
+            for name, coverage in diagnostics["strategies"].items():
+                f.write(f"| {name} | {coverage['invested_dates']} | {coverage['cash_dates']} | "
+                        f"{coverage['pnl_exposure_dates']} | {coverage['first_pnl_exposure_date']} / "
+                        f"{coverage['last_pnl_exposure_date']} |\n")
+            f.write("\n")
+            for warning in diagnostics["warnings"]:
+                f.write(f"- **Coverage warning:** {warning}\n")
+            f.write("\nFull-panel metrics include warm-up cash. P&L exposure uses the previous date's weights; "
+                    "cash dates can still incur exit costs.\n\n")
         f.write(_markdown_table(rows))
         if sensitivity_rows:
             f.write("\n\n## Cost Sensitivity\n\n")
             f.write(_cost_sensitivity_table(sensitivity_rows))
         f.write("\n\n## Interpretation Notes\n\n")
-        f.write("- The model is trained walk-forward on the selected public-data factor set.\n")
+        f.write("- The model attempts walk-forward training; inspect execution coverage before interpreting its metrics.\n")
         f.write("- Score neutralization is cross-sectional only, not industry or size neutralization.\n")
         f.write("- Optimized portfolios are constrained to top-scored candidates to keep the public run tractable.\n")
         f.write("- Read net return together with gross return, turnover, and cost drag.\n")
@@ -628,9 +694,11 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
     valid_alpha = valid_panel & factor_valid
 
     click.echo("stage: training walk-forward MLP")
+    model_diagnostics = {}
     raw_preds = _fit_predict_model(
         "mlp_alpha101", features, target, label_valid & factor_valid, validation_cfg,
         prediction_valid=valid_alpha,
+        diagnostics=model_diagnostics,
     )
     click.echo("stage: building scores")
     neutralized_preds = _neutralize_score_matrix(raw_preds, valid_alpha)
@@ -717,7 +785,11 @@ def run_full_pipeline(cfg: FullPipelineConfig) -> list[dict[str, float | int | s
 
     rows, sensitivity_rows = _strategy_rows(strategies, returns, cfg)
     click.echo("stage: writing reports")
-    _write_outputs(cfg, panel, factor_names, rows, sensitivity_rows, strategies, returns)
+    diagnostics = _coverage_diagnostics(
+        panel, valid_panel, valid_alpha, label_valid & factor_valid, model_diagnostics, strategies,
+    )
+    _write_outputs(cfg, panel, factor_names, rows, sensitivity_rows, strategies, returns,
+                   diagnostics=diagnostics)
     return rows
 
 

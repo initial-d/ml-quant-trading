@@ -1,0 +1,20 @@
+# Run from repository root with the editable .venv described in environment.json.
+# Old-code regression, before the implementation patch (base main plus new test):
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest tests/test_akshare_csi300_full_pipeline.py::test_full_pipeline_reports_skipped_training_and_empty_portfolios -q
+
+# Candidate code; byte-identical implementation to fed2db53109cc0a419b6d02d0e4db6de308b5bdd:
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest tests/test_akshare_csi300_full_pipeline.py tests/test_public_data_validation.py tests/test_audit_validation_report.py -q
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest
+.venv/bin/python -m ruff check src tests scripts/public_data_validation.py scripts/akshare_csi300_full_pipeline.py scripts/audit_validation_report.py docs/audits/validation-coverage-20261018/compare_coverage.py
+git diff --check
+
+# Clean recorded code commit; no network, synthetic only:
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 .venv/bin/python docs/audits/validation-coverage-20261018/compare_coverage.py
+
+# Download-only probe source is preserved as provider_probe.py. Executed before
+# the diagnostics patch at a0b33491266d578d63c300ad3d79832d237c40db:
+PYTHONPATH=src .venv/bin/python artifacts/revalidation-20261018/provider_probe.py
+
+# Replay loads the base runner/writer and model helper with:
+git show a0b33491266d578d63c300ad3d79832d237c40db:scripts/public_data_validation.py
+git show a0b33491266d578d63c300ad3d79832d237c40db:scripts/akshare_csi300_full_pipeline.py

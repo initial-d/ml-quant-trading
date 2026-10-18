@@ -400,6 +400,7 @@ def _fit_predict_model(
     cfg: ValidationConfig,
     *,
     prediction_valid: np.ndarray | None = None,
+    diagnostics: dict | None = None,
 ) -> np.ndarray:
     # Training may require a known forward label. Inference must use only
     # information available on the signal date, including on pre-halt days.
@@ -416,13 +417,25 @@ def _fit_predict_model(
         step=cfg.step,
     )
     in_dim = features.shape[-1]
+    split_records = []
+    min_train_samples = max(32, in_dim * 4)
     for split_id, (train_start, train_end, test_start, test_end) in enumerate(splits):
         train_valid = valid[train_start:train_end]
         test_valid = prediction_valid[test_start:test_end]
         x_train = features[train_start:train_end][train_valid]
         y_train = target[train_start:train_end][train_valid]
         x_test = features[test_start:test_end][test_valid]
-        if x_train.shape[0] < max(32, in_dim * 4) or x_test.shape[0] == 0:
+        record = {
+            "train_start": train_start, "train_end_exclusive": train_end,
+            "test_start": test_start, "test_end_exclusive": test_end,
+            "train_samples": int(x_train.shape[0]), "test_samples": int(x_test.shape[0]),
+        }
+        split_records.append(record)
+        if x_train.shape[0] < min_train_samples:
+            record["status"] = "insufficient_training_samples"
+            continue
+        if x_test.shape[0] == 0:
+            record["status"] = "no_prediction_samples"
             continue
 
         mu = x_train.mean(axis=0, keepdims=True)
@@ -465,7 +478,18 @@ def _fit_predict_model(
         split_preds = np.full(test_valid.shape, np.nan, dtype=np.float32)
         split_preds[test_valid] = pred.astype(np.float32)
         preds[test_start:test_end] = split_preds
+        record["status"] = "trained"
+        record["finite_predictions"] = int(np.isfinite(pred).sum())
         click.echo(f"trained {model_name} split {split_id + 1}/{len(splits)}")
+    if diagnostics is not None:
+        trained = sum(record["status"] == "trained" for record in split_records)
+        diagnostics.update({
+            "total_splits": len(splits), "trained_splits": trained,
+            "skipped_splits": len(splits) - trained,
+            "min_train_samples": min_train_samples, "splits": split_records,
+            "finite_prediction_cells": int(np.isfinite(preds).sum()),
+            "prediction_dates": int(np.isfinite(preds).any(axis=1).sum()),
+        })
     return preds
 
 

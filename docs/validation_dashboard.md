@@ -17,6 +17,21 @@ This page tracks the maintained public-data validation snapshot for
 `ml-quant-trading`. It is designed as a reproducibility dashboard, not a live
 trading scoreboard.
 
+## Current Validation Status — 2026-10-18
+
+The signal-date availability fix is merged in
+[PR #78](https://github.com/initial-d/ml-quant-trading/pull/78). Public-data
+revalidation remains blocked: the two fixed AkShare probes again returned
+upstream disconnects and no panel on October 18. There is **no newer market
+performance snapshot**.
+
+New full-pipeline reports display factor, training, prediction and portfolio
+coverage. The [coverage audit and raw evidence](audits/validation-coverage-20261018/README.md)
+show a synthetic case where an all-cash, untrained MLP previously passed the
+report audit. This is engineering evidence only; archived July returns below
+remain unrevalidated. Full-panel metrics retain warm-up cash and can have
+different exposure dates across strategies.
+
 ## Latest Snapshot
 
 | Field | Value |

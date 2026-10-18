@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 
 import numpy as np
+import pytest
 
 from scripts.akshare_csi300_full_pipeline import (
     _buffered_top_quantile_weights,
@@ -207,14 +208,14 @@ def test_full_pipeline_separates_signal_and_forward_label_masks(tmp_path, monkey
     )
     seen = {}
 
-    def predict(model, features, target, labels, validation_cfg, *, prediction_valid=None):
+    def predict(model, features, target, labels, validation_cfg, *, prediction_valid=None, diagnostics=None):
         if prediction_valid is None:
             prediction_valid = labels
         seen["labels"] = labels.copy()
         seen["signals"] = prediction_valid.copy()
         return np.where(prediction_valid, features[:, :, 0], np.nan)
 
-    def write(config, data, names, rows, sensitivity, strategies, returns):
+    def write(config, data, names, rows, sensitivity, strategies, returns, *, diagnostics=None):
         seen["equal_weight"] = strategies["equal_weight_daily"]
 
     monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
@@ -245,3 +246,47 @@ def test_rolling_ic_ignores_missing_labels_but_scores_current_universe():
     poisoned = _rolling_ic_weighted_scores(features, changed, signal_valid, **kwargs)
     assert np.allclose(clean, poisoned, equal_nan=True)
     assert np.isfinite(clean[25, 0])
+
+
+@pytest.mark.parametrize("factor_available", [False, True])
+def test_full_pipeline_reports_skipped_training_and_empty_portfolios(tmp_path, monkeypatch, factor_available):
+    """A no-label model must be reported as skipped, not as zero-return skill."""
+    import json
+    import scripts.akshare_csi300_full_pipeline as full
+    from mlquant.data.synthetic import SyntheticConfig, make_synthetic_panel
+
+    panel = make_synthetic_panel(SyntheticConfig(n_dates=60, n_stocks=8, halt_prob=0, seed=3))
+    cfg = full.FullPipelineConfig(
+        source="synthetic", preset="custom", tickers=(), start="2021-01-01",
+        end="2022-01-01", max_tickers=8, device="cpu", costs_bps=5, slippage_bps=2,
+        cost_grid_bps=(), train_window=30, test_window=10, step=10, top_quantile=0.25,
+        seed=3, epochs=1, batch_size=64, hidden=8, factor_set="alpha101",
+        covariance_window=10, optimizer_candidates=5, optimizer_weight_cap=0.25,
+        optimizer_risk_aversion=1, rebalance_step=1, factor_ic_window=20,
+        min_tradable_ratio=0.9, bootstrap_samples=0, bootstrap_block_size=10,
+        output_dir=tmp_path,
+    )
+    monkeypatch.setattr(full, "load_validation_panel", lambda cfg: panel)
+    monkeypatch.setattr(full, "_alpha101_features", lambda panel: (
+        np.ones((60, 8, 3), dtype=np.float32), np.full((60, 8), factor_available, dtype=bool), ["a", "b", "c"],
+    ))
+    full.run_full_pipeline(cfg)
+    report = json.loads((tmp_path / "summary.json").read_text())
+    diagnostics = report["diagnostics"]
+    model = diagnostics["model"]
+    portfolio = diagnostics["strategies"]["mlp_top20_raw_daily"]
+    if factor_available:
+        assert diagnostics["factor_signal_cells"] == 472  # synthetic row 0 is unavailable
+        assert model["trained_splits"] == 3
+        assert model["finite_prediction_cells"] == 232
+        assert portfolio["invested_dates"] == portfolio["pnl_exposure_dates"] == 29
+        assert portfolio["first_pnl_exposure_date"] == str(panel.dates[31])
+        assert any("not matched-window" in warning for warning in diagnostics["warnings"])
+    else:
+        assert diagnostics["factor_signal_cells"] == 0
+        assert model["trained_splits"] == 0
+        assert model["skipped_splits"] == 3
+        assert all(split["status"] == "insufficient_training_samples" for split in model["splits"])
+        assert portfolio["invested_dates"] == 0
+        assert any("No walk-forward split" in warning for warning in diagnostics["warnings"])
+        assert "not evidence of model performance" in (tmp_path / "summary.md").read_text()

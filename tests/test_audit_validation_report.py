@@ -62,6 +62,18 @@ def test_audit_validation_report_flags_errors_and_warnings():
     assert any(item.check == "equal_weight.final_equity" for item in findings)
 
 
+def test_audit_reports_empty_model_as_warning_even_when_metrics_are_finite():
+    report = _valid_report()
+    report["results"][0].update(ann_return=0, ann_vol=0, sharpe=0, turnover=0, final_equity=1)
+    report["diagnostics"] = {
+        "warnings": ["No walk-forward split was trained; zero-return MLP rows are not evidence of model performance."]
+    }
+    findings = audit_report(report)
+    assert not has_errors(findings)  # preserve failed runs as useful evidence
+    assert any(item.severity == "warning" and item.check == "execution_coverage" for item in findings)
+    assert not any(item.severity == "pass" for item in findings)
+
+
 def test_audit_validation_report_fixture_is_json_serializable():
     encoded = json.dumps(_valid_report())
     assert "equal_weight" in encoded
