@@ -6,9 +6,9 @@ which the paper uses throughout::
     target_01[t, i] = close[t+1, i] / close[t, i] - 1
 
 masked by ``mask[t, i] & mask[t+1, i]``. Concretely, this is the
-realised one-day forward simple return, computed only on stock-days
-where the stock was tradable both at signal time *t* and at execution
-time *t+1*. The last row is always masked because there is no ``t+1``.
+realised one-day forward simple return, computed only where the panel's
+observation mask accepts both endpoints. This is label availability, not
+proof of order execution. The last row is masked because there is no ``t+1``.
 
 We expose two helpers:
 
@@ -30,7 +30,7 @@ Tensor = torch.Tensor
 
 
 def forward_return(panel: Panel, horizon: int = 1) -> Tuple[Tensor, Tensor]:
-    """``close[t+horizon] / close[t] - 1`` masked by tradability at both ends.
+    """``close[t+horizon] / close[t] - 1`` masked by observation availability.
 
     Parameters
     ----------

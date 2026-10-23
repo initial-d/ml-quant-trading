@@ -100,16 +100,17 @@ concrete way to inspect and extend a full factor-to-backtest workflow:
 |---|---|
 | **213 factor dimensions** | Mask-aware PyTorch factors with documented families and tensor primitives |
 | **One end-to-end path** | Data, masks, factors, models, portfolio construction, cost-aware backtest, and reports |
-| **Mask-first factor protocol** | Non-tradable limit-move observations are masked before rolling-window factors, not only filtered later |
+| **Mask-first factor protocol** | A documented limit-move exclusion policy is applied before rolling factors; observation, factor and label validity remain distinct |
 | **Public and synthetic data paths** | Start without private data, then test AkShare, Baostock, or yfinance |
 | **Evidence, including failures** | Costs, turnover, baselines, caveats, and negative or blocked runs stay visible |
 | **A contribution path** | CI, tests, report templates, Colab, and newcomer-sized research tasks |
 | **Typed portfolio-decision adapter** | Pipeline state can also be exposed as bounded portfolio intent, without turning the project into execution infrastructure |
 
-If you are citing the paper, the most specific contribution is the mask-first
-factor-computation protocol: non-tradable limit-move prices should be masked
-before rolling-window factors so they do not contaminate downstream signals. See
-the [citation conversion guide](docs/citation_conversion.md).
+The mask-first protocol propagates a chosen exclusion policy through rolling
+factor windows. An observed price at a limit can still be valid for a return
+label or held-position P&L; see the [mask contract](docs/mask_contract.md).
+Use the [citation conversion guide](docs/citation_conversion.md) with that
+implementation boundary in mind.
 
 Try the live Hugging Face artifacts: the
 [100,000-row synthetic dataset](https://huggingface.co/datasets/dddyym/ml-quant-trading-synthetic)

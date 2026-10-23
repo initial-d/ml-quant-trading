@@ -258,7 +258,7 @@ def cmd_train(config_path: str) -> None:
     art = _artifacts_dir(cfg)
     panel = _load_panel(art)
     feat_blob  = torch.load(art / "features.pt", weights_only=False)
-    fwd_ret, _ = target_01(panel)
+    fwd_ret, label_mask = target_01(panel)
 
     # Train only on dates before the out-of-sample window. Slicing to
     # ``oos + 1`` keeps the label of the last training day (close at ``oos``),
@@ -269,6 +269,7 @@ def cmd_train(config_path: str) -> None:
         factors=feat_blob["factors"][: oos + 1],
         mask=feat_blob["mask"][: oos + 1],
         forward_returns=fwd_ret[: oos + 1],
+        label_mask=label_mask[: oos + 1],
     )
     n_features = ds.features.shape[1]
     model = MLPRegressor(in_dim=n_features, hidden=cfg.get("hidden", 128))
