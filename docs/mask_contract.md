@@ -37,6 +37,12 @@ The dataset does not shift them again. A sample requires usable factors at t,
 a valid forward label at t, and finite feature/label values. The final date is
 excluded for this next-day dataset.
 
+Forward labels also require finite, positive close prices at both endpoints and
+a finite computed return. Zero/negative prices are rejected rather than clamped
+into extreme returns. Invalid values are zero-filled while their masks stay
+false; a genuine zero return can have a true mask. Multi-row horizons check only
+their endpoints, and horizons at or beyond the panel length have no valid labels.
+
 For example, if tomorrow closes at a price limit, tomorrow's factor mask can
 be false while today's forward label remains valid. The explicit label mask
 retains that sample. Omitting `label_mask` keeps the old intersection of factor
