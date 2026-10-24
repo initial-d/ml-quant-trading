@@ -203,6 +203,52 @@ trailing argument, the generated JSON artifact path, and caveats. Treat the
 numbers as evidence that DSH can preserve the benchmark workflow and artifact
 boundary, not as a performance claim.
 
+## Opt-in Linear-Memory Rolling Moments: Apple M5 (2026-10-24)
+
+Synthetic CPU systems evidence, separate from protocol v1 and trading quality.
+The new `ts_mean_linear`, `ts_std_linear`, `ts_cov_linear` and `ts_corr_linear`
+use centred float64 prefix sums with O(T*N) arithmetic/storage, without a window
+dimension. Existing factor functions remain the default. Masked/nonfinite values
+are excluded; the first window-1 rows are invalid and partial observation counts
+follow mean/sample-moment conventions.
+
+| Kernel | Window | Unfold median | Linear median | Speedup | Unfold peak RSS | Linear peak RSS |
+|---|---:|---:|---:|---:|---:|---:|
+| mean | 20 | 5.59 ms | 5.42 ms | 1.03x | 320.5 MB | 290.5 MB |
+| mean | 60 | 15.42 ms | 5.44 ms | 2.83x | 427.4 MB | 290.5 MB |
+| mean | 252 | 47.88 ms | 5.06 ms | 9.47x | 760.9 MB | 292.6 MB |
+| corr | 20 | 26.68 ms | 13.78 ms | 1.94x | 513.6 MB | 328.3 MB |
+| corr | 60 | 72.56 ms | 13.74 ms | 5.28x | 941.8 MB | 328.3 MB |
+| corr | 252 | 222.83 ms | 12.68 ms | 17.57x | 2283.3 MB | 327.2 MB |
+
+This is one Apple M5, macOS 26.6.2 arm64, Python 3.12.14 / PyTorch 2.14.1 run
+at code commit `f767f5c` (full SHA in JSON). Synthetic 750x1000 finite float32
+panel, 10% missing, seed 42, CPU only, intra/inter-op threads 1/1, 2 warmups and
+5 repeats. Each kernel/window gets a fresh subprocess. MB is decimal;
+**RSS includes interpreter and allocator caching**, not just kernel allocations.
+The 20-day mean has little speed benefit. Masks agreed; maximum valid-output
+differences were 3.06e-5 for mean and 3.58e-7 for correlation. Independent sampled
+float64 window oracles and unit tests cover precision, missing inputs and causality.
+FP64 throughput on GPUs is unmeasured; long, strongly drifting series can still
+suffer prefix-subtraction cancellation. No market data or cost/alpha claim.
+
+```python
+from mlquant.features import ts_corr_linear
+correlation, valid = ts_corr_linear(close, volume, observation_mask, window=252)
+```
+
+```bash
+python scripts/benchmark_rolling_moments.py --n-dates 750 --n-stocks 1000 \
+  --windows 20,60,252 --repeat 5 --warmup 2 --seed 42 \
+  --json-out artifacts/rolling-moments-20261024/report.json
+```
+
+Raw evidence: [JSON](benchmarks/rolling-moments-20261024/report.json),
+[run output](benchmarks/rolling-moments-20261024/run.txt),
+[figure](benchmarks/rolling-moments-20261024/window-sweep.svg).
+Plot from JSON with `scripts/plot_rolling_moments.py --report REPORT --output FIGURE.png`
+(optional `matplotlib`).
+
 ## Pre-Protocol Machine Snapshots
 
 The following results predate protocol v1. They did not pin PyTorch thread pools
