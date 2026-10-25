@@ -1,0 +1,8 @@
+{
+  "tested_content_commit": "7b90abf224bb9ec2e860a934a0445220e43cf4ef",
+  "note": "Tests ran before committing this exact tested content.",
+  "pytest_command": "/tmp/projects-push-20261023-venv/bin/python -m pytest",
+  "pytest_result": "231 passed in 10.86s",
+  "ruff_command": "/tmp/projects-push-20261023-venv/bin/python -m ruff check src tests scripts/benchmark_factor_streaming.py",
+  "ruff_result": "All checks passed!"
+}

@@ -130,3 +130,25 @@ all 213 factors' own masks and value errors, sampled rank differences, and a
 sampled independent FP64 oracle for correlations of discrete rank inputs. Its
 fresh-process timings and RSS snapshots precede saving and diagnostics; neither
 kernel speedups nor this synthetic benchmark establish predictive quality.
+
+## Consume one factor at a time
+
+For per-factor screening, IC with your own labels, or incremental storage, avoid
+retaining the full `[T,N,213]` output:
+
+```python
+import torch
+from mlquant.features import iter_legacy_factors
+with torch.no_grad():
+    for name, values, mask in iter_legacy_factors(panel):
+        # Compute/store this factor, then discard it before requesting the next.
+        print(name, values.shape)
+```
+
+Values, names and masks follow `compute_legacy_set`, including optional
+`neutralize`, `names`, and `rolling_backend`. Backend scopes end before each
+yield. Keep the panel and registry fixed and do not mutate returned masks.
+Retaining all outputs or autograd graphs defeats bounded consumption; a trainer
+requiring every feature dimension still needs an appropriate materialization.
+Run `scripts/benchmark_factor_streaming.py --json-out artifacts/streaming.json`
+for a fresh-process full-213-factor mean/RMS screening comparison.

@@ -203,6 +203,28 @@ trailing argument, the generated JSON artifact path, and caveats. Treat the
 numbers as evidence that DSH can preserve the benchmark workflow and artifact
 boundary, not as a performance claim.
 
+## Full Factor Streaming: Apple M5 (2026-10-25)
+
+`iter_legacy_factors` supports per-factor screening/incremental storage without
+retaining a `[T,N,213]` tensor. Source `7b90abf`, Apple M5 / macOS 26.6.2,
+Python 3.12.14 / PyTorch 2.14.1, synthetic 750 x 1000, seed 42, threads 1/1,
+1 warmup / 3 repeats, separate subprocesses, default `unfold` backend.
+Both methods compute all 213 neutralized factors and reduce each to mean/RMS.
+
+| Materialization | Median compute + reduction | Peak process RSS |
+|---|---:|---:|
+| Stack all factors | 5.314 s | 2649.0 MB |
+| Consume/discard one factor | 4.450 s | 1391.2 MB |
+
+**47.5% less process RSS and 16.3% shorter elapsed time for this screening
+workload.** All 213 factor byte hashes and the joint mask agreed. Consumers
+retaining every result lose this benefit; this is not model-training or alpha
+evidence. RSS includes interpreter/allocator caching. Source/environment, exact
+command, all timing samples and hashes: [raw JSON](benchmarks/factor-streaming-20261025/report.json),
+[run output](benchmarks/factor-streaming-20261025/run.txt),
+[local checks](benchmarks/factor-streaming-20261025/local-checks.json),
+review [PR #81](https://github.com/initial-d/ml-quant-trading/pull/81).
+
 ## Integrated Block Moments: Apple M5 (2026-10-25)
 
 Synthetic CPU evidence at code commit `2620ac1`, Apple M5 / macOS 26.6.2,
