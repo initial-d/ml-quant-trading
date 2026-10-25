@@ -29,6 +29,7 @@ from typing import Callable, Dict, Tuple
 import torch
 
 from ..data.panel import Panel
+from .rolling_backend import using_rolling_backend
 from .tensor_factors import (
     cs_zscore,
     delta,
@@ -103,17 +104,25 @@ def compute_legacy_set(
     *,
     names: tuple[str, ...] | None = None,
     neutralize: bool = True,
+    rolling_backend: str = "unfold",
 ) -> Tuple[Tensor, Tensor, list[str]]:
-    """Stack registered legacy factors into a ``[T, N, F]`` tensor."""
+    """Stack registered legacy factors into a ``[T, N, F]`` tensor.
+
+    ``rolling_backend='linear'`` selects O(T*N) FP64 prefix moments on CPU
+    or CUDA. The default retains historical direct windows. Only mean/std/
+    cov/corr change; finite filtering, precision and correlation clamping
+    can alter downstream ranks. Each call scopes and restores its selection.
+    """
     names = names or tuple(LEGACY_REGISTRY)
     cols, joint = [], None
-    for n in names:
-        v, m = LEGACY_REGISTRY[n](panel)
-        v = torch.where(torch.isfinite(v), v, torch.zeros_like(v))
-        if neutralize:
-            v, _ = cs_zscore(v, m)
-        cols.append(v)
-        joint = m if joint is None else joint & m
+    with using_rolling_backend(rolling_backend):
+        for n in names:
+            v, m = LEGACY_REGISTRY[n](panel)
+            v = torch.where(torch.isfinite(v), v, torch.zeros_like(v))
+            if neutralize:
+                v, _ = cs_zscore(v, m)
+            cols.append(v)
+            joint = m if joint is None else joint & m
     factors = torch.stack(cols, dim=-1)
     return factors, joint, list(names)
 
