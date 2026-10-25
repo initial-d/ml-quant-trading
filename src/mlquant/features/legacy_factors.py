@@ -108,7 +108,7 @@ def compute_legacy_set(
 ) -> Tuple[Tensor, Tensor, list[str]]:
     """Stack registered legacy factors into a ``[T, N, F]`` tensor.
 
-    ``rolling_backend='linear'`` selects O(T*N) FP64 prefix moments on CPU
+    ``rolling_backend='linear'`` selects O(T*N) FP64 block moments on CPU
     or CUDA. The default retains historical direct windows. Only mean/std/
     cov/corr change; finite filtering, precision and correlation clamping
     can alter downstream ranks. Each call scopes and restores its selection.

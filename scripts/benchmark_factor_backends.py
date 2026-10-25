@@ -226,7 +226,7 @@ def main():
             "All 213 factors include unchanged ranks, extrema, sums and EWMA; kernel gains need not transfer to the full engine.",
             "Backend order is unfold then linear; warm median is reported without a hardware-ranking claim.",
             "Linear filters nonfinite inputs and clamps correlations; precision changes can alter downstream ranks.",
-            "Prefix subtraction can lose precision on very long, strongly drifting series.",
+            "Block summaries reduce cumulative cancellation; extreme within-window dynamic ranges can still lose precision.",
             "Rank diagnostics sample 25 evenly spaced dates; value and mask diagnostics cover every factor's own valid cells.",
             "Numerical differences are observations, not signal-equivalence or trading-quality validation.",
         ], "cases": [], "comparison": None, "failures": [],

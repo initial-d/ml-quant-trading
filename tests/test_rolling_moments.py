@@ -91,6 +91,25 @@ def test_constant_windows_and_empty_panels():
             assert out.shape == x.shape and not mask.any()
 
 
+@pytest.mark.parametrize("kind", FUNCTIONS)
+@pytest.mark.parametrize("window", [7, 10, 31])
+def test_tiny_windows_after_large_outliers(kind, window):
+    # A global first-observation anchor loses tiny post-outlier variances via
+    # subtraction of O(1e-2) cumulative squares. Local disjoint summaries must
+    # agree with direct windows across block boundaries, holes and later spikes.
+    rng = np.random.default_rng(101)
+    x = torch.tensor(rng.uniform(1e-10, 8e-9, (127, 3)), dtype=torch.float32)
+    y = torch.tensor(rng.uniform(1e-10, 8e-9, (127, 3)), dtype=torch.float32)
+    x[0, 0], x[53, 1], y[18, 2] = 0.03, 0.04, 0.02
+    mask = torch.tensor(rng.random(x.shape) > 0.15)
+    mask[0, 0] = True
+    actual, valid = call(kind, x, y, mask, window)
+    expected, expected_mask = oracle(x.numpy(), y.numpy(), mask.numpy(), window, kind)
+    np.testing.assert_array_equal(valid.numpy(), expected_mask)
+    # Corr retains the existing 1e-12 denominator floor for tiny signals.
+    np.testing.assert_allclose(actual.numpy(), expected, atol=1e-15, rtol=1e-6)
+
+
 def test_gradients_against_direct_windows():
     torch.manual_seed(14)
     x = torch.randn(12, 2, dtype=torch.float64, requires_grad=True)

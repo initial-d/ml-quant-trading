@@ -137,7 +137,7 @@ def main():
               "limitations": ["One CPU/software environment; no GPU throughput claim.",
                               "Process peak RSS includes interpreter and cached allocations.",
                               "Separate subprocesses; warm timings exclude input creation and correctness checks.",
-                              "FP64 prefix subtraction can lose precision on very long, strongly drifting series.",
+                              "FP64 block summaries can still lose precision at extreme within-window dynamic ranges.",
                               "Different finite-input policy: comparison panel contains only finite values."],
               "cases": [], "comparisons": [], "failures": []}
     args.json_out.parent.mkdir(parents=True, exist_ok=True)

@@ -67,7 +67,7 @@ def compute_alpha_set(
     neutralize : bool
         If True, each factor is cross-sectionally z-scored.
     rolling_backend : str
-        ``unfold`` (default) or opt-in ``linear`` FP64 prefix moments.
+        ``unfold`` (default) or opt-in ``linear`` FP64 block moments.
         The latter can change downstream ranks and excludes nonfinite inputs.
 
     Returns

@@ -240,7 +240,7 @@ def cmd_gen_data(config_path: str) -> None:
 @click.option(
     "--rolling-backend", type=click.Choice(["unfold", "linear"]), default=None,
     help="Rolling moments: overrides config rolling_backend (default unfold). "
-         "Linear uses FP64 prefix sums on CPU/CUDA and can change factor ranks.",
+         "Linear uses FP64 block summaries on CPU/CUDA and can change factor ranks.",
 )
 def cmd_features(config_path: str, rolling_backend: str | None = None) -> None:
     cfg = load_config(config_path)

@@ -1,7 +1,7 @@
 """Scoped selection of the four rolling moment implementations.
 
 The default is the historical direct-window (``unfold``) implementation.
-``linear`` uses centred FP64 prefix sums on CPU/CUDA. It excludes nonfinite
+``linear`` uses centred FP64 block summaries on CPU/CUDA. It excludes nonfinite
 observations and clamps correlations, so nonlinear factor ranks can change;
 it is an explicit numerical choice, not a bit-identical replacement.
 """

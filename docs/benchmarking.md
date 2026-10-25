@@ -96,7 +96,7 @@ Use this benchmark as an engineering diagnostic. It is separate from backtest qu
 
 ## Opt-in linear-memory moments
 
-The factor APIs and feature CLI can select centred FP64 prefix-sum mean/std/
+The factor APIs and feature CLI can select centred FP64 block mean/std/
 cov/corr on CPU or CUDA. Other primitives retain their existing implementations.
 
 ```python
@@ -121,7 +121,9 @@ async contexts.
 **This is a numerical choice, not a bit-identical acceleration.** Linear moments
 exclude nonfinite observations, clamp correlations and use FP64 accumulation.
 Constant-window correlations and near-ties can therefore change downstream
-ranks materially. Very long, strongly drifting series can lose prefix precision;
+ranks materially. Disjoint block prefixes/suffixes avoid subtracting cumulative
+statistics across the entire history, including large past outliers; extreme
+within-window dynamic ranges still require a direct FP64 reference.
 MPS lacks FP64 and is rejected. Compare factor values, masks and ranks before
 changing a research experiment's backend. The full-engine benchmark reports
 all 213 factors' own masks and value errors, sampled rank differences, and a

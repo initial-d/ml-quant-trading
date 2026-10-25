@@ -1,10 +1,12 @@
 """Opt-in O(T*N) trailing moments, without an expanded window dimension.
 
-Float64, first-observation-centred prefix sums reduce cancellation for price
-levels. Results keep the input dtype/device. Memory and arithmetic do not grow
-with window length; FP64 throughput (especially on GPUs) is a tradeoff. Very
-long, strongly drifting series can still lose accuracy when subtracting prefix
-sums: use the direct-window primitives as a reference in that regime.
+Float64 block prefixes/suffixes reduce cancellation for price levels and
+series with large outliers. Each window combines at most two disjoint block
+summaries, centred at an observation included in that piece. Results keep the
+input dtype/device. Memory and arithmetic are O(T*N), independent of window
+length; FP64 throughput (especially on GPUs) is a tradeoff. Extreme within-
+window dynamic ranges can still lose accuracy: use direct FP64 windows as a
+reference in that regime.
 
 Masked or nonfinite observations are excluded. A full calendar window must
 exist, but its observations may be partial: mean needs one, sample std/cov and
@@ -29,18 +31,43 @@ def _validate(x, mask, window, y=None):
         raise ValueError("y must match x shape, dtype and device")
 
 
-def _window_sum(x, window):
-    prefix = torch.cat([torch.zeros_like(x[:1]), x.cumsum(dim=0)], dim=0)
-    return prefix[window:] - prefix[:-window]
+def _summary(x, valid, kind, y=None, *, reverse=False):
+    # x is [blocks, window, N]: a reshape of O(T*N) input, not an expanded
+    # rolling-window view. The prefix includes its first valid anchor; the
+    # suffix includes its last valid anchor. Empty pieces have zero statistics.
+    first = (valid.flip(1) if reverse else valid).to(torch.int64).argmax(1, keepdim=True)
+    if reverse:
+        first = valid.shape[1] - 1 - first
+
+    def cumulative(a):
+        return a.flip(1).cumsum(1).flip(1) if reverse else a.cumsum(1)
+
+    def centered(a):
+        anchor = a.gather(1, first).masked_fill(~valid.any(1, keepdim=True), 0)
+        return (a.masked_fill(~valid, 0) - anchor).masked_fill(~valid, 0), anchor
+
+    count = cumulative(valid.to(torch.float64))
+    n = count.clamp_min(1)
+    cx, ax = centered(x)
+    sx = cumulative(cx)
+    stats = {"count": count, "mx": (sx / n + ax).masked_fill(count == 0, 0)}
+    if kind in ("std", "corr"):
+        stats["vx"] = (cumulative(cx.square()) - sx.square() / n).clamp_min(0)
+    if y is not None:
+        cy, ay = centered(y)
+        sy = cumulative(cy)
+        stats["my"] = (sy / n + ay).masked_fill(count == 0, 0)
+        stats["cross"] = cumulative(cx * cy) - sx * sy / n
+        if kind == "corr":
+            stats["vy"] = (cumulative(cy.square()) - sy.square() / n).clamp_min(0)
+    return stats
 
 
-def _center(x, valid):
-    # Before the first observed value the column has no valid output, so this
-    # anchor never makes an earlier valid result depend on a later observation.
-    first = valid.to(torch.int64).argmax(dim=0, keepdim=True)
-    anchor = x.gather(0, first).masked_fill(~valid.any(dim=0, keepdim=True), 0.0)
-    safe = x.masked_fill(~valid, 0.0)
-    return (safe - anchor).masked_fill(~valid, 0.0), anchor
+def _previous_suffix(a):
+    # At row r of block b, the trailing window combines prefix [0,r] of b
+    # with suffix [r+1,window-1] of b-1. No total-prefix subtraction occurs.
+    tail = torch.cat([a[:-1, 1:], torch.zeros_like(a[:-1, :1])], dim=1)
+    return torch.cat([torch.zeros_like(a[:1]), tail], dim=0)
 
 
 def _moments(x, mask, window, kind, y=None):
@@ -50,38 +77,48 @@ def _moments(x, mask, window, kind, y=None):
     valid = mask & torch.isfinite(x)
     if y is not None:
         valid = valid & torch.isfinite(y)
-    count = _window_sum(valid.to(torch.float64), window)
+    padding = (-x.shape[0]) % window
+
+    def blocks(a):
+        a = torch.cat([a, a.new_zeros((padding, a.shape[1]))], dim=0)
+        return a.reshape(-1, window, a.shape[1])
+
+    xb, vb = blocks(x.to(torch.float64)), blocks(valid)
+    yb = blocks(y.to(torch.float64)) if y is not None else None
+    prefix = _summary(xb, vb, kind, yb)
+    suffix = {key: _previous_suffix(value) for key, value in
+              _summary(xb, vb, kind, yb, reverse=True).items()}
+    count = prefix["count"] + suffix["count"]
     n = count.clamp_min(1)
-    cx, anchor = _center(x.to(torch.float64), valid)
-    sx = _window_sum(cx, window)
+    dx = suffix["mx"] - prefix["mx"]
+    weight = prefix["count"] * suffix["count"] / n
     if kind == "mean":
-        values = sx / n + anchor
+        values = prefix["mx"] + dx * suffix["count"] / n
         out_mask = count >= 1
     else:
         out_mask = count >= 2
         if kind in ("std", "corr"):
-            vx = (_window_sum(cx.square(), window) - sx.square() / n).clamp_min(0)
+            vx = prefix["vx"] + suffix["vx"] + dx.square() * weight
         if kind == "std":
             values = (vx / (n - 1).clamp_min(1)).sqrt()
         else:
-            cy, _ = _center(y.to(torch.float64), valid)
-            sy = _window_sum(cy, window)
-            cross = _window_sum(cx * cy, window) - sx * sy / n
+            dy = suffix["my"] - prefix["my"]
+            cross = prefix["cross"] + suffix["cross"] + dx * dy * weight
             if kind == "cov":
                 values = cross / (n - 1).clamp_min(1)
             else:
-                vy = (_window_sum(cy.square(), window) - sy.square() / n).clamp_min(0)
+                vy = prefix["vy"] + suffix["vy"] + dy.square() * weight
                 denom = (vx * vy).clamp_min(1e-24).sqrt()
                 values = (cross / denom).clamp(-1, 1)
                 values = values.masked_fill((vx == 0) | (vy == 0), 0)
-    values = values.masked_fill(~out_mask, 0).to(x.dtype)
-    pad = window - 1
-    return (torch.cat([torch.zeros_like(x[:pad]), values]),
-            torch.cat([torch.zeros_like(mask[:pad]), out_mask]))
+    out_mask = out_mask.reshape(-1, x.shape[1])[:x.shape[0]]
+    out_mask[:window - 1] = False
+    values = values.reshape(-1, x.shape[1])[:x.shape[0]]
+    return values.masked_fill(~out_mask, 0).to(x.dtype), out_mask
 
 
 def ts_mean_linear(x, mask, window):
-    """Trailing finite-observation mean using centred float64 prefix sums."""
+    """Trailing finite-observation mean using centred FP64 block summaries."""
     return _moments(x, mask, window, "mean")
 
 
