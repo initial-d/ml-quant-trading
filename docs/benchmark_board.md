@@ -203,14 +203,40 @@ trailing argument, the generated JSON artifact path, and caveats. Treat the
 numbers as evidence that DSH can preserve the benchmark workflow and artifact
 boundary, not as a performance claim.
 
-## Opt-in Linear-Memory Rolling Moments: Apple M5 (2026-10-24)
+## Integrated Block Moments: Apple M5 (2026-10-25)
+
+Synthetic CPU evidence at code commit `2620ac1`, Apple M5 / macOS 26.6.2,
+Python 3.12.14 / PyTorch 2.14.1, threads 1/1, seed 42, 2 warmups / 5 repeats.
+The factor APIs and CLI now select `rolling_backend="linear"` explicitly;
+the default remains `unfold`. Disjoint FP64 block moments repair past-outlier
+cancellation found during full-engine integration.
+
+| Complete 213-factor panel | Unfold / linear median | Unfold / linear peak process RSS |
+|---|---:|---:|
+| 500 x 200 | 0.541 / 0.816 s | 617.1 / 593.3 MB |
+| 750 x 1000 | 4.706 / 6.818 s | 2648.4 / 2100.4 MB |
+
+**The large full engine used 20.7% less process RSS but 45% more elapsed time.**
+All individual factor masks agreed and outputs were finite; 41 factors had a
+maximum valid difference above 1e-5. Nonlinear ranks can change materially
+(`old_071` sampled mean Spearman 0.9770). Backend selection changes numerical
+semantics; it is not a signal-equivalent acceleration. A separate 252-day
+correlation kernel improved 7.44x with 81.8% less RSS on the finite-normal panel;
+20-day kernels were slower. RSS includes interpreter/allocator caches.
+[Raw results, commands, oracle diagnostics and preserved pre-fix failure](benchmarks/factor-backends-20261025/README.md)
+are reviewable in [PR #81](https://github.com/initial-d/ml-quant-trading/pull/81).
+No market data, predictive-quality or GPU-throughput claim.
+
+## Historical Global-Prefix Rolling Moments: Apple M5 (2026-10-24)
 
 Synthetic CPU systems evidence, separate from protocol v1 and trading quality.
-The new `ts_mean_linear`, `ts_std_linear`, `ts_cov_linear` and `ts_corr_linear`
+At commit `f767f5c`, `ts_mean_linear`, `ts_std_linear`, `ts_cov_linear` and `ts_corr_linear`
 use centred float64 prefix sums with O(T*N) arithmetic/storage, without a window
 dimension. Existing factor functions remain the default. Masked/nonfinite values
 are excluded; the first window-1 rows are invalid and partial observation counts
 follow mean/sample-moment conventions.
+These measurements predate the block-moment repair above and do not describe
+the current implementation.
 
 | Kernel | Window | Unfold median | Linear median | Speedup | Unfold peak RSS | Linear peak RSS |
 |---|---:|---:|---:|---:|---:|---:|
