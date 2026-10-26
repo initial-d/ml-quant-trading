@@ -203,6 +203,16 @@ trailing argument, the generated JSON artifact path, and caveats. Treat the
 numbers as evidence that DSH can preserve the benchmark workflow and artifact
 boundary, not as a performance claim.
 
+## Daily Factor Screening Diagnostic (2026-10-26)
+
+The corrected `scripts/eval_factor_ic.py` completed all 213 factors on the
+synthetic 500 x 200 panel. IC/RankIC are calculated per date on pairwise eligible
+assets, with limit masks applied before factor construction. Independent SciPy
+and pooled-sign-reversal regressions passed; this is correctness evidence rather
+than a speed, factor-selection or alpha claim. Source/environment, exact command,
+full daily series and 240 local tests:
+[raw evidence](benchmarks/daily-factor-ic-20261026/README.md).
+
 ## Full Factor Streaming: Apple M5 (2026-10-25)
 
 `iter_legacy_factors` supports per-factor screening/incremental storage without

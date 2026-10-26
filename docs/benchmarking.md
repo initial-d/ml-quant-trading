@@ -152,3 +152,22 @@ Retaining all outputs or autograd graphs defeats bounded consumption; a trainer
 requiring every feature dimension still needs an appropriate materialization.
 Run `scripts/benchmark_factor_streaming.py --json-out artifacts/streaming.json`
 for a fresh-process full-213-factor mean/RMS screening comparison.
+
+## Daily IC screening
+
+`python scripts/eval_factor_ic.py --config configs/small.yaml --json-out artifacts/daily-ic.json`
+streams all 213 factors on a synthetic panel, with limit masking before factor
+construction. Repeat `--factor NAME` to select a subset. The API
+`mlquant.backtest.daily_factor_ic(values, targets, factor_mask, label_mask)`
+calculates Pearson IC and average-tie Spearman RankIC across assets on each date.
+It excludes nonfinite pairs before ranking; undersized or constant cross-sections
+are missing dates rather than zero IC. FP64 reductions run on CPU/CUDA.
+
+The script uses adjacent, available, finite positive raw closes for labels;
+future label availability is only evaluation eligibility. It never enters the
+factor panel's mask. Summaries weight each valid date equally, report pair counts
+and retain the entire daily series. IC IR is mean / sample standard deviation,
+unannualized, without correcting temporal dependence. No factor selection or
+test holdout is performed; full-sample synthetic IC is diagnostic, not alpha.
+The earlier script pooled stock-days and applied limit masking after factor
+computation, so old results from that script have different semantics.
