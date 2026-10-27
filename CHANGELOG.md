@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Correlation-loss gradients
+
+- `ICLoss` and `RankICLoss` return zero loss and zero gradients for constant
+  prediction/label batches and singleton batches. Previously the reported loss
+  could be zero while backward produced NaNs from `sqrt(0)`, poisoning optimizer
+  state. Undefined batches contribute no learning signal; nonconstant batches
+  retain the previous formula and gradients. Inputs must be aligned and finite.
+- Empty/broadcast shapes are rejected. Sign-aware `gamma` and soft-rank
+  `temperature` must be finite and positive. This is training correctness,
+  not predictive-quality or investment evidence.
+
 ### Full-pipeline validation: execution coverage
 
 - Reports now show joint factor-mask coverage, per-split training/prediction

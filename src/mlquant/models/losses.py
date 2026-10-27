@@ -20,6 +20,8 @@ date, not their absolute magnitude.
 """
 from __future__ import annotations
 
+import math
+
 import torch
 import torch.nn as nn
 
@@ -40,8 +42,8 @@ class AdjMSELoss(nn.Module):
 
     def __init__(self, gamma: float = 0.1) -> None:
         super().__init__()
-        if gamma <= 0:
-            raise ValueError("gamma must be positive")
+        if not math.isfinite(gamma) or gamma <= 0:
+            raise ValueError("gamma must be finite and positive")
         self.gamma = gamma
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
@@ -54,14 +56,27 @@ class AdjMSELoss(nn.Module):
 
 
 def _pearson(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    if x.shape != y.shape or not x.numel():
+        raise ValueError("correlation inputs must have the same nonempty shape")
     xm = x - x.mean()
     ym = y - y.mean()
-    denom = (xm.pow(2).sum().sqrt() * ym.pow(2).sum().sqrt()).clamp_min(1e-12)
-    return (xm * ym).sum() / denom
+    xss, yss = xm.pow(2).sum(), ym.pow(2).sum()
+    defined = (xss > 0) & (yss > 0)
+    # sqrt'(0) is infinite: clamping the product after sqrt cannot protect
+    # backward. Replace zero-variance operands before taking either root.
+    sx = torch.where(defined, xss, torch.ones_like(xss)).sqrt()
+    sy = torch.where(defined, yss, torch.ones_like(yss)).sqrt()
+    denom = (sx * sy).clamp_min(1e-12)
+    numerator = (xm * ym).sum()
+    return torch.where(defined, numerator / denom, numerator * 0.0)
 
 
 class ICLoss(nn.Module):
-    """Negative Pearson IC across a batch (e.g. one cross-section)."""
+    """Negative Pearson IC across a batch (e.g. one cross-section).
+
+    A constant prediction or label batch has undefined correlation and returns
+    zero loss/gradients. Pass aligned, finite tensors from one cross-section.
+    """
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         return -_pearson(pred, target)
@@ -77,6 +92,8 @@ class RankICLoss(nn.Module):
 
     def __init__(self, temperature: float = 1.0) -> None:
         super().__init__()
+        if not math.isfinite(temperature) or temperature <= 0:
+            raise ValueError("temperature must be finite and positive")
         self.temperature = temperature
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
