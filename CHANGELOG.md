@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Correlation-loss gradients
+
+- The trainer automatically uses one complete observed date per batch for
+  `ICLoss`/`RankICLoss`, shuffling dates rather than stocks across dates. Daily
+  losses are averaged equally over dates. `batch_mode="date"` supports custom
+  daily objectives; ordinary regression retains flat sample batching.
+- Time validation now holds out complete latest dates, with no date shared
+  between training and validation. `val_split` is a date fraction in this mode.
+  Explicit random daily splits also preserve whole dates. Flat training no longer
+  drops a dataset smaller than `batch_size`. These changes can alter historical
+  model diagnostics; no archived performance result is revalidated here.
+
+- `ICLoss` and `RankICLoss` return zero loss and zero gradients for constant
+  prediction/label batches and singleton batches. Previously the reported loss
+  could be zero while backward produced NaNs from `sqrt(0)`, poisoning optimizer
+  state. Undefined batches contribute no learning signal; nonconstant batches
+  retain the previous formula and gradients. Inputs must be aligned and finite.
+- Empty/broadcast shapes are rejected. Sign-aware `gamma` and soft-rank
+  `temperature` must be finite and positive. This is training correctness,
+  not predictive-quality or investment evidence.
+
 ### Full-pipeline validation: execution coverage
 
 - Reports now show joint factor-mask coverage, per-split training/prediction

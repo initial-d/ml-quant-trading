@@ -8,6 +8,7 @@ behaviour matches what's documented in the paper.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import math
 from pathlib import Path
 from typing import Callable, Iterable
 
@@ -15,7 +16,9 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Subset
 
+from ..models.losses import ICLoss, RankICLoss
 from .dataset import FactorDataset
+from .samplers import CrossSectionBatchSampler, date_boundaries
 
 
 @dataclass
@@ -29,11 +32,14 @@ class TrainConfig:
     log_every:   int   = 50
     save_dir:    str   = "checkpoints"
     val_split:   float = 0.1
-    # "time" holds out the most recent samples (FactorDataset is ordered by
-    # date), so validation never sees days that precede training days.
-    # "random" restores the old shuffled split for backward compatibility.
+    # "time" holds out the most recent complete dates. "random" splits dates
+    # for daily batches, or individual samples for legacy regression batches.
     val_split_mode: str = "time"
     extra:       dict  = field(default_factory=dict)
+    # "auto" uses complete daily batches for IC/RankIC, flat batches otherwise.
+    # "date" also supports custom cross-sectional objectives. In date mode,
+    # batch_size is ignored and losses are averaged equally over observed dates.
+    batch_mode: str = "auto"
 
 
 class Trainer:
@@ -56,23 +62,53 @@ class Trainer:
     # Public API
     # ------------------------------------------------------------------
     def fit(self, dataset: FactorDataset) -> dict:
-        n_val = max(1, int(len(dataset) * self.cfg.val_split))
-        n_train = len(dataset) - n_val
-        if self.cfg.val_split_mode == "time":
-            train_ds = Subset(dataset, range(n_train))
-            val_ds = Subset(dataset, range(n_train, len(dataset)))
-        elif self.cfg.val_split_mode == "random":
+        if not math.isfinite(self.cfg.val_split) or not 0 < self.cfg.val_split < 1:
+            raise ValueError("val_split must be finite and between zero and one")
+        if self.cfg.epochs < 1 or self.cfg.batch_size < 1:
+            raise ValueError("epochs and batch_size must be positive")
+        if self.cfg.val_split_mode not in ("time", "random"):
+            raise ValueError("val_split_mode must be 'time' or 'random'")
+        if self.cfg.batch_mode not in ("auto", "samples", "date"):
+            raise ValueError("batch_mode must be 'auto', 'samples' or 'date'")
+        correlation = isinstance(self.loss_fn, (ICLoss, RankICLoss))
+        if correlation and self.cfg.batch_mode == "samples":
+            raise ValueError("IC/RankIC require complete date batches")
+        daily = self.cfg.batch_mode == "date" or (self.cfg.batch_mode == "auto" and correlation)
+        if len(dataset) < 2 or dataset.dates.shape != (len(dataset),):
+            raise ValueError("training requires at least two samples with aligned dates")
+        if self.cfg.val_split_mode == "time" or daily:
+            boundaries = date_boundaries(dataset.dates)
+            n_dates = len(boundaries) - 1
+            if n_dates < 2:
+                raise ValueError("date splitting requires at least two observed dates")
+            n_val_dates = max(1, int(n_dates * self.cfg.val_split))
+            if self.cfg.val_split_mode == "time":
+                split = boundaries[n_dates - n_val_dates]
+                train_ds = Subset(dataset, range(split))
+                val_ds = Subset(dataset, range(split, len(dataset)))
+            else:
+                validation_days = set(torch.randperm(
+                    n_dates, generator=torch.Generator().manual_seed(0)
+                )[:n_val_dates].tolist())
+                train_indices, val_indices = [], []
+                for day in range(n_dates):
+                    target = val_indices if day in validation_days else train_indices
+                    target.extend(range(boundaries[day], boundaries[day + 1]))
+                train_ds, val_ds = Subset(dataset, train_indices), Subset(dataset, val_indices)
+        else:
+            n_val = max(1, int(len(dataset) * self.cfg.val_split))
             train_ds, val_ds = torch.utils.data.random_split(
-                dataset, [n_train, n_val],
+                dataset, [len(dataset) - n_val, n_val],
                 generator=torch.Generator().manual_seed(0),
             )
+        if daily:
+            train_loader = DataLoader(train_ds, batch_sampler=CrossSectionBatchSampler(
+                dataset.dates[train_ds.indices], shuffle=True))
+            val_loader = DataLoader(val_ds, batch_sampler=CrossSectionBatchSampler(
+                dataset.dates[val_ds.indices]))
         else:
-            raise ValueError(
-                f"val_split_mode must be 'time' or 'random', got {self.cfg.val_split_mode!r}"
-            )
-        train_loader = DataLoader(train_ds, batch_size=self.cfg.batch_size,
-                                  shuffle=True, drop_last=True)
-        val_loader   = DataLoader(val_ds,   batch_size=self.cfg.batch_size)
+            train_loader = DataLoader(train_ds, batch_size=self.cfg.batch_size, shuffle=True)
+            val_loader = DataLoader(val_ds, batch_size=self.cfg.batch_size)
 
         history: dict = {"train_loss": [], "val_loss": []}
         save_dir = Path(self.cfg.save_dir)
@@ -103,18 +139,21 @@ class Trainer:
     def _run_epoch(self, loader: Iterable, *, train: bool) -> float:
         self.model.train(train)
         total, n = 0.0, 0
+        daily = isinstance(getattr(loader, "batch_sampler", None), CrossSectionBatchSampler)
         for x, y in loader:
             x = x.to(self.cfg.device)
             y = y.to(self.cfg.device)
             if train:
                 self.optim.zero_grad(set_to_none=True)
-            preds = self.model(x)
-            loss = self.loss_fn(preds, y)
+            with torch.set_grad_enabled(train):
+                preds = self.model(x)
+                loss = self.loss_fn(preds, y)
             if train:
                 loss.backward()
                 if self.cfg.grad_clip:
                     nn.utils.clip_grad_norm_(self.model.parameters(), self.cfg.grad_clip)
                 self.optim.step()
-            total += loss.item() * x.shape[0]
-            n     += x.shape[0]
+            weight = 1 if daily else x.shape[0]
+            total += loss.item() * weight
+            n += weight
         return total / max(1, n)

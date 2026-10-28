@@ -38,7 +38,7 @@ def test_time_split_validates_on_the_latest_dates(tmp_path, monkeypatch):
 
     last_train_date = ds.dates[seen["train"]].max()
     first_val_date = ds.dates[seen["val"]].min()
-    assert last_train_date <= first_val_date
+    assert last_train_date < first_val_date
 
 
 def test_unknown_split_mode_is_rejected(tmp_path):
