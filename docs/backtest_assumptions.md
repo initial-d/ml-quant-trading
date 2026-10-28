@@ -50,12 +50,25 @@ A publishable result should document the train, validation, and test split, plus
 
 The CLI pipeline splits by date. `train_frac` (default `0.6`) sets the first
 out-of-sample date index; the model trains only on earlier dates, its
-validation set is the most recent slice of those training samples
+validation set is the most recent slice of complete training dates
 (`val_split_mode: time`), and the backtest scores only the out-of-sample window.
 `summary.json` records both windows under `evaluation`. The one-day label of the
 last training date uses the close of the first out-of-sample date, which is
 already known when the first out-of-sample signal is formed, so no purge gap is
 needed for the default one-day horizon; longer horizons need one.
+
+`Trainer` holds out whole latest observed dates for `val_split_mode="time"`;
+`val_split` therefore denotes a fraction of dates, not individual stock-days.
+The default `batch_mode="auto"` uses full daily cross-sections for `ICLoss` and
+`RankICLoss`, with one optimizer step per date and equally weighted daily losses.
+`batch_size` is ignored for daily batching: memory depends on the largest daily
+cross-section, and soft RankIC still requires quadratic pairwise rank memory.
+Use `batch_mode="date"` for a custom daily objective. Ordinary regression uses
+flat sample batches and sample-weighted epoch loss; it retains the final partial
+batch. Explicit `val_split_mode="random"` splits whole dates in daily mode and
+individual samples in flat mode. Random splits are reproducibility options,
+not chronological out-of-sample evidence. Constant/singleton IC batches contribute
+zero loss and zero gradients; they are retained, not counted as informative IC.
 
 This is a single split, not a walk-forward evaluation. Demo metrics come from
 synthetic data and are expected to hover around zero or below after costs.
