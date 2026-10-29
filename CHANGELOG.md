@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Purged date validation
+
+- `TrainConfig.purge_dates` removes complete observed signal dates immediately
+  before time validation. The default is zero; callers using multi-day labels
+  can select a gap from their label horizon and information timing. Random splits
+  reject a nonzero gap rather than claiming chronological isolation.
+- `Trainer.split_info` and checkpoint `split.json` record effective batch/split
+  modes, sample/date counts and date ranges for training, validation and purged
+  partitions. The gap leaves validation dates unchanged and never sends purged
+  samples to either loader. This is protocol support, not market-performance
+  evidence or automatic detection of label overlap.
+
 ### Correlation-loss gradients
 
 - The trainer automatically uses one complete observed date per batch for

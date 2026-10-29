@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 import math
+import json
 from pathlib import Path
 from typing import Callable, Iterable
 
@@ -40,6 +41,10 @@ class TrainConfig:
     # "date" also supports custom cross-sectional objectives. In date mode,
     # batch_size is ignored and losses are averaged equally over observed dates.
     batch_mode: str = "auto"
+    # Remove this many complete observed signal dates immediately before time
+    # validation. Choose from label horizon/information timing; zero keeps the
+    # default one-day close-to-close protocol. Random splits cannot use a gap.
+    purge_dates: int = 0
 
 
 class Trainer:
@@ -52,6 +57,7 @@ class Trainer:
         self.model = model.to(cfg.device)
         self.loss_fn = loss_fn
         self.cfg = cfg
+        self.split_info: dict = {}
         self.optim = torch.optim.AdamW(
             model.parameters(),
             lr=cfg.lr,
@@ -70,12 +76,19 @@ class Trainer:
             raise ValueError("val_split_mode must be 'time' or 'random'")
         if self.cfg.batch_mode not in ("auto", "samples", "date"):
             raise ValueError("batch_mode must be 'auto', 'samples' or 'date'")
+        if type(self.cfg.purge_dates) is not int or self.cfg.purge_dates < 0:
+            raise ValueError("purge_dates must be a nonnegative integer")
+        if self.cfg.purge_dates and self.cfg.val_split_mode != "time":
+            raise ValueError("purge_dates requires val_split_mode='time'")
         correlation = isinstance(self.loss_fn, (ICLoss, RankICLoss))
         if correlation and self.cfg.batch_mode == "samples":
             raise ValueError("IC/RankIC require complete date batches")
         daily = self.cfg.batch_mode == "date" or (self.cfg.batch_mode == "auto" and correlation)
         if len(dataset) < 2 or dataset.dates.shape != (len(dataset),):
             raise ValueError("training requires at least two samples with aligned dates")
+        if not torch.isfinite(dataset.dates).all():
+            raise ValueError("sample dates must be finite")
+        purged_indices = range(0)
         if self.cfg.val_split_mode == "time" or daily:
             boundaries = date_boundaries(dataset.dates)
             n_dates = len(boundaries) - 1
@@ -84,8 +97,13 @@ class Trainer:
             n_val_dates = max(1, int(n_dates * self.cfg.val_split))
             if self.cfg.val_split_mode == "time":
                 split = boundaries[n_dates - n_val_dates]
-                train_ds = Subset(dataset, range(split))
+                n_train_dates = n_dates - n_val_dates - self.cfg.purge_dates
+                if n_train_dates < 1:
+                    raise ValueError("purge_dates leaves no training dates")
+                train_end = boundaries[n_train_dates]
+                train_ds = Subset(dataset, range(train_end))
                 val_ds = Subset(dataset, range(split, len(dataset)))
+                purged_indices = range(train_end, split)
             else:
                 validation_days = set(torch.randperm(
                     n_dates, generator=torch.Generator().manual_seed(0)
@@ -111,8 +129,25 @@ class Trainer:
             val_loader = DataLoader(val_ds, batch_size=self.cfg.batch_size)
 
         history: dict = {"train_loss": [], "val_loss": []}
+        partitions = {"train": train_ds.indices, "validation": val_ds.indices,
+                      "purged": purged_indices}
+        self.split_info = {
+            "schema_version": 1, "val_split_mode": self.cfg.val_split_mode,
+            "batch_mode": "date" if daily else "samples", "val_split": float(self.cfg.val_split),
+            "purge_dates": self.cfg.purge_dates, "purge_unit": "observed_signal_dates",
+            "partitions": {},
+        }
+        for name, indices in partitions.items():
+            dates = dataset.dates[indices]
+            self.split_info["partitions"][name] = {
+                "samples": len(indices), "observed_dates": dates.unique().numel(),
+                "date_range": [dates.min().item(), dates.max().item()] if dates.numel() else None,
+            }
         save_dir = Path(self.cfg.save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
+        (save_dir / "split.json").write_text(
+            json.dumps(self.split_info, indent=2, sort_keys=True, allow_nan=False) + "\n"
+        )
         best_val = float("inf")
 
         for epoch in range(self.cfg.epochs):
