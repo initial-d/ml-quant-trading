@@ -57,6 +57,20 @@ last training date uses the close of the first out-of-sample date, which is
 already known when the first out-of-sample signal is formed, so no purge gap is
 needed for the default one-day horizon; longer horizons need one.
 
+Set `train.purge_dates` (default `0`) for an explicit gap immediately before
+the trainer's time-validation boundary. It counts complete observed signal dates
+in `FactorDataset`, not calendar days, and keeps the latest validation dates fixed.
+For an h-period label known at close of t+h, a gap of at least h-1 signal periods
+keeps the last training endpoint at or before the first validation signal close;
+use h if it must be strictly earlier. Sparse observations can make an observed-date
+gap more conservative. Select the gap from the actual label horizon, data timing
+and research protocol: the trainer does not infer that information. This gap
+controls the internal training/validation split; the CLI's outer out-of-sample
+boundary and separate walk-forward scripts need their own horizon-aware policy.
+Nonzero gaps require `val_split_mode="time"` and at least one remaining training
+date. `Trainer.split_info` and `save_dir/split.json` record all three partitions'
+sample/date counts and numeric date-ID ranges so the chosen split can be inspected.
+
 `Trainer` holds out whole latest observed dates for `val_split_mode="time"`;
 `val_split` therefore denotes a fraction of dates, not individual stock-days.
 The default `batch_mode="auto"` uses full daily cross-sections for `ICLoss` and
