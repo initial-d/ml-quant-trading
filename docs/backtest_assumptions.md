@@ -76,7 +76,12 @@ sample/date counts and numeric date-ID ranges so the chosen split can be inspect
 The default `batch_mode="auto"` uses full daily cross-sections for `ICLoss` and
 `RankICLoss`, with one optimizer step per date and equally weighted daily losses.
 `batch_size` is ignored for daily batching: memory depends on the largest daily
-cross-section, and soft RankIC still requires quadratic pairwise rank memory.
+cross-section. Soft RankIC uses `chunk_size=256` by default above that many
+stocks, with N × chunk_size pairwise matrices and activation checkpointing during
+training. `RankICLoss(chunk_size=None)` retains the dense reference. Pairwise work
+remains quadratic and backward recomputation adds runtime; reduction rounding
+can differ across blocks/devices. This does not bound model activations or total
+training memory, and no GPU performance estimate is provided here.
 Use `batch_mode="date"` for a custom daily objective. Ordinary regression uses
 flat sample batches and sample-weighted epoch loss; it retains the final partial
 batch. Explicit `val_split_mode="random"` splits whole dates in daily mode and

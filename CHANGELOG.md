@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Chunked soft RankIC
+
+- `RankICLoss` computes soft-rank columns in blocks above `chunk_size` (default
+  256) and uses non-reentrant activation checkpointing in training. Pairwise
+  temporary matrices grow as N × chunk_size rather than N², and backward
+  recomputes blocks instead of retaining every sigmoid activation. The pairwise
+  arithmetic remains quadratic and recomputation can cost more runtime.
+- `chunk_size=None` retains the dense reference. The same soft-rank objective
+  supports both-input and higher-order gradients; reduction rounding can differ
+  across blocks/devices. Inputs must be aligned one-dimensional cross-sections.
+  This is memory scaling support, not predictive-quality or speedup evidence.
+
 ### Purged date validation
 
 - `TrainConfig.purge_dates` removes complete observed signal dates immediately
