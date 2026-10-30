@@ -24,6 +24,7 @@ import math
 
 import torch
 import torch.nn as nn
+from torch.utils.checkpoint import checkpoint
 
 
 class AdjMSELoss(nn.Module):
@@ -88,18 +89,43 @@ class RankICLoss(nn.Module):
     Spearman = Pearson on ranks. We use the *soft-rank* trick (a
     differentiable approximation that sorts the inputs through a
     softmax-temperature lens) so the loss is gradient-friendly.
+
+    Above ``chunk_size`` stocks, compute columns in blocks and checkpoint their
+    activations. Pairwise work remains quadratic; temporary matrices scale as
+    N * chunk_size. ``chunk_size=None`` restores the dense reference path.
     """
 
-    def __init__(self, temperature: float = 1.0) -> None:
+    def __init__(self, temperature: float = 1.0, *, chunk_size: int | None = 256) -> None:
         super().__init__()
         if not math.isfinite(temperature) or temperature <= 0:
             raise ValueError("temperature must be finite and positive")
+        if chunk_size is not None and (type(chunk_size) is not int or chunk_size < 1):
+            raise ValueError("chunk_size must be a positive integer or None")
         self.temperature = temperature
+        self.chunk_size = chunk_size
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        if pred.shape != target.shape or not pred.numel():
+            raise ValueError("correlation inputs must have the same nonempty shape")
+        if pred.ndim != 1:
+            raise ValueError("RankIC inputs must be one-dimensional cross-sections")
         return -_pearson(self._soft_rank(pred), self._soft_rank(target))
 
+    @staticmethod
+    def _rank_columns(full, columns, temperature):
+        return torch.sigmoid((columns.unsqueeze(0) - full.unsqueeze(1)) / temperature).sum(0)
+
     def _soft_rank(self, x: torch.Tensor) -> torch.Tensor:
-        # Differentiable rank: softmax over pairwise differences.
-        diffs = (x.unsqueeze(0) - x.unsqueeze(1)) / self.temperature
-        return torch.sigmoid(diffs).sum(dim=0)
+        if self.chunk_size is None or x.numel() <= self.chunk_size:
+            return self._rank_columns(x, x, self.temperature)
+        ranks = []
+        for columns in x.split(self.chunk_size):
+            if torch.is_grad_enabled() and x.requires_grad:
+                # Non-reentrant checkpointing preserves autograd.grad and higher
+                # derivatives while recomputing one block during backward.
+                rank = checkpoint(self._rank_columns, x, columns, self.temperature,
+                                  use_reentrant=False, preserve_rng_state=False)
+            else:
+                rank = self._rank_columns(x, columns, self.temperature)
+            ranks.append(rank)
+        return torch.cat(ranks)
