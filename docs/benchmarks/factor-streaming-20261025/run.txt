@@ -1,0 +1,2 @@
+{"method": "stack", "backend": "unfold", "median_seconds": 5.313560833688825, "workload_peak_rss_bytes": 2648965120}
+{"method": "stream", "backend": "unfold", "median_seconds": 4.44967154180631, "workload_peak_rss_bytes": 1391198208}

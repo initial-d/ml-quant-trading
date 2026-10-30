@@ -27,16 +27,20 @@ from .tensor_factors import (
     delta,
 )
 from .neutralize import neutralize_cs, neutralize_industry
+from .rolling_moments import ts_mean_linear, ts_std_linear, ts_cov_linear, ts_corr_linear
+from .rolling_backend import using_rolling_backend
 from .bias import apply_limit_mask, board_limit_pct, limit_move_mask
 from .alpha101 import compute_alpha_set, ALPHA_REGISTRY
-from .legacy_factors import compute_legacy_set, LEGACY_REGISTRY
+from .legacy_factors import compute_legacy_set, iter_legacy_factors, LEGACY_REGISTRY
 
 __all__ = [
     "cs_rank", "cs_zscore",
     "ts_corr", "ts_cov", "ts_max", "ts_mean", "ts_min",
     "ts_rank", "ts_std", "ts_sum", "ewma", "delay", "delta",
+    "ts_mean_linear", "ts_std_linear", "ts_cov_linear", "ts_corr_linear",
+    "using_rolling_backend",
     "neutralize_cs", "neutralize_industry",
     "limit_move_mask", "board_limit_pct", "apply_limit_mask",
     "compute_alpha_set", "ALPHA_REGISTRY",
-    "compute_legacy_set", "LEGACY_REGISTRY",
+    "compute_legacy_set", "iter_legacy_factors", "LEGACY_REGISTRY",
 ]

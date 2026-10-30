@@ -21,6 +21,7 @@ from ..backtest.engine import run_backtest
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
 from ..features.legacy_factors import compute_legacy_set
 from ..features.bias import board_limit_pct, limit_move_mask
+from ..features.rolling_backend import validate_rolling_backend
 from ..features.target import target_01
 from ..models.losses import AdjMSELoss
 from ..models.nets import MLPRegressor
@@ -236,18 +237,32 @@ def cmd_gen_data(config_path: str) -> None:
 
 @cli.command("features")
 @click.option("--config", "config_path", required=True, type=click.Path(exists=True))
-def cmd_features(config_path: str) -> None:
+@click.option(
+    "--rolling-backend", type=click.Choice(["unfold", "linear"]), default=None,
+    help="Rolling moments: overrides config rolling_backend (default unfold). "
+         "Linear uses FP64 block summaries on CPU/CUDA and can change factor ranks.",
+)
+def cmd_features(config_path: str, rolling_backend: str | None = None) -> None:
     cfg = load_config(config_path)
+    try:
+        backend = validate_rolling_backend(
+            rolling_backend if rolling_backend is not None else cfg.get("rolling_backend", "unfold")
+        )
+    except ValueError as exc:
+        raise click.BadParameter(str(exc), param_hint="rolling_backend") from exc
     seed_everything(cfg.get("seed", 42))
     art = _artifacts_dir(cfg)
     panel = _load_panel(art)
     bias_mask = limit_move_mask(panel, limit_pct=_resolve_limit_pct(cfg, panel))
     # Mask-first: factors read ``panel.mask``, so limit-move prices are
     # excluded from every rolling window, not only from the limit day's row.
-    factors, mask, names = compute_legacy_set(replace(panel, mask=bias_mask))
+    factors, mask, names = compute_legacy_set(
+        replace(panel, mask=bias_mask), rolling_backend=backend,
+    )
     mask = mask & bias_mask
-    torch.save({"factors": factors, "mask": mask, "names": names}, art / "features.pt")
-    click.echo(f"wrote features: {factors.shape}  alphas={names}")
+    torch.save({"factors": factors, "mask": mask, "names": names,
+                "rolling_backend": backend}, art / "features.pt")
+    click.echo(f"wrote features: {factors.shape}  rolling_backend={backend}  alphas={names}")
 
 
 @cli.command("train")

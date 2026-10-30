@@ -93,3 +93,81 @@ When sharing benchmark results, include:
 Small panels may not benefit from GPU execution because transfer overhead and kernel launch overhead dominate runtime. Larger panels and wider universes are more likely to show GPU advantages, especially for rolling operations and multi-factor computation.
 
 Use this benchmark as an engineering diagnostic. It is separate from backtest quality, factor IC, or trading performance.
+
+## Opt-in linear-memory moments
+
+The factor APIs and feature CLI can select centred FP64 block mean/std/
+cov/corr on CPU or CUDA. Other primitives retain their existing implementations.
+
+```python
+from mlquant.features import compute_legacy_set
+factors, mask, names = compute_legacy_set(panel, rolling_backend="linear")
+```
+
+```bash
+mlquant features --config configs/small.yaml --rolling-backend linear
+python scripts/benchmark_factor_backends.py \
+  --n-dates 500 --n-stocks 200 --warmup 2 --repeat 5 --seed 42 \
+  --json-out artifacts/factor-backends.json
+```
+
+The config key `rolling_backend: linear` also applies to `mlquant demo`; an
+explicit feature CLI option overrides it. `features.pt` records the selection.
+Both factor-set APIs default to `unfold` even inside an outer scope. For direct
+primitive or registry calls, use `with using_rolling_backend("linear"):` from
+`mlquant.features`; scopes restore on exceptions and remain local to threads/
+async contexts.
+
+**This is a numerical choice, not a bit-identical acceleration.** Linear moments
+exclude nonfinite observations, clamp correlations and use FP64 accumulation.
+Constant-window correlations and near-ties can therefore change downstream
+ranks materially. Disjoint block prefixes/suffixes avoid subtracting cumulative
+statistics across the entire history, including large past outliers; extreme
+within-window dynamic ranges still require a direct FP64 reference.
+MPS lacks FP64 and is rejected. Compare factor values, masks and ranks before
+changing a research experiment's backend. The full-engine benchmark reports
+all 213 factors' own masks and value errors, sampled rank differences, and a
+sampled independent FP64 oracle for correlations of discrete rank inputs. Its
+fresh-process timings and RSS snapshots precede saving and diagnostics; neither
+kernel speedups nor this synthetic benchmark establish predictive quality.
+
+## Consume one factor at a time
+
+For per-factor screening, IC with your own labels, or incremental storage, avoid
+retaining the full `[T,N,213]` output:
+
+```python
+import torch
+from mlquant.features import iter_legacy_factors
+with torch.no_grad():
+    for name, values, mask in iter_legacy_factors(panel):
+        # Compute/store this factor, then discard it before requesting the next.
+        print(name, values.shape)
+```
+
+Values, names and masks follow `compute_legacy_set`, including optional
+`neutralize`, `names`, and `rolling_backend`. Backend scopes end before each
+yield. Keep the panel and registry fixed and do not mutate returned masks.
+Retaining all outputs or autograd graphs defeats bounded consumption; a trainer
+requiring every feature dimension still needs an appropriate materialization.
+Run `scripts/benchmark_factor_streaming.py --json-out artifacts/streaming.json`
+for a fresh-process full-213-factor mean/RMS screening comparison.
+
+## Daily IC screening
+
+`python scripts/eval_factor_ic.py --config configs/small.yaml --json-out artifacts/daily-ic.json`
+streams all 213 factors on a synthetic panel, with limit masking before factor
+construction. Repeat `--factor NAME` to select a subset. The API
+`mlquant.backtest.daily_factor_ic(values, targets, factor_mask, label_mask)`
+calculates Pearson IC and average-tie Spearman RankIC across assets on each date.
+It excludes nonfinite pairs before ranking; undersized or constant cross-sections
+are missing dates rather than zero IC. FP64 reductions run on CPU/CUDA.
+
+The script uses adjacent, available, finite positive raw closes for labels;
+future label availability is only evaluation eligibility. It never enters the
+factor panel's mask. Summaries weight each valid date equally, report pair counts
+and retain the entire daily series. IC IR is mean / sample standard deviation,
+unannualized, without correcting temporal dependence. No factor selection or
+test holdout is performed; full-sample synthetic IC is diagnostic, not alpha.
+The earlier script pooled stock-days and applied limit masking after factor
+computation, so old results from that script have different semantics.
