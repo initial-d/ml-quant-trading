@@ -1,36 +1,19 @@
-"""Bias-correction utilities for A-share microstructure quirks.
+"""Conservative price-limit exclusion policy for factor research.
 
-The two most common look-ahead biases in A-share alpha research are:
+A close at a price limit is an observed price, and a position already held
+still earns its return. This module excludes such observations symmetrically
+from factor windows as a research policy. It does not establish lookahead
+bias, invalidate the observed price, or simulate directional order fills.
+Buy/sell feasibility depends on order timing, side, liquidity and queue state.
 
-1. **Limit-up days** — when a stock closes at the +10 % cap, the close
-   you see *did not actually fill any unsatisfied buy orders*. Treating
-   such a day as tradable inflates returns.
-2. **Limit-down days** — symmetric problem on the downside.
+With explicit ``limit_up`` / ``limit_down`` prices, cells near either band
+edge are excluded. Missing bands fall back to ``|return| <= limit_pct``;
+that proxy is a heuristic, not an unambiguous identification of limit days.
+``eps`` is an absolute price tolerance and must suit the feed's units.
 
-Both must be excluded from training labels and from the tradable
-universe at portfolio construction time.
-
-Two regimes
------------
-* **Real limits available** (``Panel.limit_up`` / ``Panel.limit_down`` set):
-  use the exchange-published prices — this is the regime real Wind
-  data lands in. A cell is masked if ``close >= limit_up - eps`` or
-  ``close <= limit_down + eps``.
-* **Proxy regime** (synthetic data, or any feed without explicit limits):
-  fall back to the ``|return| > limit_pct`` heuristic, which is the
-  unambiguous signature of a limit move on most A-shares.
-
-A single scalar ``limit_pct`` only fits Main Board names. ChiNext and STAR
-Market names move up to ±20 % and Beijing Stock Exchange names up to ±30 %,
-so a 9.8 % proxy wrongly masks ordinary moves on those boards while never
-catching their real limit days. :func:`board_limit_pct` builds a per-cell
-threshold from ticker codes and dates; pass it as ``limit_pct``. It cannot
-see ST status (±5 %) or the no-limit first days after an IPO — feeds that
-care about those should supply real ``limit_up`` / ``limit_down`` prices.
-
-Both code paths are exercised by the test suite via the synthetic
-generator (which fills both real and derived fields) so this module
-behaves identically on synthetic and real feeds.
+A single scalar threshold only fits some boards. :func:`board_limit_pct`
+handles board/date rules, but cannot identify ST status or no-limit IPO days.
+Prefer reliable explicit bands and document the exclusion policy in reports.
 """
 from __future__ import annotations
 
@@ -173,7 +156,8 @@ def apply_limit_mask(
     computing factors on the returned panel keeps limit-move prices out of
     every rolling window; intersecting :func:`limit_move_mask` with the
     factor mask afterwards only drops the limit day itself and still lets
-    its price leak into the following ``window`` days.
+    that excluded observation enter later rolling windows. This difference
+    demonstrates exclusion-policy propagation, not invalid market prices.
 
     Keep using the original panel for P&L: a position held into a limit
     move still earns that return.

@@ -1,0 +1,302 @@
+Error processing line 1 of /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site.py", line 169, in addpackage
+      exec(line)
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+Error processing line 1 of /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/distutils-precedence.pth:
+
+  Traceback (most recent call last):
+    File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site.py", line 169, in addpackage
+      exec(line)
+    File "<string>", line 1, in <module>
+  ModuleNotFoundError: No module named '_distutils_hack'
+
+Remainder of file ignored
+.FF....................................................................F [ 47%]
+........................................................................ [ 94%]
+........                                                                 [100%]
+=================================== FAILURES ===================================
+_________________________ test_load_akshare_panel_mock _________________________
+
+    def test_load_akshare_panel_mock():
+        # 构造包含 akshare 真实中文列名的模拟数据
+        def make_mock_df(*, symbol, period, start_date, end_date, adjust):
+            assert symbol in {"600519", "000001"}
+            assert period == "daily"
+            assert start_date == "20230101"
+            assert end_date == "20230104"
+            assert adjust == "qfq"
+            return pd.DataFrame(
+                {
+                    "日期": ["2023-01-03", "2023-01-04"],
+                    "开盘": [10.0, 10.5],
+                    "收盘": [10.5, 11.5],
+                    "最高": [11.0, 12.0],
+                    "最低": [9.0, 10.0],
+                    "成交量": [1000, 2000],
+                    "成交额": [10000, 22000],
+                    "振幅": [20.0, 19.0],
+                    "涨跌幅": [5.0, 9.5],
+                    "涨跌额": [0.5, 1.0],
+                    "换手率": [1.0, 2.0],
+                }
+            )
+    
+>       with mock.patch("akshare.stock_zh_a_hist") as mock_hist:
+
+tests/test_akshare.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py:1389: in __enter__
+    self.target = self.getter()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py:1564: in <lambda>
+    getter = lambda: _importer(target)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+target = 'akshare'
+
+    def _importer(target):
+        components = target.split('.')
+        import_path = components.pop(0)
+>       thing = __import__(import_path)
+E       ModuleNotFoundError: No module named 'akshare'
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py:1236: ModuleNotFoundError
+____________________ test_load_akshare_panel_empty_tickers _____________________
+
+module = 'akshare', package = None
+
+    def require(module: str, package: str | None = None) -> ModuleType:
+        """Import ``module`` or explain how to install the ``[data]`` extra."""
+        try:
+>           return importlib.import_module(module)
+
+src/mlquant/data/_optional.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'akshare', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+E       ModuleNotFoundError: No module named 'akshare'
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/importlib/__init__.py:127: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_load_akshare_panel_empty_tickers():
+        with pytest.raises(ValueError, match="Tickers list cannot be empty"):
+>           load_akshare_panel([], "2023-01-01", "2023-01-04")
+
+tests/test_akshare.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/mlquant/data/akshare_loader.py:45: in load_akshare_panel
+    akshare = require("akshare")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+module = 'akshare', package = None
+
+    def require(module: str, package: str | None = None) -> ModuleType:
+        """Import ``module`` or explain how to install the ``[data]`` extra."""
+        try:
+            return importlib.import_module(module)
+        except ImportError as exc:
+>           raise ImportError(
+                f"{package or module} is required for this data loader. "
+                "Install the public-data extra with: python -m pip install 'mlquantx[data]'"
+            ) from exc
+E           ImportError: akshare is required for this data loader. Install the public-data extra with: python -m pip install 'mlquantx[data]'
+
+src/mlquant/data/_optional.py:13: ImportError
+_______________ test_problem_is_dpp_and_cached_per_universe_size _______________
+
+    def test_problem_is_dpp_and_cached_per_universe_size():
+        """The risk term must be DPP, or cvxpy re-canonicalises on every solve."""
+        import warnings
+    
+        mu, history = _toy_problem(n=30, T=60)
+        opt = MarkowitzOptimizer(MarkowitzConfig(weight_cap=0.1))
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+>           opt.solve(mu, history)
+
+tests/test_markowitz.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/mlquant/portfolio/markowitz.py:104: in solve
+    factor_param.value = self._factor(self._covariance(returns_history))
+src/mlquant/portfolio/markowitz.py:132: in _covariance
+    return LedoitWolf().fit(history).covariance_
+../bench-venv/lib/python3.9/site-packages/sklearn/base.py:1389: in wrapper
+    return fit_method(estimator, *args, **kwargs)
+../bench-venv/lib/python3.9/site-packages/sklearn/covariance/_shrunk_covariance.py:610: in fit
+    self._set_covariance(covariance)
+../bench-venv/lib/python3.9/site-packages/sklearn/covariance/_empirical_covariance.py:215: in _set_covariance
+    self.precision_ = linalg.pinvh(covariance, check_finite=False)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = array([[ 3.96465560e-04,  2.87114913e-06, -3.91175685e-06,
+        -8.46098715e-06,  2.41282946e-06, -5.44693402e-06,
+...         4.54741682e-07, -5.99319668e-06,  6.98083596e-06,
+         6.69104616e-06,  2.15540385e-06,  3.82956434e-04]])
+atol = 0.0, rtol = np.float64(6.661338147750939e-15), lower = True
+return_rank = False, check_finite = False
+
+    def pinvh(a, atol=None, rtol=None, lower=True, return_rank=False,
+              check_finite=True):
+        """
+        Compute the (Moore-Penrose) pseudo-inverse of a Hermitian matrix.
+    
+        Calculate a generalized inverse of a complex Hermitian/real symmetric
+        matrix using its eigenvalue decomposition and including all eigenvalues
+        with 'large' absolute value.
+    
+        Parameters
+        ----------
+        a : (N, N) array_like
+            Real symmetric or complex hermetian matrix to be pseudo-inverted
+    
+        atol : float, optional
+            Absolute threshold term, default value is 0.
+    
+            .. versionadded:: 1.7.0
+    
+        rtol : float, optional
+            Relative threshold term, default value is ``N * eps`` where
+            ``eps`` is the machine precision value of the datatype of ``a``.
+    
+            .. versionadded:: 1.7.0
+    
+        lower : bool, optional
+            Whether the pertinent array data is taken from the lower or upper
+            triangle of `a`. (Default: lower)
+        return_rank : bool, optional
+            If True, return the effective rank of the matrix.
+        check_finite : bool, optional
+            Whether to check that the input matrix contains only finite numbers.
+            Disabling may give a performance gain, but may result in problems
+            (crashes, non-termination) if the inputs do contain infinities or NaNs.
+    
+        Returns
+        -------
+        B : (N, N) ndarray
+            The pseudo-inverse of matrix `a`.
+        rank : int
+            The effective rank of the matrix.  Returned if `return_rank` is True.
+    
+        Raises
+        ------
+        LinAlgError
+            If eigenvalue algorithm does not converge.
+    
+        See Also
+        --------
+        pinv : Moore-Penrose pseudoinverse of a matrix.
+    
+        Examples
+        --------
+    
+        For a more detailed example see `pinv`.
+    
+        >>> import numpy as np
+        >>> from scipy.linalg import pinvh
+        >>> rng = np.random.default_rng()
+        >>> a = rng.standard_normal((9, 6))
+        >>> a = np.dot(a, a.T)
+        >>> B = pinvh(a)
+        >>> np.allclose(a, a @ B @ a)
+        True
+        >>> np.allclose(B, B @ a @ B)
+        True
+    
+        """
+        a = _asarray_validated(a, check_finite=check_finite)
+        s, u = _decomp.eigh(a, lower=lower, check_finite=False)
+        t = u.dtype.char.lower()
+        maxS = np.max(np.abs(s))
+    
+        atol = 0. if atol is None else atol
+        rtol = max(a.shape) * np.finfo(t).eps if (rtol is None) else rtol
+    
+        if (atol < 0.) or (rtol < 0.):
+            raise ValueError("atol and rtol values must be positive.")
+    
+        val = atol + maxS * rtol
+        above_cutoff = (abs(s) > val)
+    
+        psigma_diag = 1.0 / s[above_cutoff]
+        u = u[:, above_cutoff]
+    
+>       B = (u * psigma_diag) @ u.conj().T
+E       RuntimeWarning: divide by zero encountered in matmul
+
+../bench-venv/lib/python3.9/site-packages/scipy/linalg/_basic.py:1542: RuntimeWarning
+=============================== warnings summary ===============================
+tests/test_cli.py: 94 warnings
+tests/test_markowitz.py: 8 warnings
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/scipy/linalg/_basic.py:1542: RuntimeWarning: divide by zero encountered in matmul
+    B = (u * psigma_diag) @ u.conj().T
+
+tests/test_cli.py: 94 warnings
+tests/test_markowitz.py: 8 warnings
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/scipy/linalg/_basic.py:1542: RuntimeWarning: overflow encountered in matmul
+    B = (u * psigma_diag) @ u.conj().T
+
+tests/test_cli.py: 94 warnings
+tests/test_markowitz.py: 8 warnings
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/scipy/linalg/_basic.py:1542: RuntimeWarning: invalid value encountered in matmul
+    B = (u * psigma_diag) @ u.conj().T
+
+tests/test_markowitz.py::test_rank_deficient_history_solves
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+    warnings.warn(
+
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/atoms/affine/binary_operators.py:114: RuntimeWarning: divide by zero encountered in matmul
+    return values[0] @ values[1]
+
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/atoms/affine/binary_operators.py:114: RuntimeWarning: overflow encountered in matmul
+    return values[0] @ values[1]
+
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+tests/test_markowitz.py::test_rank_deficient_history_solves
+  /Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/atoms/affine/binary_operators.py:114: RuntimeWarning: invalid value encountered in matmul
+    return values[0] @ values[1]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_akshare.py::test_load_akshare_panel_mock - ModuleNotFoundEr...
+FAILED tests/test_akshare.py::test_load_akshare_panel_empty_tickers - ImportE...
+FAILED tests/test_markowitz.py::test_problem_is_dpp_and_cached_per_universe_size
+3 failed, 149 passed, 322 warnings in 2.88s

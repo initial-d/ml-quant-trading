@@ -4,9 +4,10 @@ Design rules
 ------------
 * Every numeric field has shape ``[T, N]`` (date × stock) and dtype
   ``float32``.
-* ``mask[t, i] == True`` iff stock *i* was tradable on date *t*. Limit-up,
-  limit-down, halted, and pre-IPO cells are masked out — this is the
-  "bias correction" plumbing the paper relies on.
+* ``mask[t, i]`` records the loader's usable-observation policy. Some loaders
+  also exclude halts. Limit-move exclusions are applied separately by the
+  research pipeline; a close at a price limit can still be an observed price.
+  This mask does not establish whether a buy or sell order would fill.
 * Panels are *immutable*: factor pipelines return new tensors rather
   than mutating in place. This keeps reasoning straightforward and is
   a hard requirement for autograd-backed factors.
@@ -37,7 +38,7 @@ _OPTIONAL_FIELDS = ("amount", "limit_up", "limit_down", "last_close")
 
 @dataclass(frozen=True)
 class Panel:
-    """OCHLV panel + tradability mask, all on the same device."""
+    """OCHLV panel + usable-observation mask, all on the same device."""
 
     dates:  np.ndarray            # shape [T], dtype object/datetime64
     stocks: np.ndarray            # shape [N], dtype object (ticker str)

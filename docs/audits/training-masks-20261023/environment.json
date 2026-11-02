@@ -1,0 +1,17 @@
+{
+  "commit": "5c6064cdb0d94423fdf5886cea4143ea33f483ee",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "pytorch": "2.14.1",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "cpu": "Apple M5",
+  "device": "CPU",
+  "gpu_used": false,
+  "cuda_available": false,
+  "data_source": "deterministic synthetic/unit-test inputs only",
+  "cost_assumptions": "not applicable: sample-selection regression, no performance benchmark",
+  "commands": [
+    "python -m pytest",
+    "python -m ruff check src tests"
+  ],
+  "python_executable": "/tmp/projects-push-20261023-venv/bin/python"
+}
