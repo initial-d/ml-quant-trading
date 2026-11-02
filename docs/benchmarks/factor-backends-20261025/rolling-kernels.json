@@ -1,0 +1,302 @@
+{
+  "category": "synthetic CPU systems benchmark; no alpha or investment evidence",
+  "protocol": "rolling-moments-v1",
+  "commit": "2620ac1a4e30eeebdc0929aef8c9792145211da1",
+  "command": "/tmp/projects-push-20261023-venv/bin/python scripts/benchmark_rolling_moments.py --n-dates 750 --n-stocks 1000 --windows 20,60,252 --repeat 5 --warmup 2 --seed 42 --json-out /tmp/rolling-blocks-20261025.json",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "pytorch": "2.14.1",
+  "numpy": "2.5.4",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "cpu": "Apple M5",
+  "logical_cpus": 10,
+  "gpu": "not used",
+  "device": "cpu",
+  "threads": 1,
+  "interop_threads": 1,
+  "data_source": "seeded normal synthetic panel, x level 100, correlated y, 10% missing",
+  "cost_assumptions": "no market data, trading or transaction costs in systems benchmark",
+  "settings": {
+    "n_dates": 750,
+    "n_stocks": 1000,
+    "windows": "20,60,252",
+    "repeat": 5,
+    "warmup": 2,
+    "seed": 42
+  },
+  "limitations": [
+    "One CPU/software environment; no GPU throughput claim.",
+    "Process peak RSS includes interpreter and cached allocations.",
+    "Separate subprocesses; warm timings exclude input creation and correctness checks.",
+    "FP64 block summaries can still lose precision at extreme within-window dynamic ranges.",
+    "Different finite-input policy: comparison panel contains only finite values."
+  ],
+  "cases": [
+    {
+      "kernel": "mean-unfold",
+      "window": 20,
+      "median_seconds": 0.005431415978819132,
+      "seconds": [
+        0.005615541944280267,
+        0.005385084077715874,
+        0.005431415978819132,
+        0.005163084017112851,
+        0.005492165917530656
+      ],
+      "peak_process_rss_bytes": 320208896,
+      "input_peak_rss_bytes": 250036224,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-unfold --window 20 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-unfold-20.npz --n-dates 750 --n-stocks 1000 --windows 20 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "mean-linear",
+      "window": 20,
+      "median_seconds": 0.015296833124011755,
+      "seconds": [
+        0.015301457839086652,
+        0.014528375118970871,
+        0.014796375064179301,
+        0.015296833124011755,
+        0.01569358306005597
+      ],
+      "peak_process_rss_bytes": 329957376,
+      "input_peak_rss_bytes": 250331136,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-linear --window 20 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-linear-20.npz --n-dates 750 --n-stocks 1000 --windows 20 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-unfold",
+      "window": 20,
+      "median_seconds": 0.028968957951292396,
+      "seconds": [
+        0.030019708210602403,
+        0.028968957951292396,
+        0.02888320805504918,
+        0.02910804096609354,
+        0.027828667080029845
+      ],
+      "peak_process_rss_bytes": 513851392,
+      "input_peak_rss_bytes": 250331136,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-unfold --window 20 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-unfold-20.npz --n-dates 750 --n-stocks 1000 --windows 20 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-linear",
+      "window": 20,
+      "median_seconds": 0.032541542081162333,
+      "seconds": [
+        0.032580000115558505,
+        0.032541542081162333,
+        0.032088916981592774,
+        0.03225837484933436,
+        0.03271958418190479
+      ],
+      "peak_process_rss_bytes": 417775616,
+      "input_peak_rss_bytes": 250216448,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-linear --window 20 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-linear-20.npz --n-dates 750 --n-stocks 1000 --windows 20 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "mean-unfold",
+      "window": 60,
+      "median_seconds": 0.01522058411501348,
+      "seconds": [
+        0.015528999967500567,
+        0.015095124952495098,
+        0.01489470899105072,
+        0.01594258309341967,
+        0.01522058411501348
+      ],
+      "peak_process_rss_bytes": 427589632,
+      "input_peak_rss_bytes": 250396672,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-unfold --window 60 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-unfold-60.npz --n-dates 750 --n-stocks 1000 --windows 60 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "mean-linear",
+      "window": 60,
+      "median_seconds": 0.012940749991685152,
+      "seconds": [
+        0.013007375178858638,
+        0.012940749991685152,
+        0.012799000134691596,
+        0.012782666832208633,
+        0.013346499996259809
+      ],
+      "peak_process_rss_bytes": 331153408,
+      "input_peak_rss_bytes": 250167296,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-linear --window 60 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-linear-60.npz --n-dates 750 --n-stocks 1000 --windows 60 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-unfold",
+      "window": 60,
+      "median_seconds": 0.07287108292803168,
+      "seconds": [
+        0.0739652079064399,
+        0.07281604199670255,
+        0.07245558314025402,
+        0.07287108292803168,
+        0.0735182911157608
+      ],
+      "peak_process_rss_bytes": 941735936,
+      "input_peak_rss_bytes": 250101760,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-unfold --window 60 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-unfold-60.npz --n-dates 750 --n-stocks 1000 --windows 60 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-linear",
+      "window": 60,
+      "median_seconds": 0.029461625032126904,
+      "seconds": [
+        0.029528832994401455,
+        0.029461625032126904,
+        0.02930812514387071,
+        0.029715500073507428,
+        0.029460499994456768
+      ],
+      "peak_process_rss_bytes": 421429248,
+      "input_peak_rss_bytes": 250167296,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-linear --window 60 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-linear-60.npz --n-dates 750 --n-stocks 1000 --windows 60 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "mean-unfold",
+      "window": 252,
+      "median_seconds": 0.047662500059232116,
+      "seconds": [
+        0.047604708932340145,
+        0.04731299984268844,
+        0.047662500059232116,
+        0.048350249882787466,
+        0.04812116711400449
+      ],
+      "peak_process_rss_bytes": 761036800,
+      "input_peak_rss_bytes": 250249216,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-unfold --window 252 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-unfold-252.npz --n-dates 750 --n-stocks 1000 --windows 252 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "mean-linear",
+      "window": 252,
+      "median_seconds": 0.012491124914959073,
+      "seconds": [
+        0.012357999803498387,
+        0.012491124914959073,
+        0.012476749951019883,
+        0.01345137506723404,
+        0.01713912491686642
+      ],
+      "peak_process_rss_bytes": 330039296,
+      "input_peak_rss_bytes": 250232832,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker mean-linear --window 252 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/mean-linear-252.npz --n-dates 750 --n-stocks 1000 --windows 252 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-unfold",
+      "window": 252,
+      "median_seconds": 0.2236681249924004,
+      "seconds": [
+        0.22398745804093778,
+        0.22356212511658669,
+        0.2236681249924004,
+        0.22233312507160008,
+        0.2285093329846859
+      ],
+      "peak_process_rss_bytes": 2284060672,
+      "input_peak_rss_bytes": 251002880,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-unfold --window 252 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-unfold-252.npz --n-dates 750 --n-stocks 1000 --windows 252 --seed 42 --repeat 5 --warmup 2"
+    },
+    {
+      "kernel": "corr-linear",
+      "window": 252,
+      "median_seconds": 0.030076707946136594,
+      "seconds": [
+        0.03100416692905128,
+        0.030304959043860435,
+        0.02991720801219344,
+        0.030076707946136594,
+        0.02953604212962091
+      ],
+      "peak_process_rss_bytes": 416366592,
+      "input_peak_rss_bytes": 250232832,
+      "input_sha256": "ae37d317b20b313d3566c3bfb65325b2db3de0ed4fb62f044d50cb9ed6876792",
+      "command": "/tmp/projects-push-20261023-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/scripts/benchmark_rolling_moments.py --worker corr-linear --window 252 --worker-output /var/folders/ld/dfm826ld4_d6myjvpl4f8_c80000gn/T/tmpnn3nwjw2/corr-linear-252.npz --n-dates 750 --n-stocks 1000 --windows 252 --seed 42 --repeat 5 --warmup 2"
+    }
+  ],
+  "comparisons": [
+    {
+      "masks_equal": true,
+      "max_valid_difference": 2.288818359375e-05,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.6156364893049613e-05,
+        "linear": 3.814697265625e-06
+      },
+      "passed": true,
+      "kind": "mean",
+      "window": 20,
+      "speedup": 0.3550680022973727
+    },
+    {
+      "masks_equal": true,
+      "max_valid_difference": 3.5762786865234375e-07,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.7373118355035189e-07,
+        "linear": 2.9610158991388857e-08
+      },
+      "passed": true,
+      "kind": "corr",
+      "window": 20,
+      "speedup": 0.8902146640451303
+    },
+    {
+      "masks_equal": true,
+      "max_valid_difference": 2.288818359375e-05,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.3819280667348721e-05,
+        "linear": 3.814697265625e-06
+      },
+      "passed": true,
+      "kind": "mean",
+      "window": 60,
+      "speedup": 1.176174806312864
+    },
+    {
+      "masks_equal": true,
+      "max_valid_difference": 2.980232238769531e-07,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.465977182979472e-07,
+        "linear": 2.9538116397276326e-08
+      },
+      "passed": true,
+      "kind": "corr",
+      "window": 60,
+      "speedup": 2.4734237452471897
+    },
+    {
+      "masks_equal": true,
+      "max_valid_difference": 3.0517578125e-05,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.974273146743144e-05,
+        "linear": 3.798183428216362e-06
+      },
+      "passed": true,
+      "kind": "mean",
+      "window": 252,
+      "speedup": 3.8157091842186803
+    },
+    {
+      "masks_equal": true,
+      "max_valid_difference": 2.384185791015625e-07,
+      "sample_oracle_max_abs_error": {
+        "unfold": 1.4682680182787067e-07,
+        "linear": 2.9681422764049614e-08
+      },
+      "passed": true,
+      "kind": "corr",
+      "window": 252,
+      "speedup": 7.436589316655281
+    }
+  ],
+  "failures": []
+}

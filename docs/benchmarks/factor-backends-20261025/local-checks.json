@@ -1,0 +1,28 @@
+{
+  "tested_content_commit": "2620ac1a4e30eeebdc0929aef8c9792145211da1",
+  "note": "These checks ran before committing the tested code as this SHA. Evidence-only files were added afterward.",
+  "commands": [
+    {
+      "command": "/tmp/projects-push-20261023-venv/bin/python -m pytest",
+      "exit_code": 0,
+      "summary": "223 passed in 7.52s"
+    },
+    {
+      "command": "/tmp/projects-push-20261023-venv/bin/python -m ruff check src tests scripts/benchmark_factor_backends.py scripts/benchmark_rolling_moments.py",
+      "exit_code": 0,
+      "summary": "All checks passed!"
+    }
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "pytorch": "2.14.1",
+  "numpy": "2.5.4",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "cpu": "Apple M5",
+  "gpu": "not used",
+  "figure": {
+    "code_commit": "2620ac1a4e30eeebdc0929aef8c9792145211da1",
+    "command": "/tmp/projects-push-20261023-venv/bin/python scripts/plot_rolling_moments.py --report docs/benchmarks/factor-backends-20261025/rolling-kernels.json --output docs/benchmarks/factor-backends-20261025/window-sweep.png",
+    "matplotlib": "3.11.2",
+    "input_sha256": "c3cc1dc4c86684a49e98e1294f549a18a81b9a1eeddd37277a15bde0062d889c"
+  }
+}

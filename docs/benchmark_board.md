@@ -203,6 +203,110 @@ trailing argument, the generated JSON artifact path, and caveats. Treat the
 numbers as evidence that DSH can preserve the benchmark workflow and artifact
 boundary, not as a performance claim.
 
+## Daily Factor Screening Diagnostic (2026-10-26)
+
+The corrected `scripts/eval_factor_ic.py` completed all 213 factors on the
+synthetic 500 x 200 panel. IC/RankIC are calculated per date on pairwise eligible
+assets, with limit masks applied before factor construction. Independent SciPy
+and pooled-sign-reversal regressions passed; this is correctness evidence rather
+than a speed, factor-selection or alpha claim. Source/environment, exact command,
+full daily series and 240 local tests:
+[raw evidence](benchmarks/daily-factor-ic-20261026/README.md).
+
+## Full Factor Streaming: Apple M5 (2026-10-25)
+
+`iter_legacy_factors` supports per-factor screening/incremental storage without
+retaining a `[T,N,213]` tensor. Source `7b90abf`, Apple M5 / macOS 26.6.2,
+Python 3.12.14 / PyTorch 2.14.1, synthetic 750 x 1000, seed 42, threads 1/1,
+1 warmup / 3 repeats, separate subprocesses, default `unfold` backend.
+Both methods compute all 213 neutralized factors and reduce each to mean/RMS.
+
+| Materialization | Median compute + reduction | Peak process RSS |
+|---|---:|---:|
+| Stack all factors | 5.314 s | 2649.0 MB |
+| Consume/discard one factor | 4.450 s | 1391.2 MB |
+
+**47.5% less process RSS and 16.3% shorter elapsed time for this screening
+workload.** All 213 factor byte hashes and the joint mask agreed. Consumers
+retaining every result lose this benefit; this is not model-training or alpha
+evidence. RSS includes interpreter/allocator caching. Source/environment, exact
+command, all timing samples and hashes: [raw JSON](benchmarks/factor-streaming-20261025/report.json),
+[run output](benchmarks/factor-streaming-20261025/run.txt),
+[local checks](benchmarks/factor-streaming-20261025/local-checks.json),
+review [PR #81](https://github.com/initial-d/ml-quant-trading/pull/81).
+
+## Integrated Block Moments: Apple M5 (2026-10-25)
+
+Synthetic CPU evidence at code commit `2620ac1`, Apple M5 / macOS 26.6.2,
+Python 3.12.14 / PyTorch 2.14.1, threads 1/1, seed 42, 2 warmups / 5 repeats.
+The factor APIs and CLI now select `rolling_backend="linear"` explicitly;
+the default remains `unfold`. Disjoint FP64 block moments repair past-outlier
+cancellation found during full-engine integration.
+
+| Complete 213-factor panel | Unfold / linear median | Unfold / linear peak process RSS |
+|---|---:|---:|
+| 500 x 200 | 0.541 / 0.816 s | 617.1 / 593.3 MB |
+| 750 x 1000 | 4.706 / 6.818 s | 2648.4 / 2100.4 MB |
+
+**The large full engine used 20.7% less process RSS but 45% more elapsed time.**
+All individual factor masks agreed and outputs were finite; 41 factors had a
+maximum valid difference above 1e-5. Nonlinear ranks can change materially
+(`old_071` sampled mean Spearman 0.9770). Backend selection changes numerical
+semantics; it is not a signal-equivalent acceleration. A separate 252-day
+correlation kernel improved 7.44x with 81.8% less RSS on the finite-normal panel;
+20-day kernels were slower. RSS includes interpreter/allocator caches.
+[Raw results, commands, oracle diagnostics and preserved pre-fix failure](benchmarks/factor-backends-20261025/README.md)
+are reviewable in [PR #81](https://github.com/initial-d/ml-quant-trading/pull/81).
+No market data, predictive-quality or GPU-throughput claim.
+
+## Historical Global-Prefix Rolling Moments: Apple M5 (2026-10-24)
+
+Synthetic CPU systems evidence, separate from protocol v1 and trading quality.
+At commit `f767f5c`, `ts_mean_linear`, `ts_std_linear`, `ts_cov_linear` and `ts_corr_linear`
+use centred float64 prefix sums with O(T*N) arithmetic/storage, without a window
+dimension. Existing factor functions remain the default. Masked/nonfinite values
+are excluded; the first window-1 rows are invalid and partial observation counts
+follow mean/sample-moment conventions.
+These measurements predate the block-moment repair above and do not describe
+the current implementation.
+
+| Kernel | Window | Unfold median | Linear median | Speedup | Unfold peak RSS | Linear peak RSS |
+|---|---:|---:|---:|---:|---:|---:|
+| mean | 20 | 5.59 ms | 5.42 ms | 1.03x | 320.5 MB | 290.5 MB |
+| mean | 60 | 15.42 ms | 5.44 ms | 2.83x | 427.4 MB | 290.5 MB |
+| mean | 252 | 47.88 ms | 5.06 ms | 9.47x | 760.9 MB | 292.6 MB |
+| corr | 20 | 26.68 ms | 13.78 ms | 1.94x | 513.6 MB | 328.3 MB |
+| corr | 60 | 72.56 ms | 13.74 ms | 5.28x | 941.8 MB | 328.3 MB |
+| corr | 252 | 222.83 ms | 12.68 ms | 17.57x | 2283.3 MB | 327.2 MB |
+
+This is one Apple M5, macOS 26.6.2 arm64, Python 3.12.14 / PyTorch 2.14.1 run
+at code commit `f767f5c` (full SHA in JSON). Synthetic 750x1000 finite float32
+panel, 10% missing, seed 42, CPU only, intra/inter-op threads 1/1, 2 warmups and
+5 repeats. Each kernel/window gets a fresh subprocess. MB is decimal;
+**RSS includes interpreter and allocator caching**, not just kernel allocations.
+The 20-day mean has little speed benefit. Masks agreed; maximum valid-output
+differences were 3.06e-5 for mean and 3.58e-7 for correlation. Independent sampled
+float64 window oracles and unit tests cover precision, missing inputs and causality.
+FP64 throughput on GPUs is unmeasured; long, strongly drifting series can still
+suffer prefix-subtraction cancellation. No market data or cost/alpha claim.
+
+```python
+from mlquant.features import ts_corr_linear
+correlation, valid = ts_corr_linear(close, volume, observation_mask, window=252)
+```
+
+```bash
+python scripts/benchmark_rolling_moments.py --n-dates 750 --n-stocks 1000 \
+  --windows 20,60,252 --repeat 5 --warmup 2 --seed 42 \
+  --json-out artifacts/rolling-moments-20261024/report.json
+```
+
+Raw evidence: [JSON](benchmarks/rolling-moments-20261024/report.json),
+[run output](benchmarks/rolling-moments-20261024/run.txt),
+[figure](benchmarks/rolling-moments-20261024/window-sweep.svg).
+Plot from JSON with `scripts/plot_rolling_moments.py --report REPORT --output FIGURE.png`
+(optional `matplotlib`).
+
 ## Pre-Protocol Machine Snapshots
 
 The following results predate protocol v1. They did not pin PyTorch thread pools

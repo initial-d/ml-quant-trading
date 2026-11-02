@@ -12,8 +12,8 @@ Why this shape?
     fused GPU call, not a Python loop with ``df.rolling`` per stock.
 
 Numerical conventions
-    * Float32 throughout. Accumulators promote to float64 only inside
-      :func:`ewma` because the recurrence is sensitive.
+    * The historical ``unfold`` backend keeps the input precision. The
+      opt-in ``linear`` moments and :func:`ewma` accumulate in float64.
     * Cross-sectional ranks are reported in the open interval ``(0, 1]``
       with ``ascending=True`` (smaller value → smaller rank).
     * Time-series rolling windows use *trailing* windows: ``window=5``
@@ -27,6 +27,9 @@ from typing import Tuple
 
 import torch
 import torch.nn.functional as F
+
+from .rolling_backend import get_rolling_backend
+from .rolling_moments import ts_corr_linear, ts_cov_linear, ts_mean_linear, ts_std_linear
 
 Tensor = torch.Tensor
 
@@ -118,6 +121,8 @@ def ts_sum(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
 
 
 def ts_mean(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    if get_rolling_backend() == "linear":
+        return ts_mean_linear(x, mask, window)
     xw = _unfold_t(x.masked_fill(~mask, 0.0), window)
     mw = _unfold_mask(mask, window).float()
     n  = mw.sum(dim=1).clamp_min(1.0)
@@ -127,6 +132,8 @@ def ts_mean(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
 
 
 def ts_std(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    if get_rolling_backend() == "linear":
+        return ts_std_linear(x, mask, window)
     xw = _unfold_t(x.masked_fill(~mask, 0.0), window)
     mw = _unfold_mask(mask, window).float()
     n  = mw.sum(dim=1).clamp_min(2.0)
@@ -165,6 +172,8 @@ def ts_rank(x: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
 
 def ts_corr(x: Tensor, y: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
     """Rolling Pearson correlation of two series, masked-aware."""
+    if get_rolling_backend() == "linear":
+        return ts_corr_linear(x, y, mask, window)
     xw = _unfold_t(x.masked_fill(~mask, 0.0), window)
     yw = _unfold_t(y.masked_fill(~mask, 0.0), window)
     mw = _unfold_mask(mask, window).float()
@@ -183,6 +192,8 @@ def ts_corr(x: Tensor, y: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Te
 
 
 def ts_cov(x: Tensor, y: Tensor, mask: Tensor, window: int) -> Tuple[Tensor, Tensor]:
+    if get_rolling_backend() == "linear":
+        return ts_cov_linear(x, y, mask, window)
     xw = _unfold_t(x.masked_fill(~mask, 0.0), window)
     yw = _unfold_t(y.masked_fill(~mask, 0.0), window)
     mw = _unfold_mask(mask, window).float()

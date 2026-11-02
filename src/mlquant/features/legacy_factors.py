@@ -29,6 +29,7 @@ from typing import Callable, Dict, Tuple
 import torch
 
 from ..data.panel import Panel
+from .rolling_backend import using_rolling_backend, validate_rolling_backend
 from .tensor_factors import (
     cs_zscore,
     delta,
@@ -98,20 +99,61 @@ from . import _factors_alpha101  # noqa: E402, F401
 # ---------------------------------------------------------------------------
 # Driver
 # ---------------------------------------------------------------------------
+def iter_legacy_factors(
+    panel: Panel,
+    *,
+    names: tuple[str, ...] | None = None,
+    neutralize: bool = True,
+    rolling_backend: str = "unfold",
+):
+    """Yield ``(name, values[T,N], mask[T,N])`` without retaining the factor set.
+
+    Use for per-factor IC, screening or incremental storage. Consumers control
+    whether outputs/gradients accumulate; use ``torch.no_grad()`` and discard
+    each result for bounded inference memory. Freeze panel/registry while
+    iterating. Do not mutate returned masks, which may alias the panel mask.
+    Backend scopes end before each yield, so pausing/abandoning the iterator
+    never changes its consumer's primitive calls.
+    """
+    names = names or tuple(LEGACY_REGISTRY)
+    names = tuple(names)
+    validate_rolling_backend(rolling_backend)
+    for name in names:
+        if name not in LEGACY_REGISTRY:
+            raise KeyError(name)
+
+    def generate():
+        for name in names:
+            with using_rolling_backend(rolling_backend):
+                values, mask = LEGACY_REGISTRY[name](panel)
+                values = torch.where(torch.isfinite(values), values, torch.zeros_like(values))
+                if neutralize:
+                    values, _ = cs_zscore(values, mask)
+            yield name, values, mask
+            del values, mask
+
+    return generate()
+
+
 def compute_legacy_set(
     panel: Panel,
     *,
     names: tuple[str, ...] | None = None,
     neutralize: bool = True,
+    rolling_backend: str = "unfold",
 ) -> Tuple[Tensor, Tensor, list[str]]:
-    """Stack registered legacy factors into a ``[T, N, F]`` tensor."""
+    """Stack registered legacy factors into a ``[T, N, F]`` tensor.
+
+    ``rolling_backend='linear'`` selects O(T*N) FP64 block moments on CPU
+    or CUDA. The default retains historical direct windows. Only mean/std/
+    cov/corr change; finite filtering, precision and correlation clamping
+    can alter downstream ranks. Each call scopes and restores its selection.
+    """
     names = names or tuple(LEGACY_REGISTRY)
     cols, joint = [], None
-    for n in names:
-        v, m = LEGACY_REGISTRY[n](panel)
-        v = torch.where(torch.isfinite(v), v, torch.zeros_like(v))
-        if neutralize:
-            v, _ = cs_zscore(v, m)
+    for _, v, m in iter_legacy_factors(
+        panel, names=names, neutralize=neutralize, rolling_backend=rolling_backend,
+    ):
         cols.append(v)
         joint = m if joint is None else joint & m
     factors = torch.stack(cols, dim=-1)
@@ -122,4 +164,5 @@ __all__ = [
     "LEGACY_REGISTRY",
     "register_legacy_factor",
     "compute_legacy_set",
+    "iter_legacy_factors",
 ]

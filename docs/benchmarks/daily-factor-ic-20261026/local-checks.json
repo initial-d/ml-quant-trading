@@ -1,0 +1,9 @@
+{
+  "tested_content_commit": "410f6a6b79a33706b65e0f4af86f0cc0058aa2c0",
+  "note": "Tests preceded committing this exact code content.",
+  "test_command": "/tmp/projects-push-20261023-venv/bin/python -m pytest",
+  "test_result": "240 passed in 15.67s",
+  "lint_command": "/tmp/projects-push-20261023-venv/bin/python -m ruff check src tests scripts/eval_factor_ic.py",
+  "lint_result": "All checks passed!",
+  "full_screening_result": "213 factor summaries; 431-498 eligible dates; exact command and environment in summary/report."
+}

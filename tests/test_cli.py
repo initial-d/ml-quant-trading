@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import torch
+import pytest
 from click.testing import CliRunner
 
 from mlquant.cli.main import (
@@ -23,7 +24,7 @@ def test_demo_runs_pipeline_stages_in_order(monkeypatch, tmp_path):
     for command in (cmd_gen_data, cmd_features, cmd_train, cmd_portfolio, cmd_backtest):
         name = command.name
 
-        def callback(config_path, stage=name):
+        def callback(config_path, stage=name, **kwargs):
             calls.append((stage, config_path))
 
         monkeypatch.setattr(command, "callback", callback)
@@ -58,7 +59,7 @@ def test_demo_uses_packaged_config_outside_repository(monkeypatch, tmp_path):
     for command in (cmd_gen_data, cmd_features, cmd_train, cmd_portfolio, cmd_backtest):
         name = command.name
 
-        def callback(config_path, stage=name):
+        def callback(config_path, stage=name, **kwargs):
             calls.append((stage, config_path, Path(config_path).read_text(encoding="utf-8")))
 
         monkeypatch.setattr(command, "callback", callback)
@@ -130,16 +131,19 @@ portfolio:
 """
 
 
-def test_pipeline_scores_only_the_out_of_sample_window(tmp_path):
+@pytest.mark.parametrize("backend", ["unfold", "linear"])
+def test_pipeline_scores_only_the_out_of_sample_window(tmp_path, backend):
     import torch
 
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
-        Path("tiny.yaml").write_text(TINY_CONFIG, encoding="utf-8")
+        Path("tiny.yaml").write_text(TINY_CONFIG + f"rolling_backend: {backend}\n", encoding="utf-8")
         result = runner.invoke(cli, ["demo", "--config", "tiny.yaml"])
         assert result.exit_code == 0, result.output
 
         art = Path("artifacts/tiny")
+        features = torch.load(art / "features.pt", weights_only=False)
+        assert features["rolling_backend"] == backend
         pred = torch.load(art / "predictions.pt", weights_only=False)
         oos = pred["oos_start"]
         assert oos == 72
@@ -191,6 +195,50 @@ def test_features_compute_factors_on_the_limit_masked_panel(monkeypatch, tmp_pat
 
         panel = cli_main._load_panel(Path("artifacts/tiny"))
         assert torch.equal(seen["mask"], limit_move_mask(panel, limit_pct=0.098))
+
+
+@pytest.mark.parametrize("config_backend,options,expected", [
+    (None, [], "unfold"),
+    ("linear", [], "linear"),
+    ("linear", ["--rolling-backend", "unfold"], "unfold"),
+    ("unfold", ["--rolling-backend", "linear"], "linear"),
+])
+def test_cli_backend_precedence_provenance_and_mask_first(
+    monkeypatch, tmp_path, config_backend, options, expected,
+):
+    import mlquant.cli.main as cli_main
+    from mlquant.features.bias import limit_move_mask
+
+    seen = {}
+    real = cli_main.compute_legacy_set
+
+    def spy(panel, **kwargs):
+        seen["backend"], seen["mask"] = kwargs["rolling_backend"], panel.mask.clone()
+        return real(panel, names=("stock_001",), **kwargs)
+
+    monkeypatch.setattr(cli_main, "compute_legacy_set", spy)
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        config = TINY_CONFIG
+        if config_backend is not None:
+            config += f"rolling_backend: {config_backend}\n"
+        Path("tiny.yaml").write_text(config, encoding="utf-8")
+        assert runner.invoke(cli, ["gen-data", "--config", "tiny.yaml"]).exit_code == 0
+        result = runner.invoke(cli, ["features", "--config", "tiny.yaml", *options])
+        assert result.exit_code == 0, result.output
+        blob = torch.load("artifacts/tiny/features.pt", weights_only=False)
+        assert seen["backend"] == blob["rolling_backend"] == expected
+        panel = cli_main._load_panel(Path("artifacts/tiny"))
+        assert torch.equal(seen["mask"], limit_move_mask(panel, limit_pct=0.098))
+        assert blob["factors"].shape == (120, 20, 1)
+
+
+def test_invalid_config_backend_is_reported_before_loading_panel(tmp_path):
+    config = tmp_path / "bad.yaml"
+    config.write_text("rolling_backend: auto\n", encoding="utf-8")
+    result = CliRunner().invoke(cli, ["features", "--config", str(config)])
+    assert result.exit_code == 2
+    assert "rolling_backend must be" in result.output
 
 
 def test_portfolio_and_backtest_survive_zero_filled_halts(tmp_path):

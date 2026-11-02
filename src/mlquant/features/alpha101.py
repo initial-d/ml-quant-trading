@@ -26,6 +26,7 @@ import torch
 from ..data.panel import Panel
 from .tensor_factors import cs_zscore
 from .legacy_factors import LEGACY_REGISTRY
+from .rolling_backend import using_rolling_backend
 
 Tensor = torch.Tensor
 
@@ -49,6 +50,7 @@ def compute_alpha_set(
     *,
     names: tuple[str, ...] | None = None,
     neutralize: bool = True,
+    rolling_backend: str = "unfold",
 ) -> Tuple[Tensor, Tensor, list[str]]:
     """Compute the Alpha101 subset → tensor of shape ``[T, N, F]``.
 
@@ -64,6 +66,9 @@ def compute_alpha_set(
         ``None`` → all 9 registered alphas.
     neutralize : bool
         If True, each factor is cross-sectionally z-scored.
+    rolling_backend : str
+        ``unfold`` (default) or opt-in ``linear`` FP64 block moments.
+        The latter can change downstream ranks and excludes nonfinite inputs.
 
     Returns
     -------
@@ -74,11 +79,12 @@ def compute_alpha_set(
     _populate_alpha_registry()
     names = names or tuple(ALPHA_REGISTRY)
     cols, joint_mask = [], None
-    for n in names:
-        v, m = ALPHA_REGISTRY[n](panel)
-        if neutralize:
-            v, _ = cs_zscore(v, m)
-        cols.append(v)
-        joint_mask = m if joint_mask is None else joint_mask & m
+    with using_rolling_backend(rolling_backend):
+        for n in names:
+            v, m = ALPHA_REGISTRY[n](panel)
+            if neutralize:
+                v, _ = cs_zscore(v, m)
+            cols.append(v)
+            joint_mask = m if joint_mask is None else joint_mask & m
     factors = torch.stack(cols, dim=-1)
     return factors, joint_mask, list(names)
