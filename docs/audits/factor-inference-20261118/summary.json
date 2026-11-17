@@ -1,0 +1,59 @@
+{
+  "category": "synthetic statistical/engineering diagnostic",
+  "commit": "be9afec413bc68598cd917015f524772cef721f3",
+  "source_path": "docs/benchmarks/daily-factor-ic-20261026/report.json.gz",
+  "source_sha256": "0c91ee2798e5b8f29e3b96eddbc41e5a26fdf5d94456a2681f1392d69e09e88e",
+  "cases": [
+    {
+      "case": "auto",
+      "file": "inference-auto-by.json.gz",
+      "payload_sha256": "393bf28bf3767d5345e6021feb38a21c9f15358c9b5a5f0bdd627507a8a7225f",
+      "multiple_testing": {
+        "method": "by",
+        "alpha": 0.05,
+        "family_size": 426,
+        "testable": 426,
+        "unadjusted_rejections": 19,
+        "adjusted_rejections": 0,
+        "family": "all supplied factors x (IC, RankIC), including untestable series"
+      },
+      "lags": [
+        5
+      ]
+    },
+    {
+      "case": "lag0",
+      "file": "inference-lag0-by.json.gz",
+      "payload_sha256": "b025b7ed7addda781feb9084e050111f06beb398847abe6f57ed0791cabc8090",
+      "multiple_testing": {
+        "method": "by",
+        "alpha": 0.05,
+        "family_size": 426,
+        "testable": 426,
+        "unadjusted_rejections": 14,
+        "adjusted_rejections": 0,
+        "family": "all supplied factors x (IC, RankIC), including untestable series"
+      },
+      "lags": [
+        0
+      ]
+    },
+    {
+      "case": "lag20",
+      "file": "inference-lag20-by.json.gz",
+      "payload_sha256": "5a06202375d761f5568a08ea4f4059ab7c5aa33be22f995cb8a5f73624b8482f",
+      "multiple_testing": {
+        "method": "by",
+        "alpha": 0.05,
+        "family_size": 426,
+        "testable": 426,
+        "unadjusted_rejections": 21,
+        "adjusted_rejections": 0,
+        "family": "all supplied factors x (IC, RankIC), including untestable series"
+      },
+      "lags": [
+        20
+      ]
+    }
+  ]
+}

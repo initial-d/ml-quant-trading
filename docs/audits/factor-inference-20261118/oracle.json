@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "category": "synthetic engineering diagnostic",
+  "source_commit": "410f6a6b79a33706b65e0f4af86f0cc0058aa2c0",
+  "inference_commit": "be9afec413bc68598cd917015f524772cef721f3",
+  "implementation_sha256": "d38d382ffe84473a70195b0132a04c38f9f5b61969aeec63631f9a6b4b43db2d",
+  "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python docs/audits/factor-inference-20261118/check_oracle.py --source docs/benchmarks/daily-factor-ic-20261026/report.json.gz --inference /tmp/mlquant-hac-20261118/inference-auto-by.json --output /tmp/mlquant-hac-20261118/oracle.json",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "numpy": "2.0.2",
+  "scipy": "1.13.1",
+  "statsmodels": "0.14.4",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "cpu": "Apple M5",
+  "pytorch": "2.8.0",
+  "device": "cpu",
+  "gpu": "unused",
+  "source_sha256": "0c91ee2798e5b8f29e3b96eddbc41e5a26fdf5d94456a2681f1392d69e09e88e",
+  "inference_sha256": "393bf28bf3767d5345e6021feb38a21c9f15358c9b5a5f0bdd627507a8a7225f",
+  "factors": 213,
+  "tests": 426,
+  "checked_hac_series": 426,
+  "maximum_absolute_error": {
+    "mean": 5.204170427930421e-18,
+    "standard_error": 6.5052130349130266e-18,
+    "p_value": 8.881784197001252e-16
+  },
+  "correction_control_max_error": {
+    "by": 3.469446951953614e-18,
+    "bh": 6.938893903907228e-18,
+    "holm": 0.0
+  },
+  "multiple_testing": {
+    "method": "by",
+    "alpha": 0.05,
+    "family_size": 426,
+    "testable": 426,
+    "unadjusted_rejections": 19,
+    "adjusted_rejections": 0,
+    "family": "all supplied factors x (IC, RankIC), including untestable series"
+  },
+  "data_source": "Frozen full synthetic 500-date/200-stock/213-factor report, no factor recomputation",
+  "cost_assumptions": "No transactions, data downloads, GPU or paid APIs; IC excludes execution costs",
+  "limitations": [
+    "Checks implementation against Statsmodels, not finite-sample calibration or market alpha.",
+    "Mean HAC compares full original-grid OLS scores with explicit observed-date correction.",
+    "The synthetic source remains a full-sample engineering diagnostic."
+  ]
+}
