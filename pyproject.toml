@@ -43,7 +43,8 @@ dependencies = [
 data = [
     "yfinance>=0.2.0",
     "baostock>=0.8.8",
-    "akshare>=1.18.0",
+    # The loader uses the 1.18 stock_zh_a_hist export, removed in 1.20.65.
+    "akshare>=1.18.0,<1.19",
 ]
 mosek = ["Mosek>=10.0"]
 ecos  = ["ecos>=2.0"]
