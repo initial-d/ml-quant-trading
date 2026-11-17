@@ -171,3 +171,17 @@ unannualized, without correcting temporal dependence. No factor selection or
 test holdout is performed; full-sample synthetic IC is diagnostic, not alpha.
 The earlier script pooled stock-days and applied limit masking after factor
 computation, so old results from that script have different semantics.
+
+To add inference to a saved daily report without recomputing factors:
+
+```bash
+mlquant factor-inference --input-report artifacts/daily-ic.json \
+  --json-out artifacts/factor-inference.json
+```
+
+This adds calendar-aware Newey–West standard errors, pointwise intervals and
+one multiple-testing family across all supplied IC/RankIC series. BY is the
+default; missing and untestable dates/tests remain inspectable. See the
+[API and assumptions](factor_inference.md) and the
+[complete 213-factor synthetic audit](audits/factor-inference-20261118/README.md).
+Inference remains separate from held-out selection and portfolio returns.

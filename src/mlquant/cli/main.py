@@ -7,8 +7,14 @@ without recomputing upstream work.
 from __future__ import annotations
 
 import json
+import gzip
+import hashlib
 import math
 import pickle
+import platform
+import shlex
+import subprocess
+import sys
 from dataclasses import replace
 from importlib.resources import as_file, files
 from pathlib import Path
@@ -18,6 +24,7 @@ import numpy as np
 import torch
 
 from ..backtest.engine import run_backtest
+from ..backtest.ic_inference import infer_factor_ic_report
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
 from ..features.legacy_factors import compute_legacy_set
 from ..features.bias import board_limit_pct, limit_move_mask
@@ -396,6 +403,64 @@ def cmd_backtest(config_path: str) -> None:
         else:
             click.echo(f"  {k:<12s}  {v:>10}")
     click.echo(f"\nShareable reports: {markdown_path}  {json_path}")
+
+
+@cli.command("factor-inference")
+@click.option("--input-report", required=True,
+              type=click.Path(exists=True, dir_okay=False, path_type=Path),
+              help="Frozen daily-factor IC JSON or JSON.gz; no factor recomputation or data fetch.")
+@click.option("--json-out", required=True, type=click.Path(path_type=Path))
+@click.option("--max-lag", default=None, type=click.IntRange(min=0),
+              help="Newey-West lag in original panel rows; default automatic, at least horizon-1.")
+@click.option("--min-dates", default=20, show_default=True, type=click.IntRange(min=2))
+@click.option("--confidence", default=.95, show_default=True, type=click.FloatRange(0, 1, min_open=True, max_open=True))
+@click.option("--alpha", default=.05, show_default=True, type=click.FloatRange(0, 1, min_open=True, max_open=True))
+@click.option("--method", default="by", show_default=True, type=click.Choice(["by", "bh", "holm"]))
+def cmd_factor_inference(input_report, json_out, max_lag, min_dates, confidence, alpha, method):
+    """HAC mean IC tests and joint IC/RankIC multiple-testing correction."""
+    raw = input_report.read_bytes()
+    try:
+        payload = gzip.decompress(raw) if input_report.suffix == ".gz" else raw
+        source = json.loads(payload)
+        report = infer_factor_ic_report(source, max_lag=max_lag, min_dates=min_dates,
+                                        confidence=confidence, alpha=alpha, method=method)
+    except (ValueError, TypeError, OSError, KeyError) as exc:
+        raise click.BadParameter(str(exc), param_hint="input-report/inference options") from exc
+    if input_report.resolve() == json_out.resolve():
+        raise click.BadParameter("output must not replace the frozen input report", param_hint="json-out")
+    source_root = Path(__file__).resolve().parents[3]
+    commit = None
+    if (source_root / "pyproject.toml").is_file():
+        try:
+            commit = subprocess.check_output(["git", "-C", str(source_root), "rev-parse", "HEAD"],
+                                             text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            pass
+    cpu = platform.processor() or platform.machine()
+    if sys.platform == "darwin":
+        cpu = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+    elif Path("/proc/cpuinfo").is_file():
+        cpu = next((line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines()
+                    if line.startswith("model name")), cpu)
+    from ..backtest import ic_inference
+    report.update(
+        input_report=str(input_report), input_report_sha256=hashlib.sha256(raw).hexdigest(),
+        input_payload_sha256=hashlib.sha256(payload).hexdigest(),
+        source_metadata={key: value for key, value in source.items() if key != "factors"},
+        environment={"commit": commit, "command": shlex.join([sys.executable, *sys.argv]),
+                     "python": sys.version, "numpy": np.__version__, "pytorch": torch.__version__,
+                     "os": platform.platform(), "cpu": cpu, "device": "cpu", "gpu": "unused",
+                     "implementation_sha256": hashlib.sha256(Path(ic_inference.__file__).read_bytes()).hexdigest(),
+                     "data_source": "frozen input report; source_metadata preserves original evidence category",
+                     "cost_assumptions": "No transactions, market-data downloads, GPU or paid API; IC excludes execution costs"},
+    )
+    json_out.parent.mkdir(parents=True, exist_ok=True)
+    json_out.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
+    family = report["multiple_testing"]
+    click.echo(f"{family['family_size']} hypotheses; {family['testable']} testable; "
+               f"p <= {alpha:g}: {family['unadjusted_rejections']}; "
+               f"{method} adjusted: {family['adjusted_rejections']}")
+    click.echo(f"wrote {json_out}")
 
 
 @cli.group("systemone")

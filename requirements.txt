@@ -19,4 +19,5 @@ tqdm>=4.65
 # Public market-data providers (the `[data]` extra).
 yfinance>=0.2.0
 baostock>=0.8.8
-akshare>=1.18.0
+# Keep the stock_zh_a_hist export used by the loader (verified on 1.18.88).
+akshare>=1.18.0,<1.19
