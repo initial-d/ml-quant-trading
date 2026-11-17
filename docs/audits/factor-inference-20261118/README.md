@@ -94,3 +94,12 @@ NumPy-2/Accelerate matmul warning as an error. Its failed log is preserved in
 `pytest-old-environment.log.gz`. Setting the checkout's absolute PYTHONPATH and
 using task-local dependency overlays resolved all six failures without changing
 those tests or the portfolio implementation. Ruff also passes.
+
+Exact full-suite command for this retained local log (the temporary dependency
+overlay is task-local, not a repository or runtime requirement):
+
+```bash
+SETUPTOOLS_USE_DISTUTILS=stdlib \
+PYTHONPATH=/tmp/mlquant-hac-20261118/check-deps:/Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/src \
+../bench-venv/bin/python -m pytest
+```
