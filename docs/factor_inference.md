@@ -93,3 +93,46 @@ independent Statsmodels HAC calculation; multiple-test formulas also match
 Statsmodels. At the default lag, 19 unadjusted tests reach p<=0.05 and zero
 remain after BY correction. This is synthetic statistical/engineering
 evidence, with no new market return or strategy-performance claim.
+
+## Purged rolling selection and future evaluation
+
+```bash
+mlquant factor-walk-forward --input-report artifacts/daily-ic.json \
+  --json-out artifacts/factor-walk-forward.json \
+  --train-dates 200 --test-dates 50 --max-factors 10
+```
+
+```python
+from mlquant.backtest import walk_forward_factor_ic
+result = walk_forward_factor_ic(report, train_dates=200, test_dates=50)
+```
+
+This command chooses factors using each trailing training window's joint
+IC/RankIC correction, then freezes their names and signs for the next disjoint
+test window. The default selection metric is RankIC (`--metric ic` also works).
+Only factors whose chosen metric rejects after correction qualify. Order is
+adjusted p-value, descending absolute HAC statistic, then name; `--max-factors`
+caps the list. A negative training mean freezes a negative direction. A factor
+that reverses in the test period retains its disappointing signed IC. Empty
+selections remain empty; there is no best-looking-factor fallback.
+
+For a label on signal row `t` ending at `t + label_horizon`, the default purge
+gap is the full horizon. With test start `s`, training ends exclusively at
+`s - purge_dates`, so its last label ends strictly before `s`. Training windows
+contain the requested number of original rows; missing dates stay gaps.
+`--purge-dates` can increase the gap but cannot reduce it below the horizon.
+The final shorter test window is retained and marked `partial_test`.
+
+Every fold saves all training hypotheses, selection decisions, exact ranges,
+label endpoints and signed per-factor test IC series. `oos_by_factor` stitches
+each named factor's selected windows on the original grid, leaving other rows
+missing. Selection coverage and observed IC coverage are separate: choosing a
+factor does not imply its future cross-section is observable. Future missingness
+does not remove it from the frozen selection.
+
+Each fold's correction applies to its training family, **not to repeated folds
+or parameter searches as a whole**. Test summaries are descriptive and contain
+no post-selection p-values. Signed IC is per factor, not portfolio returns or
+the IC of a combined score. The input family, universe and preprocessing still
+need to be causal and fixed independently of held-out outcomes; the declared
+horizon must accurately describe when labels become known.
