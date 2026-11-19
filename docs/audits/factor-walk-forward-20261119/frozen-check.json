@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "category": "synthetic engineering diagnostic",
+  "source_sha256": "0c91ee2798e5b8f29e3b96eddbc41e5a26fdf5d94456a2681f1392d69e09e88e",
+  "report_payload_sha256": "f57225835d6765bcba125a2449f0cf451015b60a0d0b2db820aafd9f4db2e066",
+  "implementation_commit": "c3ffea57ed2ce6cfbc9da3e409b7acde38d789e3",
+  "implementation_sha256": "98a39a5e2230cd54f2893c09a6c7ef00b5e7a4de96d736f01a85e80773d238b2",
+  "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python docs/audits/factor-walk-forward-20261119/check.py --source docs/benchmarks/daily-factor-ic-20261026/report.json.gz --report /tmp/mlquant-walk-forward-20261119/frozen-report.json --json-out /tmp/mlquant-walk-forward-20261119/frozen-check.json",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "numpy": "1.26.4",
+  "statsmodels": "0.14.4",
+  "environment": {
+    "commit": "c3ffea57ed2ce6cfbc9da3e409b7acde38d789e3",
+    "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/src/mlquant/cli/main.py factor-walk-forward --input-report docs/benchmarks/daily-factor-ic-20261026/report.json.gz --json-out /tmp/mlquant-walk-forward-20261119/frozen-report.json --train-dates 200 --test-dates 50 --max-factors 10",
+    "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "numpy": "1.26.4",
+    "pytorch": "2.8.0",
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "cpu": "Apple M5",
+    "device": "cpu",
+    "gpu": "unused",
+    "implementation_sha256": "98a39a5e2230cd54f2893c09a6c7ef00b5e7a4de96d736f01a85e80773d238b2",
+    "implementation_files": {
+      "factor_walk_forward.py": "442b1d9ff48b9b835edab62528e5eacc6ffb305877b289cabff727a195cac983",
+      "ic_inference.py": "0faff7409822c8bec439506d2fd0648cd0cd4be9af245e138527e1f883a4c6a9"
+    },
+    "data_source": "frozen input report; source_metadata preserves original evidence category",
+    "cost_assumptions": "No transactions, market-data downloads, GPU or paid API; IC excludes execution costs"
+  },
+  "summary": {
+    "folds": 6,
+    "folds_with_selection": 0,
+    "test_rows": 299,
+    "test_rows_with_selection": 0,
+    "observed_test_rows": 0,
+    "distinct_selected_factors": 0
+  },
+  "fold_families": 6,
+  "hypotheses_per_fold": 426,
+  "checked_hac_series": 2556,
+  "maximum_absolute_errors": {
+    "mean": 0.0,
+    "standard_error": 3.469446951953614e-18,
+    "p_value": 3.885780586188048e-16
+  },
+  "future_and_purge_mutation_checks": 6,
+  "planted_control": null,
+  "limitations": [
+    "Engineering timing/oracle checks, not market alpha or post-selection calibration.",
+    "Input causality and declared horizon are assumptions; multiple folds do not form a single corrected family."
+  ]
+}

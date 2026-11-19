@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "category": "synthetic planted IC timing control",
+  "source_sha256": "aeda9023a6ffd454fa8a264afb90ec4be6cb1f1f15efea941d4f98833c433dbf",
+  "report_payload_sha256": "886a608e90fbed592cec957b65a87211a176df0cad9eb8dfd6ecadb0778b1955",
+  "implementation_commit": "c3ffea57ed2ce6cfbc9da3e409b7acde38d789e3",
+  "implementation_sha256": "98a39a5e2230cd54f2893c09a6c7ef00b5e7a4de96d736f01a85e80773d238b2",
+  "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python docs/audits/factor-walk-forward-20261119/check.py --source /tmp/mlquant-walk-forward-20261119/control-source.json --report /tmp/mlquant-walk-forward-20261119/control-report.json --json-out /tmp/mlquant-walk-forward-20261119/control-check.json",
+  "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+  "numpy": "1.26.4",
+  "statsmodels": "0.14.4",
+  "environment": {
+    "commit": "c3ffea57ed2ce6cfbc9da3e409b7acde38d789e3",
+    "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python /Users/duyimin/Documents/Codex/2026-07-04/ban/work/ml-quant-trading/src/mlquant/cli/main.py factor-walk-forward --input-report /tmp/mlquant-walk-forward-20261119/control-source.json --json-out /tmp/mlquant-walk-forward-20261119/control-report.json --train-dates 100 --test-dates 50 --max-factors 10",
+    "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "numpy": "1.26.4",
+    "pytorch": "2.8.0",
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "cpu": "Apple M5",
+    "device": "cpu",
+    "gpu": "unused",
+    "implementation_sha256": "98a39a5e2230cd54f2893c09a6c7ef00b5e7a4de96d736f01a85e80773d238b2",
+    "implementation_files": {
+      "factor_walk_forward.py": "442b1d9ff48b9b835edab62528e5eacc6ffb305877b289cabff727a195cac983",
+      "ic_inference.py": "0faff7409822c8bec439506d2fd0648cd0cd4be9af245e138527e1f883a4c6a9"
+    },
+    "data_source": "frozen input report; source_metadata preserves original evidence category",
+    "cost_assumptions": "No transactions, market-data downloads, GPU or paid API; IC excludes execution costs"
+  },
+  "summary": {
+    "folds": 4,
+    "folds_with_selection": 4,
+    "test_rows": 200,
+    "test_rows_with_selection": 200,
+    "observed_test_rows": 200,
+    "distinct_selected_factors": 3
+  },
+  "fold_families": 4,
+  "hypotheses_per_fold": 6,
+  "checked_hac_series": 24,
+  "maximum_absolute_errors": {
+    "mean": 0.0,
+    "standard_error": 6.938893903907228e-18,
+    "p_value": 0.0
+  },
+  "future_and_purge_mutation_checks": 4,
+  "planted_control": {
+    "future_winner_excluded_initially": true,
+    "later_past_evidence_can_select_it": true,
+    "reversal_first_test_signed_rank_ic": -0.34376105420107855
+  },
+  "limitations": [
+    "Engineering timing/oracle checks, not market alpha or post-selection calibration.",
+    "Input causality and declared horizon are assumptions; multiple folds do not form a single corrected family."
+  ]
+}

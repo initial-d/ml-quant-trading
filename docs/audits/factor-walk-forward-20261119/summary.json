@@ -1,0 +1,46 @@
+{
+  "category": "synthetic engineering and planted timing controls",
+  "implementation_commit": "c3ffea5",
+  "cases": [
+    {
+      "case": "frozen",
+      "source": "docs/benchmarks/daily-factor-ic-20261026/report.json.gz",
+      "source_sha256": "0c91ee2798e5b8f29e3b96eddbc41e5a26fdf5d94456a2681f1392d69e09e88e",
+      "report": "frozen-report.json.gz",
+      "report_sha256": "03c3d4e50a3c3be9f0976604daf90697e98f4297706be76dad14a3d84e0637bf",
+      "report_payload_sha256": "f57225835d6765bcba125a2449f0cf451015b60a0d0b2db820aafd9f4db2e066",
+      "check": "frozen-check.json",
+      "check_sha256": "9b154384a3d2838be82c0e0afa872348eb291508303ba38469cf3f3a6be7e38c",
+      "summary": {
+        "folds": 6,
+        "folds_with_selection": 0,
+        "test_rows": 299,
+        "test_rows_with_selection": 0,
+        "observed_test_rows": 0,
+        "distinct_selected_factors": 0
+      },
+      "checked_hac_series": 2556,
+      "future_and_purge_mutation_checks": 6
+    },
+    {
+      "case": "control",
+      "source": "docs/audits/factor-walk-forward-20261119/control-source.json",
+      "source_sha256": "aeda9023a6ffd454fa8a264afb90ec4be6cb1f1f15efea941d4f98833c433dbf",
+      "report": "control-report.json.gz",
+      "report_sha256": "a6a28c8d9879aaecd905d0af695668e94f470b51db452ae106d671a36de330b8",
+      "report_payload_sha256": "886a608e90fbed592cec957b65a87211a176df0cad9eb8dfd6ecadb0778b1955",
+      "check": "control-check.json",
+      "check_sha256": "5b024988d1b663fa20c0e2c92a4a5e969166da22d0e6923a303c63b9b3265092",
+      "summary": {
+        "folds": 4,
+        "folds_with_selection": 4,
+        "test_rows": 200,
+        "test_rows_with_selection": 200,
+        "observed_test_rows": 200,
+        "distinct_selected_factors": 3
+      },
+      "checked_hac_series": 24,
+      "future_and_purge_mutation_checks": 4
+    }
+  ]
+}

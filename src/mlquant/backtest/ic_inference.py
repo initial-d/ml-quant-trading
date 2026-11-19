@@ -134,6 +134,47 @@ def adjust_pvalues(p_values, *, method: str = "by") -> np.ndarray:
     return output
 
 
+def _validated_daily_report(report: dict):
+    """Validate frozen series without computing any full-sample statistics."""
+    if not isinstance(report, dict):
+        raise ValueError("report must be an object")
+    factors = report.get("factors")
+    if not isinstance(factors, list) or not factors:
+        raise ValueError("report must contain a nonempty factors list")
+    horizon = report.get("label_horizon", 1)
+    if type(horizon) is not int or horizon < 1:
+        raise ValueError("label_horizon must be a positive integer")
+    names, series, length = set(), [], None
+    for factor in factors:
+        if not isinstance(factor, dict):
+            raise ValueError("each factor must be an object")
+        name = factor.get("name")
+        if not isinstance(name, str) or not name or name in names:
+            raise ValueError("factor names must be unique nonempty strings")
+        names.add(name)
+        pair = []
+        for metric in ("ic", "rank_ic"):
+            key = "daily_" + metric
+            if key not in factor:
+                raise ValueError("each factor must contain daily_ic and daily_rank_ic")
+            values = np.asarray(factor[key], dtype=np.float64)
+            if values.ndim != 1:
+                raise ValueError("daily_ic must be a one-dimensional original-date series")
+            if np.isinf(values).any() or np.any(np.abs(values[np.isfinite(values)]) > 1 + 1e-12):
+                raise ValueError("finite IC observations must lie in [-1, 1]; infinity is invalid")
+            if length is None:
+                length = len(values)
+            if len(values) != length or factor.get("total_dates", length) != length:
+                raise ValueError("all factor series must share the original date grid")
+            if factor.get("valid_dates", int(np.isfinite(values).sum())) != int(np.isfinite(values).sum()):
+                raise ValueError("valid_dates disagrees with the retained daily series")
+            pair.append(values)
+        if not np.array_equal(np.isfinite(pair[0]), np.isfinite(pair[1])):
+            raise ValueError("daily IC and RankIC must share their reported eligible dates")
+        series.append((name, *pair))
+    return series, horizon, length
+
+
 def infer_factor_ic_report(
     report: dict, *, max_lag: int | None = None, min_dates: int = 20,
     confidence: float = .95, alpha: float = .05, method: str = "by",
@@ -148,39 +189,15 @@ def infer_factor_ic_report(
     """
     if isinstance(alpha, bool) or not math.isfinite(alpha) or not 0 < alpha < 1:
         raise ValueError("alpha must be finite and in (0, 1)")
-    if not isinstance(report, dict):
-        raise ValueError("report must be an object")
-    factors = report.get("factors")
-    if not isinstance(factors, list) or not factors:
-        raise ValueError("report must contain a nonempty factors list")
-    horizon = report.get("label_horizon", 1)
-    names, rows, tests, length = set(), [], [], None
-    for factor in factors:
-        if not isinstance(factor, dict):
-            raise ValueError("each factor must be an object")
-        name = factor.get("name")
-        if not isinstance(name, str) or not name or name in names:
-            raise ValueError("factor names must be unique nonempty strings")
-        names.add(name)
+    series, horizon, length = _validated_daily_report(report)
+    rows, tests = [], []
+    for name, ic, rank_ic in series:
         row = {"name": name}
-        masks = []
-        for metric in ("ic", "rank_ic"):
-            key = "daily_" + metric
-            if key not in factor:
-                raise ValueError("each factor must contain daily_ic and daily_rank_ic")
-            result = ic_mean_inference(factor[key], max_lag=max_lag, horizon=horizon,
+        for metric, values in (("ic", ic), ("rank_ic", rank_ic)):
+            result = ic_mean_inference(values, max_lag=max_lag, horizon=horizon,
                                        min_dates=min_dates, confidence=confidence)
-            if length is None:
-                length = result.total_dates
-            if result.total_dates != length or factor.get("total_dates", length) != length:
-                raise ValueError("all factor series must share the original date grid")
-            if factor.get("valid_dates", result.valid_dates) != result.valid_dates:
-                raise ValueError("valid_dates disagrees with the retained daily series")
-            masks.append(np.isfinite(np.asarray(factor[key], dtype=np.float64)))
             row[metric] = asdict(result)
             tests.append(row[metric])
-        if not np.array_equal(*masks):
-            raise ValueError("daily IC and RankIC must share their reported eligible dates")
         rows.append(row)
     adjusted = adjust_pvalues([test["p_value"] for test in tests], method=method)
     for test, value in zip(tests, adjusted):
