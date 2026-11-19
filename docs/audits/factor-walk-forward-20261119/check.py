@@ -107,6 +107,8 @@ def main():
             for key in ("daily_ic", "daily_rank_ic"):
                 row[key][b:] = [None if v is None else -.9 if v >= 0 else .9 for v in row[key][b:]]
         rerun = walk_forward_factor_ic(changed, **cfg)["folds"][fold["fold"]]
+        # Match the retained JSON representation (e.g. interval tuple -> list).
+        rerun = json.loads(json.dumps(rerun, allow_nan=False))
         require(rerun["training"] == fold["training"] and rerun["selection"] == fold["selection"],
                 "future mutation changed past decisions")
         mutation_checks += 1

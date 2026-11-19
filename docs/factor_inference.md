@@ -136,3 +136,7 @@ no post-selection p-values. Signed IC is per factor, not portfolio returns or
 the IC of a combined score. The input family, universe and preprocessing still
 need to be causal and fixed independently of held-out outcomes; the declared
 horizon must accurately describe when labels become known.
+
+The [full-factor walk-forward audit](audits/factor-walk-forward-20261119/README.md)
+retains all six frozen-source folds, independent covariance/correction checks
+and separate planted reversal/future-winner controls.
