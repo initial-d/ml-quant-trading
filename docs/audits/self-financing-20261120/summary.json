@@ -1,0 +1,61 @@
+{
+  "category": "synthetic historical-accounting engineering diagnostic",
+  "implementation_commit": "00bf65196c551d67aaa3273bdf7b50f360fe0b14",
+  "implementation_sha256": "aa3596cfc9a6bdc6968eeb54094fe30398d7166d6e78ebcbb1d615c9d2da145d",
+  "audit_file": "audit.json.gz",
+  "audit_sha256": "004cf81a9d77c4b42531dbc59a3bb81f9bd1b7bf0a2036760556c49578b4917e",
+  "audit_payload_sha256": "08db4fa7ab00bf3a9c06eaea53e7e2b890a7764a04de84c3a77add96f810ab64",
+  "cases": [
+    {
+      "case": "fixed_50_50",
+      "shape": [
+        252,
+        2
+      ],
+      "one_way_costs_bps": 20.0,
+      "maximum_absolute_errors": {
+        "equity": 4.3853809472693683e-14,
+        "fees": 1.8431436932253575e-18,
+        "cash": 0.0,
+        "trades": 5.620504062164855e-16
+      },
+      "future_mutation_check": "passed",
+      "self_financing_final_equity": 0.9880339658169214,
+      "target_difference_final_equity": 0.998
+    },
+    {
+      "case": "changing_targets_and_cash",
+      "shape": [
+        75,
+        4
+      ],
+      "one_way_costs_bps": 100.0,
+      "maximum_absolute_errors": {
+        "equity": 5.662137425588298e-15,
+        "fees": 6.765421556309548e-17,
+        "cash": 3.552713678800501e-15,
+        "trades": 3.2751579226442118e-15
+      },
+      "future_mutation_check": "passed",
+      "self_financing_final_equity": 0.6221158734358281,
+      "target_difference_final_equity": 0.6209295936497496
+    },
+    {
+      "case": "synthetic_500x200",
+      "shape": [
+        500,
+        200
+      ],
+      "one_way_costs_bps": 5.0,
+      "maximum_absolute_errors": {
+        "equity": 5.040412531798211e-14,
+        "fees": 2.879912020664621e-19,
+        "cash": 5.245803791353865e-15,
+        "trades": 1.452830911130576e-17
+      },
+      "future_mutation_check": "passed",
+      "self_financing_final_equity": 0.9794284743916152,
+      "target_difference_final_equity": 0.9820618425098924
+    }
+  ]
+}

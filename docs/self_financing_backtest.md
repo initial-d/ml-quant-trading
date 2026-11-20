@@ -66,3 +66,7 @@ This is historical accounting with complete fills at each row's mark, not a
 tradability, settlement, order-book, market-impact or capacity simulator.
 Factor selection and input weights still require their own causality checks.
 Cost assumptions need market-specific calibration before empirical use.
+
+The [cash-ledger audit](audits/self-financing-20261120/README.md) retains
+independent Decimal reconstructions, future-mutation controls and the full
+synthetic comparison, including cases where the difference changes direction.
