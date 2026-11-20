@@ -24,6 +24,7 @@ import numpy as np
 import torch
 
 from ..backtest.engine import run_backtest
+from ..backtest.self_financing import run_self_financing_backtest
 from ..backtest.ic_inference import infer_factor_ic_report
 from ..backtest.factor_walk_forward import walk_forward_factor_ic
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
@@ -104,6 +105,7 @@ def _write_backtest_summary(
     config_path: str,
     costs_bps: float,
     evaluation: dict | None = None,
+    accounting: dict | None = None,
 ) -> tuple[Path, Path]:
     """Write portable JSON and Markdown summaries for sharing and review."""
     clean_metrics = {
@@ -124,6 +126,8 @@ def _write_backtest_summary(
     }
     if evaluation is not None:
         payload["evaluation"] = evaluation
+    if accounting is not None:
+        payload["accounting"] = accounting
     json_path = output_dir / "summary.json"
     json_path.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
@@ -149,6 +153,10 @@ def _write_backtest_summary(
         else:
             display = str(value)
         rows.append(f"| `{key}` | {display} |")
+    accounting_lines = [] if accounting is None else [
+        f"- Accounting mode: `{accounting['mode']}`",
+        "- " + accounting["description"],
+    ]
 
     markdown = "\n".join(
         [
@@ -157,6 +165,7 @@ def _write_backtest_summary(
             f"- Config: `{config_path}`",
             f"- Transaction cost assumption: `{costs_bps:g} bps`",
             *window_lines,
+            *accounting_lines,
             "- Workflow: synthetic data → 213 factors → MLP → Markowitz → backtest",
             f"- Source: [{PROJECT_URL}]({PROJECT_URL})",
             (
@@ -356,7 +365,9 @@ def cmd_portfolio(config_path: str) -> None:
 
 @cli.command("backtest")
 @click.option("--config", "config_path", required=True, type=click.Path(exists=True))
-def cmd_backtest(config_path: str) -> None:
+@click.option("--accounting", default=None, type=click.Choice(["target_difference", "self_financing"]),
+              help="Override backtest_accounting in config; default target_difference for archived compatibility.")
+def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
     cfg = load_config(config_path)
     art = _artifacts_dir(cfg)
     panel_blob = torch.load(art / "panel.pt", weights_only=False)
@@ -371,9 +382,23 @@ def cmd_backtest(config_path: str) -> None:
 
     weights = weight_blob["weights"].numpy()
     costs_bps = cfg.get("costs_bps", 5.0)
+    mode = accounting if accounting is not None else cfg.get("backtest_accounting", "target_difference")
+    if mode not in ("target_difference", "self_financing"):
+        raise click.BadParameter("backtest_accounting must be target_difference or self_financing")
     # Score only the out-of-sample window; the engine charges the entry
     # trade on its first row.
-    res = run_backtest(weights[oos:], rets[oos:], costs_bps=costs_bps)
+    operation = run_self_financing_backtest if mode == "self_financing" else run_backtest
+    res = operation(weights[oos:], rets[oos:], costs_bps=costs_bps)
+    accounting_metadata = {"mode": mode, "description": (
+        "Marked holdings and residual cash; one-way fees on actual trades paid from NAV. "
+        "Long-only, complete fills, zero cash interest; no execution/settlement/volume model."
+        if mode == "self_financing" else
+        "Approximation: fees on consecutive target differences, including entry; no drift-aware trade ledger."
+    )}
+    if mode == "self_financing":
+        accounting_metadata.update(initial_equity=res.initial_equity, bankrupt_index=res.bankrupt_index,
+                                   target_rounding_max_excess=res.target_rounding_max_excess,
+                                   ledger="backtest.pkl", fee_basis="one-way actual traded notional")
     evaluation = None
     if oos > 0:
         dates = panel_blob["dates"]
@@ -394,6 +419,7 @@ def cmd_backtest(config_path: str) -> None:
         config_path=config_path,
         costs_bps=costs_bps,
         evaluation=evaluation,
+        accounting=accounting_metadata,
     )
 
     click.echo("\nBacktest summary" + (" (out-of-sample window)" if evaluation else ""))
