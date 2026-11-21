@@ -244,7 +244,7 @@ submit a structured
 | `mlquant.training` | Factor dataset, augmentation, and trainer |
 | `mlquant.models` | MLP, Transformer, AdjMSE, IC, and RankIC losses |
 | `mlquant.portfolio` | Long-only Markowitz-style construction with shrunk covariance support |
-| `mlquant.backtest` | Vectorized backtest, Sharpe, IC, IR, and drawdown metrics |
+| `mlquant.backtest` | Vectorized backtest, [self-financing cash ledger](docs/self_financing_backtest.md), [constrained historical fills](docs/constrained_backtest.md), and IC/risk metrics |
 | `mlquant.systemone` | Typed portfolio-intent decisions from structured pipeline state |
 
 ## Data Sources

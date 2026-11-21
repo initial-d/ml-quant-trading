@@ -64,6 +64,8 @@ equity arrays use the same monetary unit as `initial_equity` (default one).
 
 This is historical accounting with complete fills at each row's mark, not a
 tradability, settlement, order-book, market-impact or capacity simulator.
+For blocked sells, directional permissions and cash-funded partial purchases,
+use the opt-in [constrained mode](constrained_backtest.md).
 Factor selection and input weights still require their own causality checks.
 Cost assumptions need market-specific calibration before empirical use.
 

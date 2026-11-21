@@ -25,6 +25,7 @@ import torch
 
 from ..backtest.engine import run_backtest
 from ..backtest.self_financing import run_self_financing_backtest
+from ..backtest.constrained import run_constrained_backtest, panel_trade_permissions
 from ..backtest.ic_inference import infer_factor_ic_report
 from ..backtest.factor_walk_forward import walk_forward_factor_ic
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
@@ -365,7 +366,7 @@ def cmd_portfolio(config_path: str) -> None:
 
 @cli.command("backtest")
 @click.option("--config", "config_path", required=True, type=click.Path(exists=True))
-@click.option("--accounting", default=None, type=click.Choice(["target_difference", "self_financing"]),
+@click.option("--accounting", default=None, type=click.Choice(["target_difference", "self_financing", "constrained"]),
               help="Override backtest_accounting in config; default target_difference for archived compatibility.")
 def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
     cfg = load_config(config_path)
@@ -378,24 +379,39 @@ def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
         oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0))
 
     # Halt-aware returns: loaders zero-fill halted prices.
-    rets = _load_panel(art).returns.numpy()
+    panel = _load_panel(art)
+    rets = panel.returns.numpy()
 
     weights = weight_blob["weights"].numpy()
     costs_bps = cfg.get("costs_bps", 5.0)
     mode = accounting if accounting is not None else cfg.get("backtest_accounting", "target_difference")
-    if mode not in ("target_difference", "self_financing"):
-        raise click.BadParameter("backtest_accounting must be target_difference or self_financing")
+    if mode not in ("target_difference", "self_financing", "constrained"):
+        raise click.BadParameter("backtest_accounting must be target_difference, self_financing or constrained")
     # Score only the out-of-sample window; the engine charges the entry
     # trade on its first row.
-    operation = run_self_financing_backtest if mode == "self_financing" else run_backtest
-    res = operation(weights[oos:], rets[oos:], costs_bps=costs_bps)
+    if mode == "constrained":
+        buy, sell, permissions_metadata = panel_trade_permissions(panel)
+        res = run_constrained_backtest(weights[oos:], rets[oos:], costs_bps=costs_bps,
+                                        buy_allowed=buy[oos:], sell_allowed=sell[oos:])
+    else:
+        operation = run_self_financing_backtest if mode == "self_financing" else run_backtest
+        res = operation(weights[oos:], rets[oos:], costs_bps=costs_bps)
     accounting_metadata = {"mode": mode, "description": (
         "Marked holdings and residual cash; one-way fees on actual trades paid from NAV. "
         "Long-only, complete fills, zero cash interest; no execution/settlement/volume model."
         if mode == "self_financing" else
         "Approximation: fees on consecutive target differences, including entry; no drift-aware trade ledger."
     )}
-    if mode == "self_financing":
+    if mode == "constrained":
+        accounting_metadata.update(
+            description="Marked actual holdings; directional price/volume gates; sells then cash-funded "
+                        "pro-rata buys. One-way fees on fills; no queue/settlement/impact model.",
+            execution=permissions_metadata,
+            buy_allowed_sha256=hashlib.sha256(buy[oos:].tobytes()).hexdigest(),
+            sell_allowed_sha256=hashlib.sha256(sell[oos:].tobytes()).hexdigest(),
+            notional_cap="none; Python API accepts max_trade_values in account currency units",
+        )
+    if mode in ("self_financing", "constrained"):
         accounting_metadata.update(initial_equity=res.initial_equity, bankrupt_index=res.bankrupt_index,
                                    target_rounding_max_excess=res.target_rounding_max_excess,
                                    ledger="backtest.pkl", fee_basis="one-way actual traded notional")
