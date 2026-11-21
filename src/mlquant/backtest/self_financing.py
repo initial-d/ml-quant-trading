@@ -71,6 +71,16 @@ def run_self_financing_backtest(
     An asset with a recorded -100% return cannot receive positive targets
     again; an account with zero NAV cannot be funded or restarted.
     """
+    return _run_cash_ledger(weights, returns, costs_bps=costs_bps,
+                            initial_equity=initial_equity, benchmark=benchmark)
+
+
+def _run_cash_ledger(weights, returns, *, costs_bps=5.0, initial_equity=1.0,
+                     benchmark=None, execution=None):
+    """Shared accounting; optional row-local execution returns trades/cash.
+
+    Returning None from execution keeps the complete-fill arithmetic unchanged.
+    """
     target = np.asarray(weights, dtype=np.float64).copy()
     realized = np.asarray(returns, dtype=np.float64)
     if target.ndim != 2 or target.shape != realized.shape or min(target.shape, default=0) < 1:
@@ -124,12 +134,18 @@ def run_self_financing_backtest(
             raise ValueError("positive target after an asset's total loss; re-entry is unsupported")
         pre_weights[t] = marked / before
         fraction = _post_fee_fraction(target[t], pre_weights[t], rate)
-        holdings = target[t] * (before * fraction)
-        trades[t] = holdings - marked
+        desired = target[t] * (before * fraction)
+        requested = desired - marked
+        filled = None if execution is None else execution(t, requested, marked, cash, rate)
+        if filled is None:
+            holdings = desired
+            trades[t] = requested
+            cash = max(0.0, before * fraction - float(holdings.sum()))
+        else:
+            trades[t], cash = filled
+            holdings = marked + trades[t]
         l1[t] = float(np.abs(trades[t] / before).sum())
         fees[t] = before * (rate * l1[t])
-        # Residual cash, with only an ULP-level floor at a fully invested row.
-        cash = max(0.0, before * fraction - float(holdings.sum()))
         after = float(holdings.sum() + cash)
         if after == 0:
             raise ValueError("post-fee NAV underflow; choose a representable initial_equity scale")

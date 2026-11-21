@@ -62,3 +62,4 @@ jobs:
           python -m mlquant.cli.main train     --config configs/small.yaml
           python -m mlquant.cli.main portfolio --config configs/small.yaml
           python -m mlquant.cli.main backtest  --config configs/small.yaml
+          python -m mlquant.cli.main backtest  --config configs/small.yaml --accounting constrained
