@@ -140,6 +140,7 @@ python -m pip install -e '.[dev]'
 | Understand the claims | [Research Card](docs/research_card.md) | Intended use, non-goals, validation status, and data caveats |
 | Try public data | [Public-Data Mini Reproduction](docs/public_data_mini_reproduction.md) | A small yfinance factor-IC check with documented outputs |
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
+| Stress account size | [Capital-Capacity Sensitivity](docs/capital_capacity.md) | Frozen targets across capital sizes, lagged monetary caps, fill ratios and actual exposure |
 | Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
 | Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
 | Test a coding or quant agent | [Agent Quant Benchmark Challenge](docs/agent_quant_benchmark_challenge.md) | A zero-account challenge for agent reproducibility, evidence preservation, and caveat discipline |

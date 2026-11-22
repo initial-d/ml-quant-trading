@@ -71,6 +71,9 @@ volume participation fractions. Scaling account size requires scaling caps
 too. The CLI applies no notional cap. None means unrestricted. No broadcasting
 or numeric-to-boolean coercion is accepted for permissions.
 
+To derive strictly lagged monetary caps from `panel.amount` and replay the same
+targets across account sizes, use [the capacity API/CLI](capital_capacity.md).
+
 ## Inspect fills and missed targets
 
 `backtest.pkl` retains the complete `ConstrainedResult`, including the original
