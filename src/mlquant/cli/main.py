@@ -26,6 +26,7 @@ import torch
 from ..backtest.engine import run_backtest
 from ..backtest.self_financing import run_self_financing_backtest
 from ..backtest.constrained import run_constrained_backtest, panel_trade_permissions
+from ..backtest.capacity import run_capacity_backtest
 from ..backtest.ic_inference import infer_factor_ic_report
 from ..backtest.factor_walk_forward import walk_forward_factor_ic
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
@@ -446,6 +447,123 @@ def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
         else:
             click.echo(f"  {k:<12s}  {v:>10}")
     click.echo(f"\nShareable reports: {markdown_path}  {json_path}")
+
+
+@cli.command("capacity")
+@click.option("--config", "config_path", required=True, type=click.Path(exists=True))
+@click.option("--capital", "capitals", multiple=True, required=True, type=click.FloatRange(min=0, min_open=True),
+              help="Repeat for every frozen capital scenario, in the account currency.")
+@click.option("--participation-rate", default=.01, show_default=True, type=click.FloatRange(0, 1))
+@click.option("--lookback", default=20, show_default=True, type=click.IntRange(min=1))
+@click.option("--amount-scale", default=1., show_default=True, type=click.FloatRange(min=0, min_open=True),
+              help="Convert panel.amount into account currency; e.g. 1000 for amounts in thousands.")
+@click.option("--currency", required=True, help="Explicit common monetary unit of turnover and capital, e.g. CNY.")
+@click.option("--data-category", required=True,
+              type=click.Choice(["synthetic", "public-data", "provider-backed", "proprietary-data"]))
+@click.option("--data-source", required=True, help="Name the frozen panel's source; no downloads occur.")
+@click.option("--output-dir", default=None, type=click.Path(path_type=Path, file_okay=False),
+              help="Default artifacts_dir/capacity; retains JSON, Markdown and full pickled ledgers.")
+def cmd_capacity(config_path, capitals, participation_rate, lookback, amount_scale,
+                 currency, data_category, data_source, output_dir):
+    """Replay saved targets across capital sizes with strictly lagged turnover caps."""
+    cfg = load_config(config_path)
+    art = _artifacts_dir(cfg)
+    panel = _load_panel(art)
+    if panel.amount is None:
+        raise click.BadParameter("panel.amount is required in known monetary units; share volume is not a substitute")
+    if not currency.strip() or not data_source.strip():
+        raise click.BadParameter("currency and data-source must be nonempty")
+    weights = torch.load(art / "weights.pt", weights_only=False)["weights"].numpy()
+    pred_path = art / "predictions.pt"
+    oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0)) if pred_path.exists() else 0
+    buy, sell, gate_metadata = panel_trade_permissions(panel)
+    try:
+        if not math.isfinite(amount_scale):
+            raise ValueError("amount-scale must be finite")
+        with np.errstate(over="raise", invalid="ignore"):
+            turnover = panel.amount.detach().cpu().numpy().astype(np.float64) * amount_scale
+        result = run_capacity_backtest(
+            weights, panel.returns.numpy(), turnover, capitals, start_index=oos,
+            participation_rate=participation_rate, lookback=lookback,
+            buy_allowed=buy, sell_allowed=sell, costs_bps=cfg.get("costs_bps", 5.),
+        )
+    except (ValueError, FloatingPointError) as exc:
+        raise click.BadParameter(str(exc)) from exc
+    destination = output_dir if output_dir is not None else art / "capacity"
+    # Preserve inputs and the ordinary backtest artifacts when choosing an output path.
+    input_paths = [art / "panel.pt", art / "weights.pt"] + ([pred_path] if pred_path.exists() else [])
+    for name in ("summary.json", "summary.md", "capacity.pkl"):
+        if (destination / name).resolve() in {path.resolve() for path in input_paths} or destination.resolve() == art.resolve():
+            raise click.BadParameter("capacity output must use a separate directory from the pipeline artifacts")
+    root = Path(__file__).resolve().parents[3]
+    implementation = Path(__file__).resolve().parents[1] / "backtest"
+    commit = None
+    if (root / "pyproject.toml").is_file():
+        try:
+            commit = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True,
+                                             stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.SubprocessError):
+            pass
+    cpu = platform.processor() or platform.machine()
+    if sys.platform == "darwin":
+        cpu = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+    payload = {
+        "category": data_category, "data_source": data_source,
+        "workflow": "frozen portfolio capital-capacity sensitivity; no retraining or scenario selection",
+        "commit": commit, "command": shlex.join([sys.executable, *sys.argv]),
+        "python": sys.version, "pytorch": torch.__version__, "numpy": np.__version__,
+        "os": platform.platform(), "cpu": cpu, "device": "cpu", "gpu": "unused",
+        "currency": currency, "amount_scale": amount_scale,
+        "costs_bps_one_way": cfg.get("costs_bps", 5.),
+        "lookback": result.lookback, "participation_rate": result.participation_rate,
+        "cap_policy": "rate * mean(amount[t-lookback:t]); full finite history required, else zero cap",
+        "execution": gate_metadata,
+        "reference_policy": "same permission gates without notional caps, initial equity one",
+        "input_sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in input_paths},
+        "implementation_sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                                  for path in (implementation / "capacity.py", implementation / "constrained.py",
+                                               implementation / "self_financing.py") if path.is_file()},
+        "trade_caps_sha256": hashlib.sha256(result.trade_caps.tobytes()).hexdigest(),
+        "evaluation": {"start_index": oos, "start_date": _date_str(panel.dates[oos]),
+                       "end_date": _date_str(panel.dates[-1]), "n_dates": len(weights) - oos,
+                       "n_assets": weights.shape[1], "n_pre_evaluation_rows": oos},
+        "liquidity_coverage": {"ready_cells": int(result.liquidity_ready.sum()),
+                               "total_cells": int(result.liquidity_ready.size),
+                               "zero_cap_cells": int((result.trade_caps == 0).sum())},
+        "scenarios": result.rows,
+        "limitations": ["Lagged monetary turnover budgets are a sensitivity policy, not actual daily participation or proven market capacity.",
+                        "Same-row sale proceeds and mark-price fills; no impact, slippage, settlement or queue model.",
+                        "Currency and amount-unit conversion are supplied by the caller, not inferred from vendor column names.",
+                        "The uncapped comparison isolates notional caps; it does not establish alpha or select an optimal capital.",
+                        "Cash weights average positive-NAV dates only; bankruptcy remains recorded."],
+    }
+    def clean(value):
+        if isinstance(value, float) and not math.isfinite(value):
+            return None
+        if isinstance(value, dict):
+            return {key: clean(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [clean(item) for item in value]
+        return value
+    destination.mkdir(parents=True, exist_ok=True)
+    (destination / "summary.json").write_text(json.dumps(clean(payload), indent=2, allow_nan=False) + "\n")
+    with (destination / "capacity.pkl").open("wb") as handle:
+        pickle.dump(result, handle)
+    lines = ["# Frozen-portfolio capital-capacity sensitivity", "",
+             f"- Evidence: {data_category}; source: {data_source}; currency: {currency}",
+             f"- Lookback: {lookback} rows, strictly before the order date; participation budget: {participation_rate:g}",
+             f"- Evaluation: {_date_str(panel.dates[oos])} to {_date_str(panel.dates[-1])}; every account starts in cash.",
+             "- Reference uses the same directional permissions without monetary caps.", "",
+             "| Initial capital | Final NAV multiple | Uncapped multiple | Fill ratio | Mean cash weight | Mean target L1 error |",
+             "|---:|---:|---:|---:|---:|---:|"]
+    for row in result.rows:
+        lines.append("| " + " | ".join(f"{row[key]:.6g}" for key in (
+            "initial_capital", "final_equity_multiple", "uncapped_final_equity_multiple",
+            "notional_fill_ratio", "mean_cash_weight", "mean_target_weight_l1")) + " |")
+    lines.extend(["", "Full assumptions, environment, input hashes and per-scenario metrics: `summary.json`.",
+                  "Full ledgers and lagged caps: `capacity.pkl`.", "", *["- " + item for item in payload["limitations"]], ""])
+    (destination / "summary.md").write_text("\n".join(lines))
+    click.echo(f"Replayed {len(capitals)} frozen capital scenarios; wrote {destination}")
 
 
 def _frozen_factor_report(input_report, json_out, operation, options, implementation_files):
