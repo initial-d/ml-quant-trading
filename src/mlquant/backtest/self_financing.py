@@ -76,7 +76,7 @@ def run_self_financing_backtest(
 
 
 def _run_cash_ledger(weights, returns, *, costs_bps=5.0, initial_equity=1.0,
-                     benchmark=None, execution=None):
+                     benchmark=None, execution=None, decision=None):
     """Shared accounting; optional row-local execution returns trades/cash.
 
     Returning None from execution keeps the complete-fill arithmetic unchanged.
@@ -130,17 +130,29 @@ def _run_cash_ledger(weights, returns, *, costs_bps=5.0, initial_equity=1.0,
             bankrupt = t
             continue
         lost_assets |= realized[t] == -1
+        pre_weights[t] = marked / before
+        hold = False
+        if decision is not None:
+            proposed = decision(t, marked.copy(), cash, before)
+            hold = proposed is None
+            row = pre_weights[t].copy() if hold else np.asarray(proposed, dtype=np.float64).copy()
+            if row.shape != (N,) or not np.isfinite(row).all() or np.any(row < 0) or row.sum() > 1 + 1e-6:
+                raise ValueError("decision must return finite long-only [N] post-fee targets within budget")
+            excess = max(excess, float(max(0, row.sum() - 1)))
+            if row.sum() > 1:
+                row /= row.sum()
+            target[t] = row
         if np.any(target[t, lost_assets] > 0):
             raise ValueError("positive target after an asset's total loss; re-entry is unsupported")
-        pre_weights[t] = marked / before
-        fraction = _post_fee_fraction(target[t], pre_weights[t], rate)
-        desired = target[t] * (before * fraction)
+        fraction = 1.0 if hold else _post_fee_fraction(target[t], pre_weights[t], rate)
+        desired = marked.copy() if hold else target[t] * (before * fraction)
         requested = desired - marked
         filled = None if execution is None else execution(t, requested, marked, cash, rate)
         if filled is None:
             holdings = desired
             trades[t] = requested
-            cash = max(0.0, before * fraction - float(holdings.sum()))
+            if not hold:
+                cash = max(0.0, before * fraction - float(holdings.sum()))
         else:
             trades[t], cash = filled
             holdings = marked + trades[t]

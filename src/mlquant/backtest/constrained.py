@@ -54,6 +54,14 @@ def run_constrained_backtest(
     This is a historical mark-price policy with same-row sale proceeds, zero
     cash interest and no settlement, queue, impact, lot-size or broker model.
     """
+    return _run_constrained_ledger(weights, returns, buy_allowed=buy_allowed, sell_allowed=sell_allowed,
+                                    max_trade_values=max_trade_values, costs_bps=costs_bps,
+                                    initial_equity=initial_equity, benchmark=benchmark)
+
+
+def _run_constrained_ledger(weights, returns, *, buy_allowed=None, sell_allowed=None,
+                            max_trade_values=None, costs_bps=5., initial_equity=1.,
+                            benchmark=None, decision=None):
     shape = np.asarray(weights).shape
     if len(shape) != 2 or min(shape) < 1:
         raise ValueError("weights must be a nonempty [T,N] grid")
@@ -86,7 +94,8 @@ def run_constrained_backtest(
         return filled_buys - sales, remaining
 
     base = _run_cash_ledger(weights, returns, costs_bps=costs_bps,
-                            initial_equity=initial_equity, benchmark=benchmark, execution=execute)
+                            initial_equity=initial_equity, benchmark=benchmark, execution=execute,
+                            decision=decision)
     unfilled = requested - base.trade_values
     total_requested = float(np.abs(requested).sum())
     total_filled = float(np.abs(base.trade_values).sum())
