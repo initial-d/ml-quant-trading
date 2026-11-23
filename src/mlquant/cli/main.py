@@ -15,7 +15,7 @@ import platform
 import shlex
 import subprocess
 import sys
-from dataclasses import replace
+from dataclasses import replace, asdict
 from importlib.resources import as_file, files
 from pathlib import Path
 
@@ -26,7 +26,9 @@ import torch
 from ..backtest.engine import run_backtest
 from ..backtest.self_financing import run_self_financing_backtest
 from ..backtest.constrained import run_constrained_backtest, panel_trade_permissions
-from ..backtest.capacity import run_capacity_backtest
+from ..backtest.capacity import run_capacity_backtest, lagged_turnover_caps
+from ..backtest.rebalance import run_rebalance_backtest
+from ..portfolio.rebalance import RebalanceConfig
 from ..backtest.ic_inference import infer_factor_ic_report
 from ..backtest.factor_walk_forward import walk_forward_factor_ic
 from ..data.synthetic import SyntheticConfig, make_synthetic_panel
@@ -564,6 +566,105 @@ def cmd_capacity(config_path, capitals, participation_rate, lookback, amount_sca
                   "Full ledgers and lagged caps: `capacity.pkl`.", "", *["- " + item for item in payload["limitations"]], ""])
     (destination / "summary.md").write_text("\n".join(lines))
     click.echo(f"Replayed {len(capitals)} frozen capital scenarios; wrote {destination}")
+
+
+@cli.command("rebalance")
+@click.option("--config", "config_path", required=True, type=click.Path(exists=True))
+@click.option("--initial-capital", default=1., show_default=True, type=click.FloatRange(min=0, min_open=True))
+@click.option("--participation-rate", default=None, type=click.FloatRange(0, 1),
+              help="Optional monetary caps from strictly prior turnover; requires panel.amount.")
+@click.option("--liquidity-lookback", default=20, show_default=True, type=click.IntRange(min=1))
+@click.option("--amount-scale", default=1., type=click.FloatRange(min=0, min_open=True))
+@click.option("--currency", required=True)
+@click.option("--data-category", required=True,
+              type=click.Choice(["synthetic", "public-data", "provider-backed", "proprietary-data"]))
+@click.option("--data-source", required=True)
+@click.option("--output-dir", default=None, type=click.Path(path_type=Path, file_okay=False))
+def cmd_rebalance(config_path, initial_capital, participation_rate, liquidity_lookback,
+                  amount_scale, currency, data_category, data_source, output_dir):
+    """Replan saved return forecasts from actual holdings with cash-paid fees."""
+    cfg = load_config(config_path)
+    art = _artifacts_dir(cfg)
+    destination = output_dir if output_dir is not None else art / "rebalance"
+    if destination.resolve() == art.resolve():
+        raise click.BadParameter("rebalance output must use a separate directory from ordinary artifacts")
+    if not currency.strip() or not data_source.strip():
+        raise click.BadParameter("currency and data-source must be nonempty")
+    panel = _load_panel(art)
+    predictions = torch.load(art / "predictions.pt", weights_only=False)
+    forecasts = predictions["pred"].numpy()
+    buy, sell, gate_metadata = panel_trade_permissions(panel)
+    values = cfg.get("rebalance", {}).copy()
+    values["costs_bps"] = cfg.get("costs_bps", 5.)  # One fee rate for planning AND execution.
+    try:
+        profile = RebalanceConfig(**values)
+        caps, ready = None, None
+        if participation_rate is not None:
+            if panel.amount is None:
+                raise ValueError("panel.amount in known currency units is required for monetary caps")
+            if not math.isfinite(amount_scale):
+                raise ValueError("amount-scale must be finite")
+            caps, ready = lagged_turnover_caps(panel.amount.numpy().astype(np.float64) * amount_scale,
+                                              participation_rate=participation_rate, lookback=liquidity_lookback)
+        result = run_rebalance_backtest(forecasts, panel.returns.numpy(), cfg=profile,
+            lookback=cfg.get("cov_lookback", 60), start_index=predictions.get("oos_start", 0),
+            initial_equity=initial_capital, buy_allowed=buy, sell_allowed=sell, max_trade_values=caps)
+    except (ValueError, TypeError) as exc:
+        raise click.BadParameter(str(exc)) from exc
+    root = Path(__file__).resolve().parents[3]
+    commit = None
+    if (root / "pyproject.toml").is_file():
+        try:
+            commit = subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD"], text=True,
+                                             stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.SubprocessError):
+            pass
+    cpu = platform.processor() or platform.machine()
+    if sys.platform == "darwin":
+        cpu = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+    oos = result.start_index
+    payload = {
+        "category": data_category, "data_source": data_source, "currency": currency,
+        "workflow": "closed-loop cost-aware planning from actual marked holdings; no model retraining",
+        "commit": commit, "command": shlex.join([sys.executable, *sys.argv]),
+        "python": sys.version, "numpy": np.__version__, "pytorch": torch.__version__,
+        "os": platform.platform(), "cpu": cpu, "device": "cpu", "gpu": "unused",
+        "config": asdict(profile), "initial_capital": initial_capital,
+        "lookback": result.lookback, "execution": gate_metadata,
+        "participation_rate": participation_rate, "liquidity_lookback": liquidity_lookback,
+        "amount_scale": amount_scale,
+        "liquidity_ready_cells": None if ready is None else int(ready[oos:].sum()),
+        "evaluation": {"start_index": oos, "n_dates": len(forecasts) - oos,
+                       "start_date": _date_str(panel.dates[oos]), "end_date": _date_str(panel.dates[-1])},
+        "metrics": {key: value if not isinstance(value, float) or math.isfinite(value) else None
+                    for key, value in result.metrics.items()},
+        "decisions": result.decision_records,
+        "input_sha256": {name: hashlib.sha256((art / name).read_bytes()).hexdigest()
+                         for name in ("panel.pt", "predictions.pt")},
+        "implementation_sha256": {str(path.relative_to(Path(__file__).resolve().parents[1])):
+            hashlib.sha256(path.read_bytes()).hexdigest() for path in (
+                Path(__file__).resolve().parents[1] / "portfolio/rebalance.py",
+                Path(__file__).resolve().parents[1] / "backtest/rebalance.py",
+                Path(__file__).resolve().parents[1] / "backtest/self_financing.py",
+                Path(__file__).resolve().parents[1] / "backtest/constrained.py")},
+        "limitations": ["One-period forecasts must be expected simple returns; calibration and alpha remain unvalidated.",
+                        "Covariance uses strictly prior return rows; missing/zero-filled market histories still need source validation.",
+                        "Position value cap and cash floor use pre-trade NAV units; drifted holdings may remain but cannot be increased beyond that value.",
+                        "Same-row sale proceeds and mark-price fills; no settlement, impact, queue or lot-size model.",
+                        "Failed/infeasible solves hold actual positions and record the reason; no silent forced liquidation."]}
+    destination.mkdir(parents=True, exist_ok=True)
+    with (destination / "backtest.pkl").open("wb") as handle:
+        pickle.dump(result, handle)
+    (destination / "summary.json").write_text(json.dumps(payload, indent=2, allow_nan=False) + "\n")
+    lines = ["# Cost-aware closed-loop rebalancing", "", f"- Evidence: {data_category}; source: {data_source}",
+             f"- One-way fees: {profile.costs_bps:g} bps, paid from actual cash/sales.",
+             f"- Optimized: {result.metrics['optimized_dates']}; failed holds: {result.metrics['failed_hold_dates']}; warm-up holds: {result.metrics['warmup_hold_dates']}",
+             "- Full account and plan/fill ledgers: `backtest.pkl`; environment and decision reasons: `summary.json`.",
+             "", "| Metric | Value |", "|---|---:|"]
+    lines.extend(f"| {key} | {value} |" for key, value in payload["metrics"].items())
+    lines.extend(["", *["- " + item for item in payload["limitations"]], ""])
+    (destination / "summary.md").write_text("\n".join(lines))
+    click.echo(f"Rebalanced {len(result.decision_records)} rows; optimized {result.metrics['optimized_dates']}, failed holds {result.metrics['failed_hold_dates']}; wrote {destination}")
 
 
 def _frozen_factor_report(input_report, json_out, operation, options, implementation_files):
