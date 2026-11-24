@@ -1,0 +1,2646 @@
+{
+  "category": "synthetic engineering full-213-factor pipeline",
+  "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python /tmp/mlquant-walk-forward-20261124/full-pipeline.py",
+  "wrapper_sha256": "8c1101cd454fca8c4cab4caa686647d3f34a999ace7e619406a33ba53f497b6b",
+  "config": {
+    "seed": 42,
+    "artifacts_dir": "/tmp/mlquant-walk-forward-20261124/full",
+    "limit_pct": 0.098,
+    "costs_bps": 5.0,
+    "cov_lookback": 60,
+    "train_frac": 0.6,
+    "hidden": 64,
+    "loss_gamma": 0.1,
+    "synthetic": {
+      "n_stocks": 200,
+      "n_dates": 500,
+      "start_date": "2022-01-04",
+      "annual_drift": 0.05,
+      "annual_vol": 0.3,
+      "market_beta": 0.6,
+      "halt_prob": 0.005,
+      "limit_pct": 0.1,
+      "seed": 42,
+      "device": "cpu"
+    },
+    "train": {
+      "epochs": 8,
+      "batch_size": 1024,
+      "lr": 0.001,
+      "weight_decay": 1e-05,
+      "grad_clip": 1.0,
+      "device": "cpu",
+      "log_every": 50,
+      "save_dir": "/tmp/mlquant-walk-forward-20261124/full/static-checkpoints",
+      "val_split": 0.1
+    },
+    "portfolio": {
+      "risk_aversion": 5.0,
+      "weight_cap": 0.05,
+      "long_only": true,
+      "cash_weight": 0.0,
+      "solver": "SCS",
+      "shrinkage": true
+    }
+  },
+  "stages": [
+    {
+      "args": [
+        "gen-data",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 0.02164320799999997,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "features",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 0.785702291,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "train",
+        "--walk-forward",
+        "--test-dates",
+        "50",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 3.5748550829999997,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "portfolio",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 73.14939270800001,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "backtest",
+        "--accounting",
+        "constrained",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 0.04275320799999349,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "rebalance",
+        "--currency",
+        "CNY",
+        "--data-category",
+        "synthetic",
+        "--data-source",
+        "synthetic-demo",
+        "--config",
+        "/tmp/mlquant-walk-forward-20261124/full/config.yaml"
+      ],
+      "elapsed_seconds": 103.796842125,
+      "exit_code": 0
+    }
+  ],
+  "training": {
+    "protocol": "model-walk-forward-v1",
+    "config": {
+      "train_dates": 299,
+      "test_dates": 50,
+      "label_horizon": 1,
+      "purge_dates": 1,
+      "window": "rolling",
+      "seed": 42
+    },
+    "training_config": {
+      "epochs": 8,
+      "batch_size": 1024,
+      "lr": 0.001,
+      "weight_decay": 1e-05,
+      "grad_clip": 1.0,
+      "device": "cpu",
+      "log_every": 50,
+      "save_dir": "/tmp/mlquant-walk-forward-20261124/full/walk-forward/checkpoints",
+      "val_split": 0.1,
+      "val_split_mode": "time",
+      "extra": {},
+      "batch_mode": "auto",
+      "purge_dates": 0
+    },
+    "inner_purge_observed_dates": 1,
+    "shape": [
+      500,
+      200,
+      213
+    ],
+    "oos_start": 300,
+    "folds": [
+      {
+        "fold": 0,
+        "seed": 42,
+        "train_start": 0,
+        "history_end_exclusive": 299,
+        "purge_start": 299,
+        "purge_end_exclusive": 300,
+        "test_start": 300,
+        "test_end_exclusive": 350,
+        "partial_test": false,
+        "last_training_label_row": 275,
+        "last_validation_label_row": 299,
+        "split": {
+          "schema_version": 1,
+          "val_split_mode": "time",
+          "batch_mode": "samples",
+          "val_split": 0.1,
+          "purge_dates": 1,
+          "purge_unit": "observed_signal_dates",
+          "partitions": {
+            "train": {
+              "samples": 29458,
+              "observed_dates": 207,
+              "date_range": [
+                68,
+                274
+              ]
+            },
+            "validation": {
+              "samples": 3419,
+              "observed_dates": 23,
+              "date_range": [
+                276,
+                298
+              ]
+            },
+            "purged": {
+              "samples": 146,
+              "observed_dates": 1,
+              "date_range": [
+                275,
+                275
+              ]
+            }
+          }
+        },
+        "history": {
+          "train_loss": [
+            0.0017166008306941946,
+            0.000609898053698986,
+            0.0004650762407405376,
+            0.000406349351984433,
+            0.0003717715661903429,
+            0.00034920836559234605,
+            0.00033767575718342263,
+            0.00032744329927236683
+          ],
+          "val_loss": [
+            0.0004927004509170723,
+            0.0002939152375225775,
+            0.00025488041652789824,
+            0.00022910477920382524,
+            0.00023432346182428878,
+            0.00023485916442061826,
+            0.00023944619806224885,
+            0.00023698393158873683
+          ]
+        },
+        "best_epoch": 3,
+        "checkpoint": "/tmp/mlquant-walk-forward-20261124/full/walk-forward/checkpoints/fold-0000-8124c25cd2f04d1a11eb8aee4a0f61f246519cf62d83e2276367187fe66cc1ca.pt",
+        "checkpoint_sha256": "8124c25cd2f04d1a11eb8aee4a0f61f246519cf62d83e2276367187fe66cc1ca",
+        "prediction_cells": 7388,
+        "prediction_dates": 50
+      },
+      {
+        "fold": 1,
+        "seed": 43,
+        "train_start": 50,
+        "history_end_exclusive": 349,
+        "purge_start": 349,
+        "purge_end_exclusive": 350,
+        "test_start": 350,
+        "test_end_exclusive": 400,
+        "partial_test": false,
+        "last_training_label_row": 320,
+        "last_validation_label_row": 349,
+        "split": {
+          "schema_version": 1,
+          "val_split_mode": "time",
+          "batch_mode": "samples",
+          "val_split": 0.1,
+          "purge_dates": 1,
+          "purge_unit": "observed_signal_dates",
+          "partitions": {
+            "train": {
+              "samples": 36067,
+              "observed_dates": 252,
+              "date_range": [
+                68,
+                319
+              ]
+            },
+            "validation": {
+              "samples": 4163,
+              "observed_dates": 28,
+              "date_range": [
+                321,
+                348
+              ]
+            },
+            "purged": {
+              "samples": 145,
+              "observed_dates": 1,
+              "date_range": [
+                320,
+                320
+              ]
+            }
+          }
+        },
+        "history": {
+          "train_loss": [
+            0.001275078706312276,
+            0.00047293051869077586,
+            0.0003854520168418248,
+            0.00034716021701807463,
+            0.0003252425441246856,
+            0.00030870651954936795,
+            0.00029353622347658734,
+            0.0002826707993698626
+          ],
+          "val_loss": [
+            0.00038654317580693237,
+            0.00029410746430461623,
+            0.0002783642290227174,
+            0.000273232031476843,
+            0.0002737465249298446,
+            0.0002595652552038443,
+            0.0002690437585970021,
+            0.0002480959332662847
+          ]
+        },
+        "best_epoch": 7,
+        "checkpoint": "/tmp/mlquant-walk-forward-20261124/full/walk-forward/checkpoints/fold-0001-223172a4497ee95eb9d6a7ebe3f86c4477086df963158ab8344d65def6e4f0fa.pt",
+        "checkpoint_sha256": "223172a4497ee95eb9d6a7ebe3f86c4477086df963158ab8344d65def6e4f0fa",
+        "prediction_cells": 7449,
+        "prediction_dates": 50
+      },
+      {
+        "fold": 2,
+        "seed": 44,
+        "train_start": 100,
+        "history_end_exclusive": 399,
+        "purge_start": 399,
+        "purge_end_exclusive": 400,
+        "test_start": 400,
+        "test_end_exclusive": 450,
+        "partial_test": false,
+        "last_training_label_row": 369,
+        "last_validation_label_row": 399,
+        "split": {
+          "schema_version": 1,
+          "val_split_mode": "time",
+          "batch_mode": "samples",
+          "val_split": 0.1,
+          "purge_dates": 1,
+          "purge_unit": "observed_signal_dates",
+          "partitions": {
+            "train": {
+              "samples": 38763,
+              "observed_dates": 269,
+              "date_range": [
+                100,
+                368
+              ]
+            },
+            "validation": {
+              "samples": 4317,
+              "observed_dates": 29,
+              "date_range": [
+                370,
+                398
+              ]
+            },
+            "purged": {
+              "samples": 150,
+              "observed_dates": 1,
+              "date_range": [
+                369,
+                369
+              ]
+            }
+          }
+        },
+        "history": {
+          "train_loss": [
+            0.0016417085547845527,
+            0.0005317198837715315,
+            0.00041310276644209565,
+            0.0003619027416674401,
+            0.000333193790496481,
+            0.0003163802664694309,
+            0.00029631020467577447,
+            0.00028662264459884825
+          ],
+          "val_loss": [
+            0.00042344123796790275,
+            0.00029466686634030143,
+            0.00026209548181313345,
+            0.0002491185882316787,
+            0.0002457050719315789,
+            0.00023969175347206517,
+            0.0002393669207225074,
+            0.00023368068090869764
+          ]
+        },
+        "best_epoch": 7,
+        "checkpoint": "/tmp/mlquant-walk-forward-20261124/full/walk-forward/checkpoints/fold-0002-cbfd546579b78aac8966127e546f0b2f3f1dfb2b5bc03352c7ceee14b5e90459.pt",
+        "checkpoint_sha256": "cbfd546579b78aac8966127e546f0b2f3f1dfb2b5bc03352c7ceee14b5e90459",
+        "prediction_cells": 7670,
+        "prediction_dates": 50
+      },
+      {
+        "fold": 3,
+        "seed": 45,
+        "train_start": 150,
+        "history_end_exclusive": 449,
+        "purge_start": 449,
+        "purge_end_exclusive": 450,
+        "test_start": 450,
+        "test_end_exclusive": 500,
+        "partial_test": false,
+        "last_training_label_row": 419,
+        "last_validation_label_row": 449,
+        "split": {
+          "schema_version": 1,
+          "val_split_mode": "time",
+          "batch_mode": "samples",
+          "val_split": 0.1,
+          "purge_dates": 1,
+          "purge_unit": "observed_signal_dates",
+          "partitions": {
+            "train": {
+              "samples": 38958,
+              "observed_dates": 269,
+              "date_range": [
+                150,
+                418
+              ]
+            },
+            "validation": {
+              "samples": 4451,
+              "observed_dates": 29,
+              "date_range": [
+                420,
+                448
+              ]
+            },
+            "purged": {
+              "samples": 152,
+              "observed_dates": 1,
+              "date_range": [
+                419,
+                419
+              ]
+            }
+          }
+        },
+        "history": {
+          "train_loss": [
+            0.0011821247144806204,
+            0.00046689415162770256,
+            0.00039067324156120086,
+            0.0003508596761940729,
+            0.00032530402043003413,
+            0.0003091778530811814,
+            0.00029464786254493764,
+            0.00028214821981560324
+          ],
+          "val_loss": [
+            0.0003039435814583594,
+            0.00024800165658048266,
+            0.00023144029639051903,
+            0.00022194113444824209,
+            0.00021966272930143757,
+            0.0002168479090001967,
+            0.0002244540296245548,
+            0.00021662704054088047
+          ]
+        },
+        "best_epoch": 7,
+        "checkpoint": "/tmp/mlquant-walk-forward-20261124/full/walk-forward/checkpoints/fold-0003-184c76e3ed93d9993a15ff7521f9fd8979ddd4318661715d57608151acf201b8.pt",
+        "checkpoint_sha256": "184c76e3ed93d9993a15ff7521f9fd8979ddd4318661715d57608151acf201b8",
+        "prediction_cells": 7252,
+        "prediction_dates": 50
+      }
+    ],
+    "summary": {
+      "folds": 4,
+      "scheduled_test_dates": 200,
+      "prediction_dates": 200,
+      "prediction_cells": 29759
+    },
+    "clock": "original panel rows; label at t ends at t+label_horizon; strict endpoint gaps",
+    "checkpoint_selection": "minimum trailing-validation loss within each history window; fresh model/optimizer each fold",
+    "limitations": [
+      "Input features, label timing, universe and preprocessing must be causal and accurately declared.",
+      "Forecasts use signal availability only; future label eligibility is exclusively an offline training/evaluation filter.",
+      "Hyperparameters and input selection are fixed by the caller; retrospective tuning needs an outer holdout.",
+      "Predictions and coverage are engineering outputs, not portfolio returns or deployable alpha.",
+      "Earlier OOS observations may become later training history; this is sequential refitting, not one permanent holdout."
+    ],
+    "commit": "3fab92a5785c52b59147319428a227a0405b2c42",
+    "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python /tmp/mlquant-walk-forward-20261124/full-pipeline.py",
+    "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "pytorch": "2.8.0",
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "cpu": "Apple M5",
+    "device": "cpu",
+    "gpu": "unused",
+    "data_source": "saved panel.pt; caller-supplied source",
+    "costs_bps": 5.0,
+    "input_sha256": {
+      "panel.pt": "72acb67f6701ab71d3a210e562f07d16584fa6efe02545b157281af79a260a5d",
+      "features.pt": "badc93901f01a1926ae667c7faf08b8aff92d9bf19ba145af7575a4a068871a3"
+    },
+    "feature_names": [
+      "best_001",
+      "best_002",
+      "best_003",
+      "best_004",
+      "best_005",
+      "best_006",
+      "best_007",
+      "best_008",
+      "best_009",
+      "best_010",
+      "best_011",
+      "best_012",
+      "best_013",
+      "best_014",
+      "best_015",
+      "best_016",
+      "best_017",
+      "best_018",
+      "best_019",
+      "best_020",
+      "best_021",
+      "stock_001",
+      "stock_002",
+      "stock_003",
+      "stock_004",
+      "stock_005",
+      "stock_006",
+      "stock_007",
+      "stock_008",
+      "stock_009",
+      "stock_010",
+      "stock_011",
+      "stock_012",
+      "stock_013",
+      "stock_014",
+      "stock_015",
+      "stock_016",
+      "stock_017",
+      "stock_018",
+      "stock_019",
+      "stock_020",
+      "stock_021",
+      "stock_022",
+      "extra_001",
+      "extra_002",
+      "extra_003",
+      "extra_004",
+      "extra_005",
+      "extra_006",
+      "extra_007",
+      "extra_008",
+      "extra_009",
+      "extra_010",
+      "extra_011",
+      "extra_012",
+      "extra_013",
+      "extra_014",
+      "add_001",
+      "add_002",
+      "add_003",
+      "add_004",
+      "add_005",
+      "add_006",
+      "add_007",
+      "add_008",
+      "add_009",
+      "add_010",
+      "add_011",
+      "add_012",
+      "add_013",
+      "add_014",
+      "add_015",
+      "add_016",
+      "add_017",
+      "add_018",
+      "add_019",
+      "add_020",
+      "add_021",
+      "add_022",
+      "add_023",
+      "add_024",
+      "add_025",
+      "add_026",
+      "add_027",
+      "add_028",
+      "add_029",
+      "add_030",
+      "change_001",
+      "change_002",
+      "change_003",
+      "change_004",
+      "change_005",
+      "original_001",
+      "original_002",
+      "original_003",
+      "original_004",
+      "original_005",
+      "original_006",
+      "original_007",
+      "original_008",
+      "original_009",
+      "original_010",
+      "original_011",
+      "original_012",
+      "original_013",
+      "original_014",
+      "original_015",
+      "original_016",
+      "original_017",
+      "original_018",
+      "original_019",
+      "original_020",
+      "original_021",
+      "original_022",
+      "original_023",
+      "original_024",
+      "original_025",
+      "original_026",
+      "original_027",
+      "original_028",
+      "old_027",
+      "old_028",
+      "old_029",
+      "old_030",
+      "old_031",
+      "old_032",
+      "old_033",
+      "old_034",
+      "old_035",
+      "old_036",
+      "old_037",
+      "old_038",
+      "old_039",
+      "old_040",
+      "old_041",
+      "old_042",
+      "old_043",
+      "old_044",
+      "old_045",
+      "old_046",
+      "old_047",
+      "old_048",
+      "old_049",
+      "old_050",
+      "old_051",
+      "old_052",
+      "old_053",
+      "old_054",
+      "old_055",
+      "old_056",
+      "old_057",
+      "old_058",
+      "old_059",
+      "old_060",
+      "old_061",
+      "old_062",
+      "old_063",
+      "old_064",
+      "old_065",
+      "old_066",
+      "old_067",
+      "old_068",
+      "old_069",
+      "old_070",
+      "old_071",
+      "old_072",
+      "old_073",
+      "old_074",
+      "old_075",
+      "old_076",
+      "better_001",
+      "better_002",
+      "better_003",
+      "better_004",
+      "better_005",
+      "better_006",
+      "better_007",
+      "better_008",
+      "better_009",
+      "better_010",
+      "better_011",
+      "better_012",
+      "better_013",
+      "better_014",
+      "better_015",
+      "better_016",
+      "better_017",
+      "better_018",
+      "better_019",
+      "better_020",
+      "better_021",
+      "better_022",
+      "better_023",
+      "better_024",
+      "better_025",
+      "better_026",
+      "better_027",
+      "better_028",
+      "cs_rank_close",
+      "cs_rank_open",
+      "cs_rank_high",
+      "cs_rank_low",
+      "cs_rank_avg",
+      "cs_rank_amount",
+      "alpha_001",
+      "alpha_002",
+      "alpha_003",
+      "alpha_004",
+      "alpha_006",
+      "alpha_007",
+      "alpha_012",
+      "alpha_053",
+      "alpha_101"
+    ],
+    "rolling_backend": "unfold"
+  },
+  "constrained_backtest": {
+    "accounting": {
+      "bankrupt_index": null,
+      "buy_allowed_sha256": "7223617a7da67b97a06e17318e558fb66d7b04e9cc89014f79375fc1ce7fd037",
+      "description": "Marked actual holdings; directional price/volume gates; sells then cash-funded pro-rata buys. One-way fees on fills; no queue/settlement/impact model.",
+      "execution": {
+        "fill_assumption": "permitted orders fill at close mark; same-row net sale proceeds fund buys",
+        "limit_down_supplied": true,
+        "limit_up_supplied": true,
+        "missing_band_policy": "absent columns impose no limit proxy; invalid supplied cells block direction",
+        "policy": "observed positive close and volume; directional supplied close-price bands"
+      },
+      "fee_basis": "one-way actual traded notional",
+      "initial_equity": 1.0,
+      "ledger": "backtest.pkl",
+      "mode": "constrained",
+      "notional_cap": "none; Python API accepts max_trade_values in account currency units",
+      "sell_allowed_sha256": "7223617a7da67b97a06e17318e558fb66d7b04e9cc89014f79375fc1ce7fd037",
+      "target_rounding_max_excess": 3.58231773134321e-08
+    },
+    "config": "/tmp/mlquant-walk-forward-20261124/full/config.yaml",
+    "costs_bps": 5.0,
+    "disclaimer": "Synthetic research output only; not investment advice or evidence of live performance.",
+    "evaluation": {
+      "n_oos_dates": 200,
+      "n_train_dates": 299,
+      "oos_end": "2023-12-04",
+      "oos_start": "2023-02-28",
+      "prediction_protocol": "model-walk-forward-v1",
+      "refit_folds": 4,
+      "train_end": "2023-02-27",
+      "train_start": "2022-01-04",
+      "training_report": "walk-forward.json",
+      "training_window": "rolling"
+    },
+    "metrics": {
+      "ann_return": -0.013939348592435286,
+      "ann_vol": 0.17850214745170112,
+      "calmar": -0.07661476439066728,
+      "cap_unfilled_notional": 0.0,
+      "cash_unfilled_notional": 0.7844580661794791,
+      "cost_drag": 0.14415765208150433,
+      "cost_drag_cumulative": 0.14415765208150433,
+      "executed_notional_total": 298.0001932713556,
+      "fees_fraction_initial": 0.14900009663567781,
+      "fees_total": 0.14900009663567781,
+      "max_dd": 0.18194076172259674,
+      "max_self_financing_residual": 5.789639601072594e-16,
+      "max_target_weight_l1": 0.20160276175401715,
+      "n_periods": 200,
+      "notional_fill_ratio": 0.9947601501990713,
+      "permission_unfilled_notional": 0.7852431860039258,
+      "requested_notional_total": 299.569894523539,
+      "sharpe": 0.010402702588442173,
+      "sortino": 0.015447918466319604,
+      "target_rounding_max_excess": 3.58231773134321e-08,
+      "turnover": 0.7212922946013506,
+      "turnover_including_entry": 0.7201845836982709,
+      "unfilled_notional_total": 1.5697012521834053
+    },
+    "project": "ml-quant-trading",
+    "repository": "https://github.com/initial-d/ml-quant-trading",
+    "reproduction_report": "https://github.com/initial-d/ml-quant-trading/issues/new?template=reproduction_report.yml",
+    "workflow": "synthetic factor-to-backtest demo"
+  },
+  "cost_aware_backtest": {
+    "category": "synthetic",
+    "data_source": "synthetic-demo",
+    "currency": "CNY",
+    "workflow": "closed-loop cost-aware planning from actual marked holdings; no model retraining",
+    "commit": "3fab92a5785c52b59147319428a227a0405b2c42",
+    "command": "/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/bin/python /tmp/mlquant-walk-forward-20261124/full-pipeline.py",
+    "python": "3.9.6 (default, Apr 17 2026, 18:15:52) \n[Clang 21.0.0 (clang-2100.1.1.101)]",
+    "numpy": "1.26.4",
+    "pytorch": "2.8.0",
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "cpu": "Apple M5",
+    "device": "cpu",
+    "gpu": "unused",
+    "config": {
+      "risk_aversion": 1.0,
+      "costs_bps": 5.0,
+      "position_value_cap": 0.05,
+      "cash_floor": 0.0,
+      "shrinkage": true,
+      "solver": "CLARABEL"
+    },
+    "initial_capital": 1.0,
+    "lookback": 60,
+    "execution": {
+      "policy": "observed positive close and volume; directional supplied close-price bands",
+      "limit_up_supplied": true,
+      "limit_down_supplied": true,
+      "missing_band_policy": "absent columns impose no limit proxy; invalid supplied cells block direction",
+      "fill_assumption": "permitted orders fill at close mark; same-row net sale proceeds fund buys",
+      "forecast_coverage": "buys require a valid signal-date prediction; sells retain market permissions"
+    },
+    "participation_rate": null,
+    "liquidity_lookback": 20,
+    "amount_scale": 1.0,
+    "liquidity_ready_cells": null,
+    "evaluation": {
+      "start_index": 300,
+      "n_dates": 200,
+      "start_date": "2023-02-28",
+      "end_date": "2023-12-04"
+    },
+    "metrics": {
+      "ann_return": 0.016856379436381186,
+      "ann_vol": 0.17861341317020155,
+      "sharpe": 0.18265855395153138,
+      "sortino": 0.27111344351360217,
+      "calmar": 0.10466956512676992,
+      "max_dd": 0.1610437515047061,
+      "turnover": 0.4778763858879209,
+      "turnover_including_entry": 0.4779857545831689,
+      "cost_drag_cumulative": 0.09565483899750138,
+      "cost_drag": 0.09565483899750138,
+      "fees_total": 0.09920922793103441,
+      "fees_fraction_initial": 0.09920922793103441,
+      "max_self_financing_residual": 5.668208957754217e-16,
+      "target_rounding_max_excess": 2.220446049250313e-16,
+      "n_periods": 200,
+      "requested_notional_total": 198.41845586206878,
+      "executed_notional_total": 198.41845586206878,
+      "unfilled_notional_total": 2.8018961044318276e-15,
+      "notional_fill_ratio": 1.0,
+      "permission_unfilled_notional": 1.1102230289702024e-16,
+      "cap_unfilled_notional": 0.0,
+      "cash_unfilled_notional": 2.6908738015348074e-15,
+      "max_target_weight_l1": 4.3281350737085695e-16,
+      "optimized_dates": 200,
+      "failed_hold_dates": 0,
+      "warmup_hold_dates": 0,
+      "max_plan_fill_value_error": 4.163336342344337e-17,
+      "max_plan_fee_error": 3.2526065174565133e-19
+    },
+    "decisions": [
+      {
+        "row": 300,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0038564540043900322,
+        "repair_l1": 8.288367431504067e-11,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 301,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003399070572455781,
+        "repair_l1": 5.4818175368066096e-11,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 302,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0028106408584419413,
+        "repair_l1": 2.745585787166599e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 303,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002906411975823706,
+        "repair_l1": 2.573926400286831e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 304,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0025569616249095017,
+        "repair_l1": 1.5920655389503404e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 305,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003921099433800038,
+        "repair_l1": 6.842742122070683e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 306,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002593078750921992,
+        "repair_l1": 4.6348859282248407e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 307,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0033338656912444337,
+        "repair_l1": 1.7060252227621847e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 308,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0033880252646580023,
+        "repair_l1": 9.177945671399581e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 309,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0039838172702111535,
+        "repair_l1": 2.450062830506519e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 310,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003714436231483718,
+        "repair_l1": 7.337247324223684e-11,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 311,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002142304724292176,
+        "repair_l1": 7.032548176374266e-11,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 312,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0034614014489932825,
+        "repair_l1": 6.604567168945037e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 313,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003713898216220737,
+        "repair_l1": 1.1950881439047367e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 314,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00265160196114288,
+        "repair_l1": 1.0987083735989458e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 315,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0027119762547779002,
+        "repair_l1": 9.87285083285354e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 316,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002086342646747543,
+        "repair_l1": 1.0677133049295763e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 317,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0016612834749377568,
+        "repair_l1": 1.1955657406223007e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 318,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0028598469942630192,
+        "repair_l1": 6.666636186629308e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 319,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003803961458911923,
+        "repair_l1": 1.679852566085901e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 320,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0018383115740914623,
+        "repair_l1": 6.226944704109663e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 321,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0025375205741824318,
+        "repair_l1": 5.187569435852482e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 322,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0017777479886522311,
+        "repair_l1": 1.0264744364601707e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 323,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003158819072550084,
+        "repair_l1": 1.2922860784287243e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 324,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003749633629304311,
+        "repair_l1": 7.85845869441872e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 325,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00288673719835445,
+        "repair_l1": 9.185367054174967e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 326,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002244678588622568,
+        "repair_l1": 6.126631832777585e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 327,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0025200007282523453,
+        "repair_l1": 2.192339780461514e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 328,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0027658866726836765,
+        "repair_l1": 8.9135413621273e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 329,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0023093365973102967,
+        "repair_l1": 4.350756399125322e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 330,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0027174963002344174,
+        "repair_l1": 1.3380719170463657e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 331,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0027635951961123882,
+        "repair_l1": 8.722160729127943e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 332,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0034525984174132085,
+        "repair_l1": 5.685519056601069e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 333,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0031091299136139223,
+        "repair_l1": 1.735729870567526e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 334,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0022272687190818827,
+        "repair_l1": 5.719597913993967e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 335,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0030751739001356063,
+        "repair_l1": 4.876797095999823e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 336,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.002513350379657393,
+        "repair_l1": 1.3530154612583415e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 337,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0039908055828436996,
+        "repair_l1": 7.500677525575235e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 338,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0034158441360234754,
+        "repair_l1": 8.619654505116841e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 339,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0026174003053145646,
+        "repair_l1": 9.056790083779544e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 340,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0037340334470419506,
+        "repair_l1": 3.976030848862418e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 341,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0031727622384753753,
+        "repair_l1": 1.0221305719945636e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 342,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0034469957922322607,
+        "repair_l1": 6.586022030654499e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 343,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0033621474118125027,
+        "repair_l1": 9.45382888105952e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 344,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003683138729669324,
+        "repair_l1": 1.0592092885717805e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 345,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0029578765892657134,
+        "repair_l1": 9.986146216152178e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 346,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0032925268302493953,
+        "repair_l1": 7.989004603041406e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 347,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0024193378249144203,
+        "repair_l1": 1.0108185564408054e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 348,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003095230046862,
+        "repair_l1": 6.672580701921311e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 349,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.003309883803764415,
+        "repair_l1": 5.914993084324025e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 350,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007285986801804646,
+        "repair_l1": 3.9654317830675437e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 351,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009824479245985635,
+        "repair_l1": 4.606545760829597e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 352,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011456472784815137,
+        "repair_l1": 7.702743257814032e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 353,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010101953294437472,
+        "repair_l1": 3.704930216563794e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 354,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011789174574197842,
+        "repair_l1": 2.5750027142022378e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 355,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007484411416090988,
+        "repair_l1": 4.535915459068466e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 356,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009050331060557212,
+        "repair_l1": 8.918971898510739e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 357,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007167967821615891,
+        "repair_l1": 2.057466982788833e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 358,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011488721010349632,
+        "repair_l1": 1.1082623640125064e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 359,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001023179058927312,
+        "repair_l1": 7.088788889353823e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 360,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008830411002577157,
+        "repair_l1": 7.054676287771061e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 361,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010395078321238866,
+        "repair_l1": 1.945980695071473e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 362,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009108998279542634,
+        "repair_l1": 4.570926569396802e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 363,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006663175786655539,
+        "repair_l1": 6.537645734614442e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 364,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010057320955813923,
+        "repair_l1": 1.1313342032666861e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 365,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012238380489019303,
+        "repair_l1": 7.487088600505218e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 366,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008725099038461063,
+        "repair_l1": 5.437147981609112e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 367,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000900643309163583,
+        "repair_l1": 7.23480667179028e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 368,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008733502100740061,
+        "repair_l1": 6.153099278186262e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 369,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011501559314185113,
+        "repair_l1": 5.6466313130111085e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 370,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011632064111651277,
+        "repair_l1": 9.559967701830459e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 371,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010881749065079758,
+        "repair_l1": 1.3726736025042261e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 372,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008566016845350474,
+        "repair_l1": 1.1331421229666626e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 373,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011524453108454577,
+        "repair_l1": 1.5114339066941515e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 374,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011468451591961745,
+        "repair_l1": 1.8562924767422144e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 375,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0014004101795939052,
+        "repair_l1": 7.769271901140078e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 376,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009300706638332606,
+        "repair_l1": 1.1735809554889332e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 377,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011608787901230405,
+        "repair_l1": 1.8449070969216036e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 378,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012158868761827256,
+        "repair_l1": 1.885250474095026e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 379,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009902801500262625,
+        "repair_l1": 2.045301201196169e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 380,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000934979625200521,
+        "repair_l1": 1.7350610684532633e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 381,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009829308854095785,
+        "repair_l1": 2.4666774285974168e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 382,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008685658586388952,
+        "repair_l1": 1.6023413915072272e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 383,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012951378685763276,
+        "repair_l1": 6.686094210894111e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 384,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007165978644237014,
+        "repair_l1": 5.992070850532944e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 385,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009539750201034674,
+        "repair_l1": 1.6266947138782628e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 386,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010891758403135158,
+        "repair_l1": 1.7826343895224541e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 387,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009383934974426639,
+        "repair_l1": 6.772671904479279e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 388,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009655281900022143,
+        "repair_l1": 1.7274874102708111e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 389,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007762665011629396,
+        "repair_l1": 6.267278291692243e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 390,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009453856355214729,
+        "repair_l1": 7.694541484087906e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 391,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009214316457210117,
+        "repair_l1": 7.475108691040451e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 392,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011389769459233885,
+        "repair_l1": 7.176150716373625e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 393,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006400285488123832,
+        "repair_l1": 1.2208059650609522e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 394,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008871976849758548,
+        "repair_l1": 1.2489779923119197e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 395,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010763625696028842,
+        "repair_l1": 7.145752428404052e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 396,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009286488594281036,
+        "repair_l1": 8.175778381542127e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 397,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009961242434904825,
+        "repair_l1": 4.872584135483892e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 398,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000982562392410098,
+        "repair_l1": 1.0417934804957018e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 399,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009554175435384068,
+        "repair_l1": 5.691060954310839e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 400,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005917324703318502,
+        "repair_l1": 7.59925575167414e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 401,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001096031169513812,
+        "repair_l1": 8.061767560659687e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 402,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011107661408318809,
+        "repair_l1": 1.8584270673680202e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 403,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010332940851230008,
+        "repair_l1": 4.799480249119333e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 404,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009675616659477699,
+        "repair_l1": 2.472537581446528e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 405,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008716910016516014,
+        "repair_l1": 2.1946087519392047e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 406,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011323369718999419,
+        "repair_l1": 3.4329026483680475e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 407,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010677500643591833,
+        "repair_l1": 2.0680190888563247e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 408,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010285231665660938,
+        "repair_l1": 1.964295542008365e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 409,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00059550722386339,
+        "repair_l1": 2.7888353359153362e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 410,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011165224446600562,
+        "repair_l1": 1.7915661241667523e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 411,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0013189652264597417,
+        "repair_l1": 3.5946250961652694e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 412,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011295033399988884,
+        "repair_l1": 2.5649126684964653e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 413,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012222882307057446,
+        "repair_l1": 3.784261456420363e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 414,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001339119142586352,
+        "repair_l1": 2.96723361906574e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 415,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012883149542715906,
+        "repair_l1": 3.924029704867594e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 416,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012125194393864253,
+        "repair_l1": 2.7414805860292244e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 417,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001218892488950004,
+        "repair_l1": 4.018521463309404e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 418,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008578727060153928,
+        "repair_l1": 2.968513564044644e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 419,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0014223275182760962,
+        "repair_l1": 1.8330626414233765e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 420,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011827989515469262,
+        "repair_l1": 1.50719423031792e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 421,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000914231710298579,
+        "repair_l1": 2.423340772836329e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 422,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001875942103639133,
+        "repair_l1": 1.30973901218837e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 423,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001508972060226708,
+        "repair_l1": 1.0464642352466544e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 424,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012421572612050318,
+        "repair_l1": 1.2243585356332403e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 425,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001336421681097653,
+        "repair_l1": 1.0916062581158455e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 426,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000877199489195841,
+        "repair_l1": 2.2315284908325314e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 427,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012841129404050258,
+        "repair_l1": 8.897486068392841e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 428,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0013430088373983518,
+        "repair_l1": 9.384409285914931e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 429,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009266284148409605,
+        "repair_l1": 1.1609155450951738e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 430,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001932825091629437,
+        "repair_l1": 1.1642870560066727e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 431,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010600041330727638,
+        "repair_l1": 8.709750757666343e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 432,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0014679884755729874,
+        "repair_l1": 8.941495951647334e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 433,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00138668923717983,
+        "repair_l1": 9.601163372331288e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 434,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008442728242108118,
+        "repair_l1": 1.0849708610551739e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 435,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.001402781036191656,
+        "repair_l1": 1.0673108698902812e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 436,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009739640584817375,
+        "repair_l1": 9.68559676998089e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 437,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0013314869231150824,
+        "repair_l1": 1.180605684620607e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 438,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0015475154914872508,
+        "repair_l1": 9.44353747111291e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 439,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007682939061876423,
+        "repair_l1": 6.501719571986568e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 440,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012557559977252563,
+        "repair_l1": 8.813519877380887e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 441,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012042948441071562,
+        "repair_l1": 9.13263119482774e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 442,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000819375910614098,
+        "repair_l1": 8.761342011587e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 443,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0015333340625627333,
+        "repair_l1": 7.348644602576338e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 444,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008916315199929401,
+        "repair_l1": 6.480553064256646e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 445,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0014965794842151563,
+        "repair_l1": 1.3540497493674056e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 446,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0013015472251385904,
+        "repair_l1": 1.1472690740672317e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 447,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0010516966234884058,
+        "repair_l1": 1.808194882816117e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 448,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009679680858587466,
+        "repair_l1": 1.2661949295590761e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 449,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0012845247378820395,
+        "repair_l1": 1.9493997731508942e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 450,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005211518795934683,
+        "repair_l1": 1.153187859474958e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 451,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006361516060471032,
+        "repair_l1": 9.071796871502057e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 452,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008735112408612068,
+        "repair_l1": 7.894772262344457e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 453,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00118060392288205,
+        "repair_l1": 1.4230202041758234e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 454,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0011689477067696745,
+        "repair_l1": 2.235560842749047e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 455,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009135564952117393,
+        "repair_l1": 1.7782953067904275e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 456,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008980355250708684,
+        "repair_l1": 5.01786017293177e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 457,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006292442121995439,
+        "repair_l1": 7.984922272151678e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 458,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007618714892213274,
+        "repair_l1": 6.712681871087543e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 459,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007415452759364507,
+        "repair_l1": 1.2747666068684594e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 460,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006090787041872804,
+        "repair_l1": 9.187280798295538e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 461,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005709021077432715,
+        "repair_l1": 1.7092444442354424e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 462,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005265137642378015,
+        "repair_l1": 1.1948640920901396e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 463,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007178378507285938,
+        "repair_l1": 9.497451118268001e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 464,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005478887940363931,
+        "repair_l1": 1.7991272311908502e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 465,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0004579301856347217,
+        "repair_l1": 1.2139037977841882e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 466,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00036785276241818273,
+        "repair_l1": 9.929402242297476e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 467,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005642065489610722,
+        "repair_l1": 5.707659503668986e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 468,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007486901087200206,
+        "repair_l1": 1.630897084789853e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 469,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006098733554402985,
+        "repair_l1": 1.23650615747313e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 470,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006431787671842615,
+        "repair_l1": 1.3322152285286455e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 471,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008500309547525737,
+        "repair_l1": 3.2765321067162288e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 472,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00046869341528312837,
+        "repair_l1": 6.2402970128474e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 473,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006501389620155378,
+        "repair_l1": 1.1021513537987845e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 474,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008742592031517497,
+        "repair_l1": 8.68008140004723e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 475,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007541822263554896,
+        "repair_l1": 9.827128865680176e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 476,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009530759185503422,
+        "repair_l1": 1.3264016581013308e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 477,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007508737649501811,
+        "repair_l1": 1.1877873573439329e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 478,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0004683802924892077,
+        "repair_l1": 1.8508642877007785e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 479,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0008229170031647203,
+        "repair_l1": 8.39757690063122e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 480,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007911937008518823,
+        "repair_l1": 1.4315568105495054e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 481,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006983018526416339,
+        "repair_l1": 9.601171363792297e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 482,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0009667283138627144,
+        "repair_l1": 6.777931828547652e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 483,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006913667900613835,
+        "repair_l1": 1.6515853961539506e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 484,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0006282226362319545,
+        "repair_l1": 1.514983500547153e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 485,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005499934596547617,
+        "repair_l1": 1.9481221496096456e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 486,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0004960438679458134,
+        "repair_l1": 9.869011007220384e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 487,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0004518118300748532,
+        "repair_l1": 8.007390152806391e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 488,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007131647297472549,
+        "repair_l1": 1.07060741197119e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 489,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007919925200140568,
+        "repair_l1": 7.14067281729936e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 490,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0004130638906141881,
+        "repair_l1": 1.055803281942525e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 491,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005495799199293945,
+        "repair_l1": 2.49748441587125e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 492,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000677465018821025,
+        "repair_l1": 8.191790347749072e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 493,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.000635655413131723,
+        "repair_l1": 8.142661050821723e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 494,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005859888481600986,
+        "repair_l1": 6.347642255768382e-10,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 495,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005845046117800579,
+        "repair_l1": 2.861972895339582e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 496,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005993877124303727,
+        "repair_l1": 1.3607492686668588e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 497,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.00042300768680074923,
+        "repair_l1": 1.4263755755366576e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 498,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0005002161932453062,
+        "repair_l1": 2.1303278971272855e-09,
+        "selection": "solver_candidate"
+      },
+      {
+        "row": 499,
+        "status": "optimized",
+        "solver_status": "optimal",
+        "solver": "CLARABEL",
+        "objective_value": 0.0007141928259472624,
+        "repair_l1": 6.281439490785374e-10,
+        "selection": "solver_candidate"
+      }
+    ],
+    "input_sha256": {
+      "panel.pt": "72acb67f6701ab71d3a210e562f07d16584fa6efe02545b157281af79a260a5d",
+      "predictions.pt": "e1b05b5212a8dd3b70c0c0e9f93f74ebdd07973e7c1cc23561fc8a65ef7b9dde"
+    },
+    "implementation_sha256": {
+      "portfolio/rebalance.py": "79b15dfe2e0bf9deaacb850790a19cf67e7cbbbc25e0c3d344f3e0b8b9253aa1",
+      "backtest/rebalance.py": "cea2af10aeb944c8121fdd19783a48854619c3132d5f6b72b1c311ba80752cfd",
+      "backtest/self_financing.py": "caf088edadd79f6a682c602a210389548b7fa32943633c12f2f246d518e95823",
+      "backtest/constrained.py": "08f8f978fc148a63bb1c7cc8a7a8017f9a9aedc9944bc8a90cb041a348ff6103"
+    },
+    "limitations": [
+      "One-period forecasts must be expected simple returns; calibration and alpha remain unvalidated.",
+      "Covariance uses strictly prior return rows; missing/zero-filled market histories still need source validation.",
+      "Position value cap and cash floor use pre-trade NAV units; drifted holdings may remain but cannot be increased beyond that value.",
+      "Same-row sale proceeds and mark-price fills; no settlement, impact, queue or lot-size model.",
+      "Failed/infeasible solves hold actual positions and record the reason; no silent forced liquidation."
+    ]
+  }
+}
