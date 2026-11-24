@@ -1,0 +1,119 @@
+gen-data --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+wrote /tmp/mlquant-walk-forward-20261124/full/panel.pt  (500 dates × 200 stocks)
+
+features --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+wrote features: torch.Size([500, 200, 213])  rolling_backend=unfold  alphas=['best_001', 'best_002', 'best_003', 'best_004', 'best_005', 'best_006', 'best_007', 'best_008', 'best_009', 'best_010', 'best_011', 'best_012', 'best_013', 'best_014', 'best_015', 'best_016', 'best_017', 'best_018', 'best_019', 'best_020', 'best_021', 'stock_001', 'stock_002', 'stock_003', 'stock_004', 'stock_005', 'stock_006', 'stock_007', 'stock_008', 'stock_009', 'stock_010', 'stock_011', 'stock_012', 'stock_013', 'stock_014', 'stock_015', 'stock_016', 'stock_017', 'stock_018', 'stock_019', 'stock_020', 'stock_021', 'stock_022', 'extra_001', 'extra_002', 'extra_003', 'extra_004', 'extra_005', 'extra_006', 'extra_007', 'extra_008', 'extra_009', 'extra_010', 'extra_011', 'extra_012', 'extra_013', 'extra_014', 'add_001', 'add_002', 'add_003', 'add_004', 'add_005', 'add_006', 'add_007', 'add_008', 'add_009', 'add_010', 'add_011', 'add_012', 'add_013', 'add_014', 'add_015', 'add_016', 'add_017', 'add_018', 'add_019', 'add_020', 'add_021', 'add_022', 'add_023', 'add_024', 'add_025', 'add_026', 'add_027', 'add_028', 'add_029', 'add_030', 'change_001', 'change_002', 'change_003', 'change_004', 'change_005', 'original_001', 'original_002', 'original_003', 'original_004', 'original_005', 'original_006', 'original_007', 'original_008', 'original_009', 'original_010', 'original_011', 'original_012', 'original_013', 'original_014', 'original_015', 'original_016', 'original_017', 'original_018', 'original_019', 'original_020', 'original_021', 'original_022', 'original_023', 'original_024', 'original_025', 'original_026', 'original_027', 'original_028', 'old_027', 'old_028', 'old_029', 'old_030', 'old_031', 'old_032', 'old_033', 'old_034', 'old_035', 'old_036', 'old_037', 'old_038', 'old_039', 'old_040', 'old_041', 'old_042', 'old_043', 'old_044', 'old_045', 'old_046', 'old_047', 'old_048', 'old_049', 'old_050', 'old_051', 'old_052', 'old_053', 'old_054', 'old_055', 'old_056', 'old_057', 'old_058', 'old_059', 'old_060', 'old_061', 'old_062', 'old_063', 'old_064', 'old_065', 'old_066', 'old_067', 'old_068', 'old_069', 'old_070', 'old_071', 'old_072', 'old_073', 'old_074', 'old_075', 'old_076', 'better_001', 'better_002', 'better_003', 'better_004', 'better_005', 'better_006', 'better_007', 'better_008', 'better_009', 'better_010', 'better_011', 'better_012', 'better_013', 'better_014', 'better_015', 'better_016', 'better_017', 'better_018', 'better_019', 'better_020', 'better_021', 'better_022', 'better_023', 'better_024', 'better_025', 'better_026', 'better_027', 'better_028', 'cs_rank_close', 'cs_rank_open', 'cs_rank_high', 'cs_rank_low', 'cs_rank_avg', 'cs_rank_amount', 'alpha_001', 'alpha_002', 'alpha_003', 'alpha_004', 'alpha_006', 'alpha_007', 'alpha_012', 'alpha_053', 'alpha_101']
+
+train --walk-forward --test-dates 50 --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+[epoch   0] train=0.00172  val=0.00049
+[epoch   1] train=0.00061  val=0.00029
+[epoch   2] train=0.00047  val=0.00025
+[epoch   3] train=0.00041  val=0.00023
+[epoch   4] train=0.00037  val=0.00023
+[epoch   5] train=0.00035  val=0.00023
+[epoch   6] train=0.00034  val=0.00024
+[epoch   7] train=0.00033  val=0.00024
+[epoch   0] train=0.00128  val=0.00039
+[epoch   1] train=0.00047  val=0.00029
+[epoch   2] train=0.00039  val=0.00028
+[epoch   3] train=0.00035  val=0.00027
+[epoch   4] train=0.00033  val=0.00027
+[epoch   5] train=0.00031  val=0.00026
+[epoch   6] train=0.00029  val=0.00027
+[epoch   7] train=0.00028  val=0.00025
+[epoch   0] train=0.00164  val=0.00042
+[epoch   1] train=0.00053  val=0.00029
+[epoch   2] train=0.00041  val=0.00026
+[epoch   3] train=0.00036  val=0.00025
+[epoch   4] train=0.00033  val=0.00025
+[epoch   5] train=0.00032  val=0.00024
+[epoch   6] train=0.00030  val=0.00024
+[epoch   7] train=0.00029  val=0.00023
+[epoch   0] train=0.00118  val=0.00030
+[epoch   1] train=0.00047  val=0.00025
+[epoch   2] train=0.00039  val=0.00023
+[epoch   3] train=0.00035  val=0.00022
+[epoch   4] train=0.00033  val=0.00022
+[epoch   5] train=0.00031  val=0.00022
+[epoch   6] train=0.00029  val=0.00022
+[epoch   7] train=0.00028  val=0.00022
+wrote rolling predictions: torch.Size([500, 200]); 4 fresh models, OOS from 300; 29759 usable cells
+
+portfolio --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+wrote weights: (500, 200)
+
+backtest --accounting constrained --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+
+Backtest summary (out-of-sample window)
+----------------------------------------
+  ann_return       -0.0139
+  ann_vol           0.1785
+  sharpe            0.0104
+  sortino           0.0154
+  calmar           -0.0766
+  max_dd            0.1819
+  turnover          0.7213
+  turnover_including_entry      0.7202
+  cost_drag_cumulative      0.1442
+  cost_drag         0.1442
+  fees_total        0.1490
+  fees_fraction_initial      0.1490
+  max_self_financing_residual      0.0000
+  target_rounding_max_excess      0.0000
+  n_periods            200
+  requested_notional_total    299.5699
+  executed_notional_total    298.0002
+  unfilled_notional_total      1.5697
+  notional_fill_ratio      0.9948
+  permission_unfilled_notional      0.7852
+  cap_unfilled_notional      0.0000
+  cash_unfilled_notional      0.7845
+  max_target_weight_l1      0.2016
+
+Shareable reports: /tmp/mlquant-walk-forward-20261124/full/summary.md  /tmp/mlquant-walk-forward-20261124/full/summary.json
+
+rebalance --currency CNY --data-category synthetic --data-source synthetic-demo --config /tmp/mlquant-walk-forward-20261124/full/config.yaml
+/Users/duyimin/Documents/Codex/2026-07-04/ban/work/bench-venv/lib/python3.9/site-packages/cvxpy/reductions/solvers/solving_chain.py:251: UserWarning: Your problem has too many parameters for efficient DPP compilation. We suggest setting 'ignore_dpp = True'.
+  warnings.warn(
+Rebalanced 200 rows; optimized 200, failed holds 0; wrote /tmp/mlquant-walk-forward-20261124/full/rebalance
+
