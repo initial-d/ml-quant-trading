@@ -65,3 +65,6 @@ jobs:
           python -m mlquant.cli.main backtest  --config configs/small.yaml --accounting constrained
           python -m mlquant.cli.main capacity --config configs/small.yaml --capital 1000000 --capital 100000000 --currency CNY --data-category synthetic --data-source synthetic-demo
           python -m mlquant.cli.main rebalance --config configs/small.yaml --currency CNY --data-category synthetic --data-source synthetic-demo
+          python -m mlquant.cli.main train --config configs/small.yaml --walk-forward --test-dates 100
+          python -m mlquant.cli.main portfolio --config configs/small.yaml
+          python -m mlquant.cli.main backtest --config configs/small.yaml --accounting constrained
