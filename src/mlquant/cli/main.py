@@ -47,6 +47,7 @@ from ..systemone import load_state as load_systemone_state
 from ..systemone import save_json as save_systemone_json
 from ..training.dataset import FactorDataset
 from ..training.trainer import TrainConfig, Trainer
+from ..training.walk_forward import WalkForwardConfig, train_walk_forward
 from ..utils.config import load_config
 from ..utils.seed import seed_everything
 
@@ -147,6 +148,13 @@ def _write_backtest_summary(
             ),
             "- Metrics cover the out-of-sample window only; the model never trained on it.",
         ]
+        if evaluation.get("prediction_protocol") == "model-walk-forward-v1":
+            window_lines = [
+                f"- Sequential out-of-sample window: `{evaluation['oos_start']}` → `{evaluation['oos_end']}`; "
+                f"{evaluation['refit_folds']} fresh models.",
+                "- Each prediction uses a prior-history model; earlier test observations can enter later refits.",
+                "- Full original-row label gaps, inner validation and checkpoint hashes: `walk-forward.json`.",
+            ]
 
     rows = []
     for key, value in clean_metrics.items():
@@ -288,7 +296,18 @@ def cmd_features(config_path: str, rolling_backend: str | None = None) -> None:
 
 @cli.command("train")
 @click.option("--config", "config_path", required=True, type=click.Path(exists=True))
-def cmd_train(config_path: str) -> None:
+@click.option("--walk-forward", is_flag=True, help="Refit fresh models on purged history for each future prediction window.")
+@click.option("--train-dates", type=click.IntRange(1), default=None,
+              help="History rows per fold; default preserves train_frac's first OOS row.")
+@click.option("--test-dates", type=click.IntRange(1), default=None,
+              help="Rows between refits (default 50 in walk-forward mode).")
+@click.option("--purge-dates", type=click.IntRange(1), default=None,
+              help="Original-row history/test gap (default 1 for next-day labels).")
+@click.option("--expanding", is_flag=True, help="Use all prior history instead of a trailing fixed-length window.")
+def cmd_train(config_path: str, walk_forward=False, train_dates=None, test_dates=None,
+              purge_dates=None, expanding=False) -> None:
+    if not walk_forward and (any(value is not None for value in (train_dates, test_dates, purge_dates)) or expanding):
+        raise click.UsageError("--train-dates, --test-dates, --purge-dates and --expanding require --walk-forward")
     cfg = load_config(config_path)
     seed_everything(cfg.get("seed", 42))
     art = _artifacts_dir(cfg)
@@ -301,6 +320,48 @@ def cmd_train(config_path: str) -> None:
     # which is already known when the first out-of-sample signal is formed.
     T = fwd_ret.shape[0]
     oos = _oos_start(cfg, T)
+    if walk_forward:
+        gap = 1 if purge_dates is None else purge_dates
+        training = TrainConfig(**(cfg.train.to_dict() if "train" in cfg else {}))
+        training = replace(training, save_dir=str(art / "walk-forward" / "checkpoints"))
+        profile = WalkForwardConfig(train_dates=oos - gap if train_dates is None else train_dates,
+                                    test_dates=50 if test_dates is None else test_dates,
+                                    purge_dates=gap, window="expanding" if expanding else "rolling",
+                                    seed=cfg.get("seed", 42))
+        try:
+            result = train_walk_forward(
+                feat_blob["factors"], feat_blob["mask"], fwd_ret, label_mask,
+                model_factory=lambda: MLPRegressor(feat_blob["factors"].shape[-1], hidden=cfg.get("hidden", 128)),
+                loss_factory=lambda: AdjMSELoss(gamma=cfg.get("loss_gamma", .1)),
+                train_cfg=training, cfg=profile)
+        except ValueError as exc:
+            raise click.ClickException(str(exc)) from exc
+        report = result.report
+        try:
+            commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
+        except (OSError, subprocess.CalledProcessError):
+            commit = "unavailable"
+        cpu = platform.processor() or platform.machine()
+        if sys.platform == "darwin":
+            cpu = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+        report.update(commit=commit, command=shlex.join([sys.executable, *sys.argv]),
+                      python=sys.version, pytorch=torch.__version__, os=platform.platform(), cpu=cpu,
+                      device=training.device,
+                      gpu=torch.cuda.get_device_name(training.device) if str(training.device).startswith("cuda") else "unused",
+                      data_source="saved panel.pt; caller-supplied source", costs_bps=cfg.get("costs_bps", 5.),
+                      input_sha256={name: hashlib.sha256((art / name).read_bytes()).hexdigest()
+                                    for name in ("panel.pt", "features.pt")},
+                      feature_names=feat_blob.get("names"), rolling_backend=feat_blob.get("rolling_backend", "unfold"))
+        output = {"pred": result.predictions, "prediction_mask": result.prediction_mask,
+                  "fold_id": result.fold_id, "oos_start": report["oos_start"],
+                  "protocol": report["protocol"], "training_report": report}
+        # Publish forecasts only after every scheduled fold succeeds.
+        (art / "walk-forward.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
+        torch.save(output, art / "predictions.pt")
+        click.echo(f"wrote rolling predictions: {result.predictions.shape}; "
+                   f"{len(report['folds'])} fresh models, OOS from {report['oos_start']}; "
+                   f"{report['summary']['prediction_cells']} usable cells")
+        return
     ds = FactorDataset(
         factors=feat_blob["factors"][: oos + 1],
         mask=feat_blob["mask"][: oos + 1],
@@ -337,6 +398,8 @@ def cmd_portfolio(config_path: str) -> None:
     pred_blob  = torch.load(art / "predictions.pt", weights_only=False)
 
     mask = panel.mask.numpy()
+    if "prediction_mask" in pred_blob:
+        mask = mask & pred_blob["prediction_mask"].numpy()
     pred = pred_blob["pred"].numpy()
     # Halt-aware returns: loaders zero-fill halted prices.
     rets = panel.returns.numpy()
@@ -363,7 +426,8 @@ def cmd_portfolio(config_path: str) -> None:
             click.echo(f"[warn] solver failed at t={t}: {exc}")
             continue
         weights[t, idx] = w
-    torch.save({"weights": torch.from_numpy(weights)}, art / "weights.pt")
+    torch.save({"weights": torch.from_numpy(weights),
+                "predictions_sha256": hashlib.sha256((art / "predictions.pt").read_bytes()).hexdigest()}, art / "weights.pt")
     click.echo(f"wrote weights: {weights.shape}")
 
 
@@ -377,9 +441,13 @@ def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
     panel_blob = torch.load(art / "panel.pt", weights_only=False)
     weight_blob = torch.load(art / "weights.pt", weights_only=False)
     pred_path = art / "predictions.pt"
+    pred_blob = {}
     oos = 0
     if pred_path.exists():
-        oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0))
+        pred_blob = torch.load(pred_path, weights_only=False)
+        oos = int(pred_blob.get("oos_start", 0))
+        if weight_blob.get("predictions_sha256") not in (None, hashlib.sha256(pred_path.read_bytes()).hexdigest()):
+            raise click.ClickException("predictions.pt changed after portfolio construction; rerun mlquant portfolio")
 
     # Halt-aware returns: loaders zero-fill halted prices.
     panel = _load_panel(art)
@@ -429,6 +497,13 @@ def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
             "n_train_dates": oos,
             "n_oos_dates": int(len(dates) - oos),
         }
+        if pred_blob.get("protocol") == "model-walk-forward-v1":
+            provenance = pred_blob["training_report"]
+            evaluation.update(prediction_protocol=provenance["protocol"],
+                              n_train_dates=provenance["config"]["train_dates"],
+                              refit_folds=len(provenance["folds"]),
+                              training_window=provenance["config"]["window"],
+                              training_report="walk-forward.json")
     out = art / "backtest.pkl"
     with open(out, "wb") as fh:
         pickle.dump(res, fh)
@@ -475,8 +550,12 @@ def cmd_capacity(config_path, capitals, participation_rate, lookback, amount_sca
         raise click.BadParameter("panel.amount is required in known monetary units; share volume is not a substitute")
     if not currency.strip() or not data_source.strip():
         raise click.BadParameter("currency and data-source must be nonempty")
-    weights = torch.load(art / "weights.pt", weights_only=False)["weights"].numpy()
+    weight_blob = torch.load(art / "weights.pt", weights_only=False)
+    weights = weight_blob["weights"].numpy()
     pred_path = art / "predictions.pt"
+    if pred_path.exists() and weight_blob.get("predictions_sha256") not in (
+            None, hashlib.sha256(pred_path.read_bytes()).hexdigest()):
+        raise click.ClickException("predictions.pt changed after portfolio construction; rerun mlquant portfolio")
     oos = int(torch.load(pred_path, weights_only=False).get("oos_start", 0)) if pred_path.exists() else 0
     buy, sell, gate_metadata = panel_trade_permissions(panel)
     try:
@@ -594,6 +673,9 @@ def cmd_rebalance(config_path, initial_capital, participation_rate, liquidity_lo
     predictions = torch.load(art / "predictions.pt", weights_only=False)
     forecasts = predictions["pred"].numpy()
     buy, sell, gate_metadata = panel_trade_permissions(panel)
+    if "prediction_mask" in predictions:
+        buy = buy & predictions["prediction_mask"].numpy()
+        gate_metadata["forecast_coverage"] = "buys require a valid signal-date prediction; sells retain market permissions"
     values = cfg.get("rebalance", {}).copy()
     values["costs_bps"] = cfg.get("costs_bps", 5.)  # One fee rate for planning AND execution.
     try:

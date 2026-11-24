@@ -142,6 +142,7 @@ python -m pip install -e '.[dev]'
 | Run a larger validation | [Public-Data Validation](docs/public_data_validation.md) | Walk-forward baselines, costs, turnover, bootstrap CIs, and report artifacts |
 | Stress account size | [Capital-Capacity Sensitivity](docs/capital_capacity.md) | Frozen targets across capital sizes, lagged monetary caps, fill ratios and actual exposure |
 | Plan around actual holdings and fees | [Cost-Aware Rebalancing](docs/cost_aware_rebalance.md) | Cash-paid convex plans, no-trade decisions and execution constraints before trading |
+| Update models through time | [Purged Model Refitting](docs/model_walk_forward.md) | Fresh rolling/expanding models, inner-validation checkpoints and causal prediction coverage |
 | Run A-share validation | [AkShare CSI 300 Report](docs/validation_akshare_csi300_20260729.md) | Zero-auth A-share validation on the current CSI 300 public universe |
 | Run paper-style public validation | [AkShare CSI 300 Daily 213-Factor Report](docs/validation_akshare_csi300_full_pipeline_20260729.md) | Daily 213-factor public-data approximation with turnover control |
 | Test a coding or quant agent | [Agent Quant Benchmark Challenge](docs/agent_quant_benchmark_challenge.md) | A zero-account challenge for agent reproducibility, evidence preservation, and caveat discipline |
