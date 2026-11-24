@@ -235,6 +235,8 @@ portfolio:
         assert result.exit_code == 0, result.output
     summary = json.loads((art / "summary.json").read_text())
     assert summary["evaluation"]["refit_folds"] == 3
+    dates = torch.load(art / "panel.pt", weights_only=False)["dates"]
+    assert summary["evaluation"]["train_end"] == str(dates[22].astype("datetime64[D]"))
     assert summary["metrics"]["n_periods"] == 16
     assert "earlier test observations" in (art / "summary.md").read_text()
     # New forecasts must not be silently evaluated against old portfolio targets.

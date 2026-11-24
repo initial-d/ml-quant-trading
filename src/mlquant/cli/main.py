@@ -500,6 +500,8 @@ def cmd_backtest(config_path: str, accounting: str | None = None) -> None:
         if pred_blob.get("protocol") == "model-walk-forward-v1":
             provenance = pred_blob["training_report"]
             evaluation.update(prediction_protocol=provenance["protocol"],
+                              train_start=_date_str(dates[provenance["folds"][0]["train_start"]]),
+                              train_end=_date_str(dates[provenance["folds"][0]["history_end_exclusive"] - 1]),
                               n_train_dates=provenance["config"]["train_dates"],
                               refit_folds=len(provenance["folds"]),
                               training_window=provenance["config"]["window"],
