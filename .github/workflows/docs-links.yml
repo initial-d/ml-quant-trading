@@ -1,0 +1,29 @@
+name: Documentation links
+
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "docs/**"
+      - "scripts/check_local_links.py"
+      - ".github/workflows/docs-links.yml"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.md"
+      - "docs/**"
+      - "scripts/check_local_links.py"
+      - ".github/workflows/docs-links.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Test link checker
+        run: python3 -m unittest tests.test_local_links
+      - name: Check local Markdown links
+        run: python3 scripts/check_local_links.py
