@@ -15,17 +15,15 @@ reports, and a preview typed portfolio-decision adapter.**
 
 Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
 
-[**Run in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
-· [**Project Facts**](docs/answer_index.md)
-· [**How to Cite**](docs/citation_conversion.md)
-· [**Agent Benchmark Challenge**](docs/agent_quant_benchmark_challenge.md)
-· [**Validation Dashboard**](docs/validation_dashboard.md)
-· [**Benchmark Board**](docs/benchmark_board.md)
-· [**Share This Project**](docs/share_this_project.md)
-· [**Run with DSH**](docs/deepseek_harness_recipe.md)
-· [**Decision Adapter**](docs/systemone_adapter.md)
-· [**Quant Jev Article**](docs/article_zh_quant_jev_portfolio_decision.md)
-· [**Read the Paper**](https://arxiv.org/abs/2507.07107)
+[**Try in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
+· [**Check the evidence**](docs/research_card.md)
+· [**Read the paper**](https://arxiv.org/abs/2507.07107)
+· [**Cite this work**](CITATION.cff)
+
+The demo below uses synthetic data. The [validation dashboard](docs/validation_dashboard.md)
+preserves historical public-data results with their protocol limitations;
+the [benchmark board](docs/benchmark_board.md) tracks engineering performance.
+For other paths, see [Start Here](docs/start_here.md).
 
 ## Quick Start
 
@@ -153,35 +151,13 @@ python -m pip install -e '.[dev]'
 
 ## Validation Dashboard
 
-Archived public-data snapshot (2026-07-29, before v0.4.1):
-[AkShare CSI 300 Daily 213-Factor Validation](docs/validation_dashboard.md).
-
-**The numbers below predate the v0.4.1 mask-first and halt-safe return fixes.**
-They remain historical records and have not been revalidated with the corrected
-protocol. The [October 17 audit](docs/audits/public-revalidation-20261017/README.md)
-also found next-day availability entering portfolio selection through v0.4.1;
-revalidation requires that correction too. The detailed
-dashboard includes the protocol note, cost-sensitivity charts, and reproduction
-commands.
-
-| Run | Universe | Frequency | Factor set | Main result at 7 bps effective cost |
-|---|---|---:|---:|---|
-| Daily 213-factor public approximation | Current CSI 300, 2021-01-04 to 2024-12-31 | Daily | 213 | Buffered factor portfolio: 22.20% ann. return, 0.919 Sharpe, 2.1616 final equity |
-| Equal-weight baseline | Same panel | Daily | n/a | 17.75% ann. return, 0.882 Sharpe, 1.8744 final equity |
-| Naive daily factor selection | Same panel | Daily | 213 | Positive gross edge, but high turnover reduces net performance |
-
-Strategy table from that archived snapshot:
-
-| Strategy | Annual return | Sharpe | Max drawdown | Turnover | Cost drag | Final equity |
-|---|---:|---:|---:|---:|---:|---:|
-| `equal_weight_daily` | 17.75% | 0.882 | 25.76% | 0.0010 | 0.13% | 1.8744 |
-| `factor_mean_daily` | 15.80% | 0.701 | 32.51% | 0.3627 | 49.16% | 1.7579 |
-| `factor_mean_buffered_daily` | 22.20% | 0.919 | 27.76% | 0.1397 | 18.94% | 2.1616 |
-
-The useful takeaway is framework-level: factor scores need tradability, turnover,
-and cost-aware portfolio construction before public-data backtests are
-interpreted. This is a public-data approximation using current CSI 300
-constituents, not an exact paper reproduction or investment claim.
+The [July 2026 AkShare CSI 300 snapshot](docs/validation_dashboard.md) is an
+archived public-data approximation. Its figures predate the mask-first,
+halt-safe return, and signal-date availability corrections; they have not been
+revalidated under the corrected protocol. The dashboard retains the original
+strategy table, costs, baseline, charts, reproduction commands, and caveats.
+The [October 17 audit](docs/audits/public-revalidation-20261017/README.md)
+documents the availability issue and the blocked revalidation attempts.
 
 Acknowledgement: the AkShare zero-auth A-share data path was added through
 contributor work from [@redamancy231-create](https://github.com/redamancy231-create)
