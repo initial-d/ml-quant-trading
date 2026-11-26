@@ -8,6 +8,13 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 >
 > [arXiv:2507.07107](https://arxiv.org/abs/2507.07107) &nbsp;|&nbsp; Yimin Du，2025
 
+[在 Colab 試用](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
+· [查看研究邊界](docs/research_card.md)
+· [閱讀論文](https://arxiv.org/abs/2507.07107)
+· [引用資訊](CITATION.cff)
+
+Demo 使用合成資料；[公開資料驗證看板](docs/validation_dashboard.md)保留舊版結果及其協議限制。
+
 ## 專案概述
 
 `ml-quant-trading` 是一套簡潔、方便 fork 的端到端 A 股量化研究系統。程式碼庫整合了張量因子引擎、213 維因子庫、偏差修正、ML baseline、Markowitz 投資組合最佳化、向量化回測、synthetic 與公開資料示範，以及 CI、測試與 benchmark 工具，適合重現及延伸多因子量化研究。
