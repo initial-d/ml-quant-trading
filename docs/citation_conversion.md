@@ -71,6 +71,7 @@ The paper is a natural citation in paragraphs about:
 ## Where To Link
 
 - Paper: <https://arxiv.org/abs/2507.07107>
+- Paper landing page: <https://initial-d.github.io/ml-quant-trading/paper.html>
 - Repository: <https://github.com/initial-d/ml-quant-trading>
 - Project site: <https://initial-d.github.io/ml-quant-trading/>
 - Project facts: <https://initial-d.github.io/ml-quant-trading/answer_index.md>
