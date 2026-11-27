@@ -49,6 +49,7 @@ multi-factor trading system."
 - Main repository: <https://github.com/initial-d/ml-quant-trading>
 - Project site: <https://initial-d.github.io/ml-quant-trading/>
 - Paper: <https://arxiv.org/abs/2507.07107>
+- Paper landing page: <https://initial-d.github.io/ml-quant-trading/paper.html>
 - Citation guide: <https://initial-d.github.io/ml-quant-trading/citation_conversion.md>
 - PyPI package: <https://pypi.org/project/mlquantx/>
 - Research Card: <https://github.com/initial-d/ml-quant-trading/blob/main/docs/research_card.md>

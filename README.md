@@ -17,7 +17,7 @@ Languages: [English](README.md) | [简体中文](README.zh-CN.md) | [繁體中�
 
 [**Try in Colab**](https://colab.research.google.com/github/initial-d/ml-quant-trading/blob/main/notebooks/quickstart_colab.ipynb)
 · [**Check the evidence**](docs/research_card.md)
-· [**Read the paper**](https://arxiv.org/abs/2507.07107)
+· [**Read the paper**](https://initial-d.github.io/ml-quant-trading/paper.html)
 · [**Cite this work**](CITATION.cff)
 
 The demo below uses synthetic data. The [validation dashboard](docs/validation_dashboard.md)
